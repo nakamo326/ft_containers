@@ -33,4 +33,5 @@
 exe
 
 # Google Test
-googletest
+googletest/*
+!googletest/Makefile

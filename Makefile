@@ -20,7 +20,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o $@
 	@printf "flags  : \e[33m%s\e[m\n" "$(CXXFLAGS)"
-	@printf "compile: \e[32m%s\e[m\n  => \e[34m%s\e[m\n" "$^" $@
+	@printf "build  : \e[32m%s\e[m\n  => \e[34m%s\e[m\n" "$^" $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(OBJDIR)/$(*D)
@@ -42,31 +42,3 @@ re: fclean all
 .PHONY: debug
 debug: CXXFLAGS += -g -fsanitize=integer -fsanitize=address -DDEBUG
 debug: re
-
-# ---- Google Test ---- #
-GTESTDIR := googletest
-gtest := $(GTESTDIR)/gtest $(GTESTDIR)/googletest-release-1.11.0
-TESTDIR := .
-TESTSRC := $(shell find tests -type f)
-
-PYTHON = $(shell which python)
-ifeq ($(shell which python),)
-PYTHON = $(shell which python3)
-endif
-
-$(gtest):
-	curl -OL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
-	tar -xvzf release-1.11.0.tar.gz googletest-release-1.11.0
-	$(RM) -f release-1.11.0.tar.gz
-	$(PYTHON) googletest-release-1.11.0/googletest/scripts/fuse_gtest_files.py $(GTESTDIR)
-	mv googletest-release-1.11.0 $(GTESTDIR)
-
-# -lpthreadいるか確認
-.PHONY: test
-test: $(gtest) 
-	clang++ -std=c++11 $(TESTDIR)/gtest.cpp $(GTESTDIR)/gtest/gtest-all.cc \
-	$(GTESTDIR)/googletest-release-1.11.0/googletest/src/gtest_main.cc \
-	$(TESTSRC) -DDEBUG -g -fsanitize=integer -fsanitize=address \
-	-I$(GTESTDIR) -I$(INCLUDES) -lpthread -o tester
-	./tester
-	$(RM) tester
