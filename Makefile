@@ -12,7 +12,6 @@ OBJS = $(subst $(SRCDIR), $(OBJDIR), $(SRCFILE:.cpp=.o))
 DEPS = $(subst $(SRCDIR), $(OBJDIR), $(SRCFILE:.cpp=.d))
 
 all: $(NAME)
-
 -include $(DEPS)
 
 $(NAME): $(OBJS)
@@ -31,4 +30,5 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re print
+.PHONY: all clean fclean re
+
