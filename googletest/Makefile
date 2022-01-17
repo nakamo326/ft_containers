@@ -41,7 +41,7 @@ $(TOBJDIR)/%.o: $(TESTDIR)/%.cpp
 
 # ==== Install Google Test ==== #
 $(GTSRCDIR)/%.cc: $(GTSRCDIR)
-	:
+	@:
 
 $(GTSRCDIR): 
 	curl -OL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
