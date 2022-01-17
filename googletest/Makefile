@@ -13,37 +13,44 @@ SRCFILE := $(filter-out %$(MAIN),$(shell find $(SRCDIR) -type f))
 OBJS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.o))
 
 TESTDIR := ../tests
+TOBJDIR := ../objs/tests
 TESTS := $(wildcard $(TESTDIR)/*.cpp)
-
+TOBJS = $(patsubst $(TESTDIR)%,$(TOBJDIR)%,$(TESTS:.cpp=.o))
 
 GTSRCDIR := gtest
-GTESTSRC = $(wildcard $(GTSRCDIR)/*.cc)
 GTOBJDIR := objs
-GTOBJS = $(patsubst $(GTSRCDIR)%,$(GTOBJDIR)%,$(GTESTSRC:.cc=.o))
+GTESTSRC := $(GTSRCDIR)/gtest-all.cc $(GTSRCDIR)/gtest_main.cc
+GTOBJS   := $(patsubst $(GTSRCDIR)%,$(GTOBJDIR)%,$(GTESTSRC:.cc=.o))
 
-PYTHON = $(shell which python)
-ifeq ($(shell which python),)
-PYTHON = $(shell which python3)
-endif
 
 all: $(NAME)
 
-print: $(GTSRCDIR)
-	@echo $(GTESTSRC)
-	@echo $(GTOBJS)
+print:
+	@echo $(GTOBJS) 
 
-$(NAME): $(GTSRCDIR) $(OBJS) $(GTOBJS)
-	$(CXX) $(CXXFLAGS) \
-	$(TESTS) $(filter-out $(GTSRCDIR),$^) $(INCLUDES) $(LIBS) -o $@
+$(NAME): $(OBJS) $(GTOBJS) $(TOBJS)
+	$(CXX) $(CXXFLAGS) $^ $(INCLUDES) $(LIBS) -o $@
 	./$@
 	$(RM) $@
 
-$(GTOBJDIR)/%.o: $(GTESTDIR)/%.cc
+$(GTOBJDIR)/%.o: $(GTSRCDIR)/%.cc
+	@mkdir -p $(GTOBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
 
+$(TOBJDIR)/%.o: $(TESTDIR)/%.cpp
+	@mkdir -p $(TOBJDIR)/$(*D)
+	@$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
+
 # ==== Install Google Test ==== #
-$(GTSRCDIR):
+$(GTSRCDIR)/%.cc:
 	curl -OL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
-	tar --remove-file -xzf release-1.11.0.tar.gz googletest-release-1.11.0
-	$(PYTHON) googletest-release-1.11.0/googletest/scripts/fuse_gtest_files.py .
+	tar -xzf release-1.11.0.tar.gz googletest-release-1.11.0
+	python3 googletest-release-1.11.0/googletest/scripts/fuse_gtest_files.py .
 	cp googletest-release-1.11.0/googletest/src/gtest_main.cc gtest/gtest_main.cc
+	$(RM) release-1.11.0.tar.gz
+
+clean:
+	$(RM) $(TOBJS)
+	$(RM) -r $(TOBJDIR)
+
+.PHONY: all clean
