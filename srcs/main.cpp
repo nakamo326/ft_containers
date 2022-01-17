@@ -1,6 +1,6 @@
 #include <iostream>
 
-void testfunc();
+int testfunc();
 
 int main() {
   std::cout << "test" << std::endl;

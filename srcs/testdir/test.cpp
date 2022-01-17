@@ -1,3 +1,6 @@
 #include <iostream>
 
-void testfunc() { std::cout << "aaa" << std::endl; }
+int testfunc() {
+  std::cout << "aaa" << std::endl;
+  return 1;
+}
