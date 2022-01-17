@@ -13,20 +13,18 @@ SRCFILE := $(filter-out %$(MAIN),$(shell find $(SRCDIR) -type f))
 OBJS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.o))
 
 TESTDIR := ../tests
-TOBJDIR := ../objs/tests
+TOBJDIR := tobjs
 TESTS := $(wildcard $(TESTDIR)/*.cpp)
 TOBJS = $(patsubst $(TESTDIR)%,$(TOBJDIR)%,$(TESTS:.cpp=.o))
 
 GTSRCDIR := gtest
-GTOBJDIR := objs
+GTOBJDIR := gobjs
+.PRECIOUS: $(GTESTSRC)
 GTESTSRC := $(GTSRCDIR)/gtest-all.cc $(GTSRCDIR)/gtest_main.cc
 GTOBJS   := $(patsubst $(GTSRCDIR)%,$(GTOBJDIR)%,$(GTESTSRC:.cc=.o))
 
 
 all: $(NAME)
-
-print:
-	@echo $(GTOBJS) 
 
 $(NAME): $(OBJS) $(GTOBJS) $(TOBJS)
 	$(CXX) $(CXXFLAGS) $^ $(INCLUDES) $(LIBS) -o $@
@@ -39,7 +37,7 @@ $(GTOBJDIR)/%.o: $(GTSRCDIR)/%.cc
 
 $(TOBJDIR)/%.o: $(TESTDIR)/%.cpp
 	@mkdir -p $(TOBJDIR)/$(*D)
-	@$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
+	$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
 
 # ==== Install Google Test ==== #
 $(GTSRCDIR)/%.cc:
