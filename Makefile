@@ -36,7 +36,7 @@ debug: CXXFLAGS += -g -fsanitize=integer -fsanitize=address -DDEBUG
 debug: re
 
 test: $(OBJS)
-	make -C $(GTESTDIR)
+	$(MAKE) -C $(GTESTDIR)
 
 ref:
 	cd ref && ./make_ref.sh
@@ -49,7 +49,7 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean
-	+make all
+	$(MAKE) all
 
 .PHONY: all clean fclean re debug test ref
 
