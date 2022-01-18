@@ -38,6 +38,9 @@ debug: re
 test: $(OBJS)
 	make -C $(GTESTDIR)
 
+ref:
+	cd ref && ./make_ref.sh
+
 clean:
 	$(RM) $(OBJS) $(DEPS)
 	$(RM) -r $(OBJDIR)
@@ -47,7 +50,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re debug test
+.PHONY: all clean fclean re debug test ref
 
 # ==== Color define ==== #
 YLW := \e[33m

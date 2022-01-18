@@ -40,4 +40,5 @@ googletest/*
 
 
 # Reference
-ref
+ref/*
+!ref/make_ref.sh
