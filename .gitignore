@@ -37,3 +37,7 @@ exe
 googletest/*
 !googletest/Makefile
 !googletest/gtest
+
+
+# Reference
+ref
