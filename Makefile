@@ -23,15 +23,14 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o $@
-	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)"
-	@echo -e "build  : $(CYN)$^$(NC)\n\t=> $(BLU)$@$(NC)" 
+	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(CYN)$^$(NC)\n\t=> $(BLU)$@$(NC)" 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(OBJDIR)/$(*D)
 	@$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
-	@echo -en "compile: $(MGN)$<$(NC)"
-	@echo -en "$$(yes ' ' | head -n $$(expr $(ALIGN) - $$((`echo $< | wc -m` - 1))) | tr -d '\n')"
-	@echo -e " -> $(CYN)$@$(NC)"
+	@echo -e "compile: $(MGN)$<$(NC)\
+	$$(yes ' ' | head -n $$(expr $(ALIGN) - $$((`echo $< | wc -m` - 1))) | tr -d '\n') -> \
+	$(CYN)$@$(NC)"
 
 debug: CXXFLAGS += -g -fsanitize=integer -fsanitize=address -DDEBUG
 debug: re
