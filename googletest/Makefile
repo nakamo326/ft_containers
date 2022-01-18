@@ -2,7 +2,7 @@ NAME := tester
 
 SHELL := /bin/bash
 CXX := clang++
-CXXFLAGS := -std=c++11 -DDEBUG -g -fsanitize=integer -fsanitize=address
+CXXFLAGS := -std=c++11 -MMD -MP -DDEBUG -g -fsanitize=integer -fsanitize=address
 LIBS := -lpthread
 INCLUDES := -I. -I./includes
 
@@ -15,21 +15,25 @@ OBJDIR := ../objs
 MAIN_SUFFIX := main.cpp
 SRCFILE := $(filter-out %$(MAIN_SUFFIX),$(shell find $(SRCDIR) -type f))
 OBJS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.o))
+DEPS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.d))
 
 # ==== Path to test ==== #
 TESTDIR := ../tests
 TOBJDIR := tobjs
 TESTS := $(wildcard $(TESTDIR)/*.cpp)
 TOBJS = $(patsubst $(TESTDIR)%,$(TOBJDIR)%,$(TESTS:.cpp=.o))
+TDEPS = $(patsubst $(TESTDIR)%,$(TOBJDIR)%,$(TESTS:.cpp=.d))
 
 GTSRCDIR := gtest
 GTOBJDIR := gobjs
 .SECONDARY: $(GTESTSRC)
 GTESTSRC := $(GTSRCDIR)/gtest-all.cc $(GTSRCDIR)/gtest_main.cc
 GTOBJS   := $(patsubst $(GTSRCDIR)%,$(GTOBJDIR)%,$(GTESTSRC:.cc=.o))
+GTDEPS   := $(patsubst $(GTSRCDIR)%,$(GTOBJDIR)%,$(GTESTSRC:.cc=.d))
 
 
 all: $(NAME)
+-include $(DEPS) $(TDEPS) $(GTDEPS)
 
 $(NAME): $(OBJS) $(GTOBJS) $(TOBJS)
 	$(CXX) $(CXXFLAGS) $^ $(INCLUDES) $(LIBS) -o $@
