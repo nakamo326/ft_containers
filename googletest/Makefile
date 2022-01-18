@@ -16,6 +16,7 @@ MAIN_SUFFIX := main.cpp
 SRCFILE := $(filter-out %$(MAIN_SUFFIX),$(shell find $(SRCDIR) -type f))
 OBJS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.o))
 
+# ==== Path to test ==== #
 TESTDIR := ../tests
 TOBJDIR := tobjs
 TESTS := $(wildcard $(TESTDIR)/*.cpp)
@@ -43,7 +44,6 @@ $(TOBJDIR)/%.o: $(TESTDIR)/%.cpp
 	@mkdir -p $(TOBJDIR)/$(*D)
 	$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
 
-# ==== Install Google Test ==== #
 $(GTESTSRC): $(GTSRCDIR)
 	@:
 
@@ -54,7 +54,6 @@ $(GTSRCDIR): $(GTEST_RELEASE)
 $(GTEST_RELEASE):
 	if [ ! -f $(notdir $(GTEST_URL)) ]; then curl -OL $(GTEST_URL); fi
 	tar -xzf $(notdir $(GTEST_URL)) $(GTEST_RELEASE) && $(RM) $(notdir $(GTEST_URL))
-
 
 clean:
 	$(RM) $(TOBJS)
