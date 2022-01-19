@@ -8,19 +8,6 @@
 *.obj
 objs
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -42,3 +29,6 @@ googletest/*
 # Reference
 ref/*
 !ref/make_ref.sh
+
+# VScode settings
+.vscode
