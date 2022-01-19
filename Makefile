@@ -18,21 +18,21 @@ GTESTDIR := googletest
 # ==== Align length to format compile message ==== #
 #ALIGN := $(shell tr ' ' '\n' <<<"$(SRCFILE)" | awk -v len=0 -F "" 'NF>len{len=NF}END{print len}')
 ALIGN := $(shell tr ' ' '\n' <<<"$(SRCFILE)" | while read line; do echo \
-	$$((`echo $$line | wc -m` - 1)); done | awk 'm<$$1{ m=$$1} END{print m}')
+	$$((`echo $$line | wc -m`)); done | awk 'm<$$1{ m=$$1} END{print m}')
 
 all: $(NAME)
 -include $(DEPS)
 
 $(NAME): $(OBJS)
 	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o $@
-	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(CYN)$^$(NC)\n\t=> $(BLU)$@$(NC)" 
+	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n\t=> $(BLU)$@$(NC)" 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(OBJDIR)/$(*D)
 	@$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
 	@echo -e "compile: $(MGN)$<$(NC)\
 	$$(yes ' ' | head -n $$(expr $(ALIGN) - $$((`echo $< | wc -m` - 1))) | tr -d '\n') -> \
-	$(CYN)$@$(NC)"
+	$(GRN)$@$(NC)"
 
 debug: CXXFLAGS += -g -fsanitize=integer -fsanitize=address -DDEBUG
 debug: re
