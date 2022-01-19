@@ -4,9 +4,9 @@
 git clone --depth 1 git@github.com:llvm/llvm-project.git
 git clone --depth 1 https://github.com/gcc-mirror/gcc
 
-# make link of vector
-ln -s llvm-project/libcxx/include/vector llvm_vector.cpp
-ln -s llvm-project/libcxx/include/__iterator/iterator_traits.h  llvm_iterator_traits.h
-ln -s llvm-project/libcxx/include/__iterator/wrap_iter.h  llvm_wrap_iter.h
+#copy vector source from llve
+cp llvm-project/libcxx/include/vector llvm_vector.cpp
+cp llvm-project/libcxx/include/__iterator/iterator_traits.h  llvm_iterator_traits.h
+cp llvm-project/libcxx/include/__iterator/wrap_iter.h  llvm_wrap_iter.h
 
-ln -s  gcc/libstdc++-v3/include/bits/stl_vector.h gcc_vector.h
+cp gcc/libstdc++-v3/include/bits/stl_vector.h gcc_vector.h
