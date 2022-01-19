@@ -65,13 +65,12 @@ MGN := \033[35m
 CYN := \033[36m
 NC := \033[m
 
-# ==== set 'j' option of make command ==== #
+# ==== suggest 'j' option of make command ==== #
 ifeq ($(shell uname), Linux)
 	procs := $$(expr $$(grep cpu.cores /proc/cpuinfo | sort -u | sed 's/[^0-9]//g') + 1)
 else
-	procs := $$(system_profiler SPHardwareDataType | grep Total | sed 's/[^0-9]//g' + 1)
+	procs := $$(expr $$(system_profiler SPHardwareDataType | grep Total | sed 's/[^0-9]//g') + 1)
 endif
 
 proc:
-	@export MAKEFLAGS=-j$(procs)
-	@echo "export MAKEFLAGS=-j$(procs)"
+	@echo -e "please do $(CYN)export MAKEFLAGS=-j$(procs)$(NC)"
