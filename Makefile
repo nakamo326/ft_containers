@@ -8,7 +8,7 @@ INCLUDES := -I./includes
 
 SRCDIR := srcs
 OBJDIR := objs
-SRCFILE := $(shell find $(SRCDIR) -type f)
+SRCFILE := $(shell find $(SRCDIR) -name "*.cpp" -type f)
 OBJS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.o))
 DEPS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.d))
 
@@ -38,6 +38,7 @@ debug: re
 test: $(OBJS)
 	$(MAKE) -C $(GTESTDIR)
 
+.PHONY: ref
 ref:
 	cd ref && ./make_ref.sh
 
@@ -51,7 +52,7 @@ fclean: clean
 re: fclean
 	$(MAKE) all
 
-.PHONY: all clean fclean re debug test ref
+.PHONY: all clean fclean re debug test
 
 # ==== Color define ==== #
 YLW := \e[33m

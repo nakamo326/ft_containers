@@ -13,14 +13,14 @@ GTEST_RELEASE := googletest-$(basename $(basename $(notdir $(GTEST_URL))))
 SRCDIR := ../srcs
 OBJDIR := ../objs
 MAIN_SUFFIX := main.cpp
-SRCFILE := $(filter-out %$(MAIN_SUFFIX),$(shell find $(SRCDIR) -type f))
+SRCFILE := $(filter-out %$(MAIN_SUFFIX),$(shell find $(SRCDIR) -name "*.cpp" -type f))
 OBJS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.o))
 DEPS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.d))
 
 # ==== Path to test ==== #
 TESTDIR := ../tests
 TOBJDIR := tobjs
-TESTS := $(wildcard $(TESTDIR)/*.cpp)
+TESTS := $(shell find $(TESTDIR) -name "*.cpp" -type f)
 TOBJS = $(patsubst $(TESTDIR)%,$(TOBJDIR)%,$(TESTS:.cpp=.o))
 TDEPS = $(patsubst $(TESTDIR)%,$(TOBJDIR)%,$(TESTS:.cpp=.d))
 
