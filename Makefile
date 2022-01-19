@@ -57,13 +57,13 @@ re: fclean
 .PHONY: all clean fclean re debug test
 
 # ==== Color define ==== #
-YLW := \e[33m
-GRN := \e[32m
-YLW := \e[33m
-BLU := \e[34m
-MGN := \e[35m
-CYN := \e[36m
-NC := \e[m
+YLW := \033[33m
+GRN := \033[32m
+YLW := \033[33m
+BLU := \033[34m
+MGN := \033[35m
+CYN := \033[36m
+NC := \033[m
 
 # ==== set 'j' option of make command ==== #
 ifeq ($(shell uname), Linux)
