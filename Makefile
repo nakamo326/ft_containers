@@ -16,7 +16,9 @@ DEPS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.d))
 GTESTDIR := googletest
 
 # ==== Align length to format compile message ==== #
-ALIGN := $(shell tr ' ' '\n' <<<"$(SRCFILE)" | awk -v len=0 -F "" 'NF>len{len=NF}END{print len}')
+#ALIGN := $(shell tr ' ' '\n' <<<"$(SRCFILE)" | awk -v len=0 -F "" 'NF>len{len=NF}END{print len}')
+ALIGN := $(shell tr ' ' '\n' <<<"$(SRCFILE)" | while read line; do echo \
+	$$((`echo $$line | wc -m` - 1)); done | awk 'm<$$1{ m=$$1} END{print m}')
 
 all: $(NAME)
 -include $(DEPS)
