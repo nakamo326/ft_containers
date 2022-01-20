@@ -1,5 +1,5 @@
-#ifndef FT_CONTAINER_HPP
-#define FT_CONTAINER_HPP
+#ifndef FT_CONTAINERS_INCLUDES_FT_CONTAINER_HPP
+#define FT_CONTAINERS_INCLUDES_FT_CONTAINER_HPP
 
 #include <iostream>
 #include <vector>
@@ -14,4 +14,4 @@
 
 int testfunc();
 
-#endif  // FT_CONTAINER_HPP
+#endif /* FT_CONTAINERS_INCLUDES_FT_CONTAINER_HPP */

@@ -40,8 +40,8 @@ debug: re
 test: $(OBJS)
 	$(MAKE) -C $(GTESTDIR)
 
-compare: CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic-errors -Wshadow -DSTD
-compare:  $(filter-out %main.o,$(OBJS)) srcs/main.cpp
+cmp: CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic-errors -Wshadow -DSTD
+cmp:  $(filter-out %main.o,$(OBJS)) srcs/main.cpp
 	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o std
 	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n\t=> $(BLU)std$(NC)" 
 
@@ -59,7 +59,7 @@ fclean: clean
 re: fclean
 	$(MAKE) all
 
-.PHONY: all clean fclean re debug test compare
+.PHONY: all clean fclean re debug test cmp
 
 # ==== Color define ==== #
 YLW := \033[33m
