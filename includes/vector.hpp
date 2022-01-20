@@ -20,10 +20,13 @@ public:
   typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
   vector(){};
-  vector(const allocator_type& alloc) : _alloc(alloc){};
-  // vector(std::size_t n = 0, Allocator a = Allocator()){};
+  explicit vector(const allocator_type& alloc) : _alloc(alloc){};
+  explicit vector(size_type count, const T& value = T(),
+                  const Allocator& alloc = Allocator());
+  vector(const vector& other){};
   // ~vector() {};
-  // vector(const vector &x) {};
+  // template <class InputIt>
+  // vector(InputIt first, InputIt last, const Allocator& alloc = Allocator());
   // vector &         operator=(const vector &x) {};
 
   iterator         begin() { return _first; }
