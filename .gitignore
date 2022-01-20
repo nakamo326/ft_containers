@@ -19,6 +19,7 @@ objs
 *.out
 *.app
 exe
+std
 
 # Google Test
 googletest/*
