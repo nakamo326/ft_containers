@@ -37,11 +37,11 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 debug: CXXFLAGS += -g -fsanitize=integer -fsanitize=address -DDEBUG
 debug: re
 
-test: $(OBJS)
+test: $(filter-out %main.o,$(OBJS))
 	$(MAKE) -C $(GTESTDIR)
 
 cmp: CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic-errors -Wshadow -DSTD
-cmp:  $(filter-out %main.o,$(OBJS)) srcs/main.cpp
+cmp: $(filter-out %main.o,$(OBJS)) srcs/main.cpp
 	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o std
 	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n\t=> $(BLU)std$(NC)" 
 
