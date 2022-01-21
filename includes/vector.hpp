@@ -1,10 +1,12 @@
 #ifndef FT_CONTAINERS_INCLUDES_VECTOR_HPP
 #define FT_CONTAINERS_INCLUDES_VECTOR_HPP
 
+#include <limits>
 #include <memory>
 #include <stdexcept>
 
 namespace ft {
+
 template <class T, class Alloc = std::allocator<T> >
 struct vector {
 public:
@@ -30,7 +32,7 @@ private:
 
 public:
   // == constructor ==
-  vector() {}
+  vector() : _alloc(Alloc()) {}
   explicit vector(const Alloc& alloc) : _alloc(alloc) {}
   vector(size_type n, const T& value = T(), const Alloc& alloc = Alloc());
   // template <class InputIt>
@@ -73,11 +75,14 @@ public:
   // const_reverse_iterator rend() const noexcept;
 
   // == capacity ==
+  bool              empty() const { return _begin == _end; };
   size_type         size() const { return _end - _begin; };
-  // size_type         max_size() const;
-  // size_type         capacity() const;
-  // bool              empty() const;
-  // void              reserve(size_type n);
+  size_type         max_size() const {
+    return std::min<size_type>(_alloc.max_size(),
+                               std::numeric_limits<difference_type>::max());
+  };
+  size_type capacity() const { return static_cast<size_type>(_cap - _begin); };
+  // void      reserve(size_type new_cap);
 
   // == modifiers ==
   // void              clear() noexcept;
@@ -125,12 +130,25 @@ vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
   _begin = _end = _cap = _alloc.allocate(n);
   try {
     std::uninitialized_fill_n(_begin, n, value);
-    _end = _begin + n;
+    _cap = _end = _begin + n;
   } catch (...) {
     _alloc.deallocate(_begin, n);
     throw;
   }
 }
+
+// template <class T, class Alloc>
+// void vector<T, Alloc>::reserve(size_type new_cap) {
+//   if (new_cap > capacity()) {
+//     if (new_cap > max_size())
+//       throw std::range_error();
+//     pointer new_data = _alloc.allocate(new_cap);
+//     // try catch
+//     std::uninitialized_copy(begin(), end(), new_data);
+//     _alloc.deallocate(_begin, size());
+//     _begin = new_data;
+//   }
+// }
 
 }  // namespace ft
 

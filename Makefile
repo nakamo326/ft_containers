@@ -38,7 +38,7 @@ debug: CXXFLAGS += -g -fsanitize=integer -fsanitize=address -DDEBUG
 debug: re
 
 test: $(filter-out %main.o,$(OBJS))
-	$(MAKE) -C $(GTESTDIR)
+	$(MAKE) -C $(GTESTDIR) re
 
 cmp: CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic-errors -Wshadow -DSTD
 cmp: $(filter-out %main.o,$(OBJS)) srcs/main.cpp

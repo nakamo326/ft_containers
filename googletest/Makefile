@@ -63,4 +63,10 @@ clean:
 	$(RM) $(TOBJS)
 	$(RM) -r $(TOBJDIR)
 
-.PHONY: all clean
+fclean: clean
+	$(RM) $(NAME)
+
+re : fclean
+	$(MAKE) all
+
+.PHONY: all clean fclean re
