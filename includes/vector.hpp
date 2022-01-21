@@ -68,28 +68,28 @@ public:
   //~vector();
 
   // == assignation overload ==
-  vector& operator=(const vector& x);
+  // vector&           operator=(const vector& x);
 
   // == assign ==
-  void    assign(size_type n, const value_type& u);
-  template <class InputIterator>
-  void            assign(InputIterator first, InputIterator last);
+  // void    assign(size_type n, const value_type& u);
+  // template <class InputIterator>
+  // void              assign(InputIterator first, InputIterator last);
 
-  allocator_type  get_allocator() const { return this->_alloc; }
+  allocator_type    get_allocator() const { return this->_alloc; }
 
   // == element access ==
-  reference       operator[](size_type n) { return this->_begin[n]; };
-  const_reference operator[](size_type n) const { return this->_begin[n]; };
+  reference         operator[](size_type n) { return this->_begin[n]; };
+  const_reference   operator[](size_type n) const { return this->_begin[n]; };
   // reference       at(size_type n);
   // const_reference at(size_type n) const;
 
-  reference       front() { return *this->_begin; };
-  const_reference front() const { return *this->_begin; };
-  reference       back() { return *(this->_end - 1); };
-  const_reference back() const { return *(this->_end - 1); };
+  reference         front() { return *this->_begin; };
+  const_reference   front() const { return *this->_begin; };
+  reference         back() { return *(this->_end - 1); };
+  const_reference   back() const { return *(this->_end - 1); };
 
-  // value_type*       data();
-  // const value_type* data() const;
+  value_type*       data() { return this->_begin; };
+  const value_type* data() const { return this->_begin; };
 
   // == iterator ==
   // iterator               begin() noexcept;
@@ -103,11 +103,11 @@ public:
   // const_reverse_iterator rend() const noexcept;
 
   // == capacity ==
-  size_type       size() const;
-  size_type       max_size() const;
-  size_type       capacity() const;
-  bool            empty() const;
-  void            reserve(size_type n);
+  // size_type         size() const;
+  // size_type         max_size() const;
+  // size_type         capacity() const;
+  // bool              empty() const;
+  // void              reserve(size_type n);
 
   // == modifiers ==
 
