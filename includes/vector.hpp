@@ -5,31 +5,8 @@
 #include <stdexcept>
 
 namespace ft {
-
-template <class T, class Allocator>
-class __vector_base {
-  typedef Allocator                        allocator_type;
-  typedef typename allocator_type::pointer pointer;
-  // pair再実装必要, そもそもpairの必要あるか確認
-  // __end_cap() { return this->__end_cap_.first(); } -> _cap
-  // __alloc() { return this->__end_cap_.second(); }  -> _alloc
-protected:
-  pointer        _begin;
-  pointer        _end;
-  pointer        _cap;
-  allocator_type _alloc;
-
-  __vector_base() : _begin(NULL), _end(NULL), _cap(NULL) {}
-
-  __vector_base(const allocator_type& __a)
-      : _begin(NULL), _end(NULL), _cap(NULL), _alloc(__a) {}
-};
-
 template <class T, class Alloc = std::allocator<T> >
-struct vector : private __vector_base<T, Alloc> {
-private:
-  typedef __vector_base<T, Alloc> _base;
-
+struct vector {
 public:
   typedef T                               value_type;
   typedef Alloc                           allocator_type;
@@ -45,21 +22,17 @@ public:
   // typedef std::reverse_iterator<iterator>          reverse_iterator;
   // typedef std::reverse_iterator<const_iterator>    const_reverse_iterator;
 
+private:
+  pointer        _begin;
+  pointer        _end;
+  pointer        _cap;
+  allocator_type _alloc;
+
+public:
   // == constructor ==
   vector() {}
-  explicit vector(const Alloc& alloc) : _base(alloc) {}
-  explicit vector(size_type n);
-  // vector(size_type n, const value_type& x);
-  // template <class = __enable_if_t<__is_allocator<_Allocator>::value>>
-  // vector(size_type n, const value_type& x, const allocator_type& a)
-  //     : __base(a) {
-  //   if (n > 0) {
-  //     __vallocate(n);
-  //     __construct_at_end(n, x);
-  //   }
-  // }
-  // explicit vector(size_type count, const T& value = T(),
-  //                 const Alloc& alloc = Alloc());
+  explicit vector(const Alloc& alloc) : _alloc(alloc) {}
+  vector(size_type n, const T& value = T(), const Alloc& alloc = Alloc());
   // template <class InputIt>
   // vector(InputIt first, InputIt last, const Alloc& alloc = Alloc());
   // vector(const vector& other);
@@ -75,73 +48,88 @@ public:
   // template <class InputIterator>
   // void              assign(InputIterator first, InputIterator last);
 
-  allocator_type    get_allocator() const { return this->_alloc; }
+  allocator_type    get_allocator() const { return _alloc; }
 
   // == element access ==
-  reference         operator[](size_type n) { return this->_begin[n]; };
-  const_reference   operator[](size_type n) const { return this->_begin[n]; };
+  reference         operator[](size_type n) { return _begin[n]; };
+  const_reference   operator[](size_type n) const { return _begin[n]; };
   // reference       at(size_type n);
   // const_reference at(size_type n) const;
-
-  reference         front() { return *this->_begin; };
-  const_reference   front() const { return *this->_begin; };
-  reference         back() { return *(this->_end - 1); };
-  const_reference   back() const { return *(this->_end - 1); };
-
-  value_type*       data() { return this->_begin; };
-  const value_type* data() const { return this->_begin; };
+  reference         front() { return *_begin; };
+  const_reference   front() const { return *_begin; };
+  reference         back() { return *(_end - 1); };
+  const_reference   back() const { return *(_end - 1); };
+  value_type*       data() { return _begin; };
+  const value_type* data() const { return _begin; };
 
   // == iterator ==
   // iterator               begin() noexcept;
   // const_iterator         begin() const noexcept;
   // iterator               end() noexcept;
   // const_iterator         end() const noexcept;
-
   // reverse_iterator       rbegin() noexcept;
   // const_reverse_iterator rbegin() const noexcept;
   // reverse_iterator       rend() noexcept;
   // const_reverse_iterator rend() const noexcept;
 
   // == capacity ==
-  // size_type         size() const;
+  size_type         size() const { return _end - _begin; };
   // size_type         max_size() const;
   // size_type         capacity() const;
   // bool              empty() const;
   // void              reserve(size_type n);
 
   // == modifiers ==
+  // void              clear() noexcept;
 
-private:
-  void __vallocate(size_type n);
-  void __construct_at_end(size_type n);
+  // iterator          insert(iterator pos, const T& value);
+  // void              insert(iterator pos, size_type count, const T& value);
+  // template <class InputIt>
+  // void insert(iterator pos, InputIt first, InputIt last);
+
+  // iterator          erase(iterator pos);
+  // iterator          erase(iterator first, iterator last);
+
+  // void              push_back(const T& value);
+  // void              pop_back();
+  // void              resize(size_type count, T value = T());
+  // void              swap(vector& other);
 };
 
 // non-member functions
+// template <class T, class Alloc>
+// bool operator==(const std::vector<T, Alloc>& lhs,
+//                 const std::vector<T, Alloc>& rhs);
+// template <class T, class Alloc>
+// bool operator!=(const std::vector<T, Alloc>& lhs,
+//                 const std::vector<T, Alloc>& rhs);
+// template <class T, class Alloc>
+// bool operator<(const std::vector<T, Alloc>& lhs,
+//                const std::vector<T, Alloc>& rhs);
+// template <class T, class Alloc>
+// bool operator<=(const std::vector<T, Alloc>& lhs,
+//                 const std::vector<T, Alloc>& rhs);
+// template <class T, class Alloc>
+// bool operator>(const std::vector<T, Alloc>& lhs,
+//                const std::vector<T, Alloc>& rhs);
+// template <class T, class Alloc>
+// bool operator>=(const std::vector<T, Alloc>& lhs,
+//                 const std::vector<T, Alloc>& rhs);
+
+// template <class T, class Alloc>
+// void swap(vector<T, Alloc>& lhs, vector<T, Alloc>& rhs);
 
 template <class T, class Alloc>
-vector<T, Alloc>::vector(size_type n) {
-  if (n > 0) {
-    __vallocate(n);
-    __construct_at_end(n);
+vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
+    : _alloc(alloc) {
+  _begin = _end = _cap = _alloc.allocate(n);
+  try {
+    std::uninitialized_fill_n(_begin, n, value);
+    _end = _begin + n;
+  } catch (...) {
+    _alloc.deallocate(_begin, n);
+    throw;
   }
-}
-
-template <class T, class Alloc>
-void vector<T, Alloc>::__vallocate(size_type n) {
-  // if (n > max_size())
-  //   this->__throw_length_error();
-  this->_begin = this->_alloc.allocate(n);
-  this->_end   = this->_begin;
-  this->_cap   = this->_begin + n;
-}
-
-template <class T, class Alloc>
-void vector<T, Alloc>::__construct_at_end(size_type n) {
-  pointer new_end = this->_end + n;
-  for (pointer pos = this->_end; pos != new_end; pos = ++pos) {
-    this->_alloc.construct(pos, 0);
-  }
-  this->_end = new_end;
 }
 
 }  // namespace ft
