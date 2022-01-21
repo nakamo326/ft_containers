@@ -32,8 +32,9 @@ private:
 
 public:
   // == constructor ==
-  vector() : _alloc(Alloc()) {}
-  explicit vector(const Alloc& alloc) : _alloc(alloc) {}
+  vector() : _alloc(Alloc()), _begin(NULL), _end(NULL), _cap(NULL) {}
+  explicit vector(const Alloc& alloc)
+      : _alloc(alloc), _begin(NULL), _end(NULL), _cap(NULL) {}
   vector(size_type n, const T& value = T(), const Alloc& alloc = Alloc());
   // template <class InputIt>
   // vector(InputIt first, InputIt last, const Alloc& alloc = Alloc());
