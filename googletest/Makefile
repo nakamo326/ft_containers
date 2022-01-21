@@ -4,7 +4,7 @@ SHELL := /bin/bash
 CXX := clang++
 CXXFLAGS := -std=c++11 -MMD -MP -DDEBUG -g -fsanitize=integer -fsanitize=address
 LIBS := -lpthread
-INCLUDES := -I. -I./includes
+INCLUDES := -I. -I../includes
 
 # ==== Enter latest release URL ==== #
 GTEST_URL := https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
