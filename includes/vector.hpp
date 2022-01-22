@@ -5,8 +5,11 @@
 #include <memory>
 #include <stdexcept>
 
+#include "vector_iterator.hpp"
+
 namespace ft {
 
+// 後でinlineにすること！
 template <class T, class Alloc = std::allocator<T> >
 struct vector {
 public:
@@ -18,11 +21,10 @@ public:
   typedef typename Alloc::difference_type difference_type;
   typedef typename Alloc::pointer         pointer;
   typedef typename Alloc::const_pointer   const_pointer;
-  // 要再実装 llvmではwrap_iter<>
-  // typedef pointer                                  iterator;
-  // typedef const_pointer                            const_iterator;
-  // typedef std::reverse_iterator<iterator>          reverse_iterator;
-  // typedef std::reverse_iterator<const_iterator>    const_reverse_iterator;
+  typedef _vector_iterator<T>             iterator;
+  typedef _vector_iterator<T const>       const_iterator;
+  // typedef std::reverse_iterator<iterator>       reverse_iterator;
+  // typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 private:
   pointer        _begin;
@@ -66,14 +68,14 @@ public:
   const value_type* data() const { return _begin; };
 
   // == iterator ==
-  // iterator               begin() noexcept;
-  // const_iterator         begin() const noexcept;
-  // iterator               end() noexcept;
-  // const_iterator         end() const noexcept;
-  // reverse_iterator       rbegin() noexcept;
-  // const_reverse_iterator rbegin() const noexcept;
-  // reverse_iterator       rend() noexcept;
-  // const_reverse_iterator rend() const noexcept;
+  iterator          begin() { return _vector_iterator<T>(_begin); };
+  const_iterator    begin() const { return _vector_iterator<T const>(_begin); };
+  iterator          end() { return _vector_iterator<T>(_end); };
+  const_iterator    end() const { return _vector_iterator<T const>(_end); };
+  // reverse_iterator       rbegin() ;
+  // const_reverse_iterator rbegin() const ;
+  // reverse_iterator       rend() ;
+  // const_reverse_iterator rend() const ;
 
   // == capacity ==
   bool              empty() const { return _begin == _end; };
@@ -132,7 +134,8 @@ vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
   _begin = _end = _cap = _alloc.allocate(n);
   try {
     std::uninitialized_fill_n(_begin, n, value);
-    _cap = _end = _begin + n;
+    _end = _begin + n;
+    _cap = _end;
   } catch (...) {
     _alloc.deallocate(_begin, n);
     throw;

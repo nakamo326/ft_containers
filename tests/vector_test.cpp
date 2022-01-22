@@ -23,3 +23,12 @@ TEST(VectorTest, At) {
   EXPECT_THROW(s.at(20), std::out_of_range);
   EXPECT_THROW(f.at(20), std::out_of_range);
 }
+
+TEST(VectorTest, BeginAndEnd) {
+  ft::vector<int> f(10);
+
+  f[0] = 21;
+  f[9] = 42;
+  EXPECT_EQ(f[0], *(f.begin()));
+  EXPECT_EQ(f[9], *(--(f.end())));
+}
