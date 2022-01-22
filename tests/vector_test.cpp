@@ -25,10 +25,15 @@ TEST(VectorTest, At) {
 }
 
 TEST(VectorTest, BeginAndEnd) {
-  ft::vector<int> f(10);
+  ft::vector<int>           f(10);
+  ft::vector<int>::iterator it = f.begin();
 
-  f[0] = 21;
-  f[9] = 42;
+  f[0]                         = 21;
+  f[9]                         = 42;
   EXPECT_EQ(f[0], *(f.begin()));
   EXPECT_EQ(f[9], *(--(f.end())));
+  for (size_t i = 0; i < 10; i++) {
+    it++;
+  }
+  EXPECT_EQ(it, f.end());
 }
