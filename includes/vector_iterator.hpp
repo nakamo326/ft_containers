@@ -62,6 +62,8 @@ public:
   }
 
   reference operator[](difference_type n) const { return _ptr[n]; }
+
+  T*        base() const { return _ptr; }
 };
 
 template <class T>
@@ -75,13 +77,13 @@ _vector_iterator<T> operator+(typename _vector_iterator<T>::difference_type n,
 template <class T>
 bool operator==(const _vector_iterator<T>& rhs,
                 const _vector_iterator<T>& lhs) {
-  return rhs._ptr == lhs._ptr;
+  return rhs.base() == lhs.base();
 }
 
 template <class T, class U>
 bool operator==(const _vector_iterator<T>& rhs,
                 const _vector_iterator<U>& lhs) {
-  return rhs._ptr == lhs._ptr;
+  return rhs.base() == lhs.base();
 }
 
 template <class T>
@@ -92,7 +94,7 @@ bool operator!=(const _vector_iterator<T>& rhs,
 
 template <class T>
 bool operator<(const _vector_iterator<T>& rhs, const _vector_iterator<T>& lhs) {
-  return rhs._ptr < lhs._ptr;
+  return rhs.base() < lhs.base();
 }
 
 template <class T>
