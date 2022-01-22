@@ -7,6 +7,7 @@ int main() {
   ft::vector<int> v(100);
   v[0]  = 42;
   v[1]  = 57;
+  v[50] = 77;
   v[99] = 9999;
   std::cout << v[30] << std::endl;
   std::cout << v.at(0) << std::endl;
@@ -39,6 +40,7 @@ int main() {
   }
   std::cout << std::boolalpha << (beginit == endit) << std::endl;
   std::cout << *(--endit) << std::endl;
-
+  beginit = 50 + v.begin();
+  std::cout << *beginit << std::endl;
   return 0;
 }

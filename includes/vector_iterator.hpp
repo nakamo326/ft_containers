@@ -34,7 +34,6 @@ public:
     ++(*this);
     return tmp;
   }
-
   _vector_iterator& operator--() {
     --_ptr;
     return *this;
@@ -63,83 +62,55 @@ public:
   }
 
   reference operator[](difference_type n) const { return _ptr[n]; }
-
-  bool      operator==(const _vector_iterator& rhs) { return _ptr == rhs._ptr; }
-  bool      operator!=(const _vector_iterator& rhs) { return _ptr != rhs._ptr; }
 };
 
-template <class _Iter1, class _Iter2>
-typename _vector_iterator<_Iter1>::difference_type operator-(
-    const _vector_iterator<_Iter1>& _x, const _vector_iterator<_Iter2>& _y) {
-  return _x.base() - _y.base();
+template <class T>
+_vector_iterator<T> operator+(typename _vector_iterator<T>::difference_type n,
+                              _vector_iterator<T>                           x) {
+  x += n;
+  return x;
 }
 
 //  comparison  maybe should use friend?
-// template <class _Iter1, class _Iter2>
-// bool operator==(const __wrap_iter<_Iter1>& __x,
-//                 const __wrap_iter<_Iter2>& __y) {
-//   return __x.base() == __y.base();
-// }
+template <class T>
+bool operator==(const _vector_iterator<T>& rhs,
+                const _vector_iterator<T>& lhs) {
+  return rhs._ptr == lhs._ptr;
+}
 
-// template <class _Iter1>
-// bool operator<(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter1>&
-// __y) {
-//   return __x.base() < __y.base();
-// }
+template <class T, class U>
+bool operator==(const _vector_iterator<T>& rhs,
+                const _vector_iterator<U>& lhs) {
+  return rhs._ptr == lhs._ptr;
+}
 
-// template <class _Iter1, class _Iter2>
-// bool operator<(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>&
-// __y) {
-//   return __x.base() < __y.base();
-// }
+template <class T>
+bool operator!=(const _vector_iterator<T>& rhs,
+                const _vector_iterator<T>& lhs) {
+  return !(rhs == lhs);
+}
 
-// template <class _Iter1>
-// bool operator!=(const __wrap_iter<_Iter1>& __x,
-//                 const __wrap_iter<_Iter1>& __y) {
-//   return !(__x == __y);
-// }
+template <class T>
+bool operator<(const _vector_iterator<T>& rhs, const _vector_iterator<T>& lhs) {
+  return rhs._ptr < lhs._ptr;
+}
 
-// template <class _Iter1, class _Iter2>
-// bool operator!=(const __wrap_iter<_Iter1>& __x,
-//                 const __wrap_iter<_Iter2>& __y) {
-//   return !(__x == __y);
-// }
+template <class T>
+bool operator>(const _vector_iterator<T>& rhs, const _vector_iterator<T>& lhs) {
+  return lhs < rhs;
+}
 
-// template <class _Iter1>
-// bool operator>(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter1>&
-// __y) {
-//   return __y < __x;
-// }
+template <class T>
+bool operator>=(const _vector_iterator<T>& rhs,
+                const _vector_iterator<T>& lhs) {
+  return !(rhs < lhs);
+}
 
-// template <class _Iter1, class _Iter2>
-// bool operator>(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>&
-// __y) {
-//   return __y < __x;
-// }
-
-// template <class _Iter1>
-// bool operator>=(const __wrap_iter<_Iter1>& __x,
-//                 const __wrap_iter<_Iter1>& __y) {
-//   return !(__x < __y);
-// }
-
-// template <class _Iter1, class _Iter2>
-// bool operator>=(const __wrap_iter<_Iter1>& __x,
-//                 const __wrap_iter<_Iter2>& __y) {
-//   return !(__x < __y);
-// }
-
-// template <class _Iter1>
-// bool operator<=(const __wrap_iter<_Iter1>& __x,
-//                 const __wrap_iter<_Iter1>& __y) {
-//   return !(__y < __x);
-// }
-
-// template <class _Iter1, class _Iter2>
-// bool operator<=(const __wrap_iter<_Iter1>& __x,
-//                 const __wrap_iter<_Iter2>& __y) {
-//   return !(__y < __x);
-// }
+template <class T>
+bool operator<=(const _vector_iterator<T>& rhs,
+                const _vector_iterator<T>& lhs) {
+  return !(lhs < rhs);
+}
 
 }  // namespace ft
 
