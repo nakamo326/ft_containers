@@ -5,11 +5,11 @@ namespace ft {
 
 template <class Iterator>
 struct iterator_traits {
-  using difference_type   = typename Iterator::difference_type;
-  using value_type        = typename Iterator::value_type;
-  using pointer           = typename Iterator::pointer;
-  using reference         = typename Iterator::reference;
-  using iterator_category = typename Iterator::iterator_category;
+  typedef typename Iterator::difference_type   difference_type;
+  typedef typename Iterator::value_type        value_type;
+  typedef typename Iterator::pointer           pointer;
+  typedef typename Iterator::reference         reference;
+  typedef typename Iterator::iterator_category iterator_category;
 };
 // ポインタ型の特殊化必要？
 

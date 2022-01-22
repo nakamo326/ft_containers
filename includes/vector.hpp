@@ -5,6 +5,7 @@
 #include <memory>
 #include <stdexcept>
 
+#include "reverse_iterator.hpp"
 #include "vector_iterator.hpp"
 
 namespace ft {
@@ -72,13 +73,17 @@ public:
   const_iterator    begin() const { return _vector_iterator<T const>(_begin); };
   iterator          end() { return _vector_iterator<T>(_end); };
   const_iterator    end() const { return _vector_iterator<T const>(_end); };
-  // reverse_iterator       rbegin() ;
-  // const_reverse_iterator rbegin() const ;
-  // reverse_iterator       rend() ;
-  // const_reverse_iterator rend() const ;
+  reverse_iterator  rbegin() { return ft::reverse_iterator<iterator>(end()); };
+  const_reverse_iterator rbegin() const {
+    return ft::reverse_iterator<iterator>(end());
+  };
+  reverse_iterator rend() { return ft::reverse_iterator<iterator>(begin()); };
+  const_reverse_iterator rend() const {
+    return ft::reverse_iterator<iterator>(begin());
+  };
 
   // == capacity ==
-  bool              empty() const { return _begin == _end; };
+  bool      empty() const { return _begin == _end; };
   size_type size() const { return static_cast<size_type>(_end - _begin); };
   size_type capacity() const { return static_cast<size_type>(_cap - _begin); };
   size_type max_size() const {
