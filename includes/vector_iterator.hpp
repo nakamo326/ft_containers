@@ -64,10 +64,8 @@ public:
 
   reference operator[](difference_type n) const { return _ptr[n]; }
 
-  pointer   base() const { return _ptr; }
-
-  bool operator==(const _vector_iterator& rhs) { return base() == rhs.base(); }
-  bool operator!=(const _vector_iterator& rhs) { return base() != rhs.base(); }
+  bool      operator==(const _vector_iterator& rhs) { return _ptr == rhs._ptr; }
+  bool      operator!=(const _vector_iterator& rhs) { return _ptr != rhs._ptr; }
 };
 
 template <class _Iter1, class _Iter2>
