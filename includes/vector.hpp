@@ -41,7 +41,7 @@ public:
   // vector(const vector& other);
 
   // == destructor ==
-  //~vector();
+  ~vector();
 
   // == assignation overload ==
   // vector&           operator=(const vector& x);
@@ -86,7 +86,7 @@ public:
   // void      reserve(size_type new_cap);
 
   // == modifiers ==
-  // void              clear() noexcept;
+  void      clear() { _end = _begin; };
 
   // iterator          insert(iterator pos, const T& value);
   // void              insert(iterator pos, size_type count, const T& value);
@@ -102,7 +102,7 @@ public:
   // void              swap(vector& other);
 };
 
-// non-member functions
+// == non-member functions ==
 // template <class T, class Alloc>
 // bool operator==(const std::vector<T, Alloc>& lhs,
 //                 const std::vector<T, Alloc>& rhs);
@@ -125,6 +125,7 @@ public:
 // template <class T, class Alloc>
 // void swap(vector<T, Alloc>& lhs, vector<T, Alloc>& rhs);
 
+// == constructor ==
 template <class T, class Alloc>
 vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
     : _alloc(alloc) {
@@ -138,18 +139,12 @@ vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
   }
 }
 
-// template <class T, class Alloc>
-// void vector<T, Alloc>::reserve(size_type new_cap) {
-//   if (new_cap > capacity()) {
-//     if (new_cap > max_size())
-//       throw std::range_error();
-//     pointer new_data = _alloc.allocate(new_cap);
-//     // try catch
-//     std::uninitialized_copy(begin(), end(), new_data);
-//     _alloc.deallocate(_begin, size());
-//     _begin = new_data;
-//   }
-// }
+// == destructor ==
+template <class T, class Alloc>
+vector<T, Alloc>::~vector() {
+  if (_begin != NULL)
+    _alloc.deallocate(_begin, capacity());
+}
 
 // == element access ==
 template <class T, class Alloc>
@@ -166,6 +161,22 @@ typename vector<T, Alloc>::const_reference vector<T, Alloc>::at(
     throw std::out_of_range("input index is out of range.");
   return _begin[pos];
 }
+
+// == capacity ==
+// template <class T, class Alloc>
+// void vector<T, Alloc>::reserve(size_type new_cap) {
+//   if (new_cap > capacity()) {
+//     if (new_cap > max_size())
+//       throw std::range_error();
+//     pointer new_data = _alloc.allocate(new_cap);
+//     // try catch
+//     std::uninitialized_copy(begin(), end(), new_data);
+//     _alloc.deallocate(_begin, size());
+//     _begin = new_data;
+//   }
+// }
+
+// == modifiers ==
 
 }  // namespace ft
 

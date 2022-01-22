@@ -13,6 +13,10 @@ int main() {
   std::cout << v.back() << std::endl;
   std::cout << v.size() << std::endl;
   std::cout << v.capacity() << std::endl;
+  v.clear();
+  std::cout << v.size() << std::endl;
+  std::cout << v.capacity() << std::endl;
   std::cout << typeid(v.get_allocator()).name() << std::endl;
+
   return 0;
 }

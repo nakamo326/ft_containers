@@ -5,10 +5,11 @@
 class VectorTest : public ::testing::Test {};
 
 TEST_F(VectorTest, DefaultConstructor) {
-  ft::vector<int>  v;
-  std::vector<int> stdv;
-  EXPECT_EQ(0, v.size());
-  EXPECT_EQ(0, v.capacity());
-  EXPECT_EQ(stdv.get_allocator(), v.get_allocator());
-  // EXPECT_EQ(0, v.begin() - v.end());
+  ft::vector<int>  f;
+  std::vector<int> s;
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.max_size(), f.max_size());
+  EXPECT_EQ(s.data(), f.data());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  EXPECT_EQ(s.get_allocator(), f.get_allocator());
 }
