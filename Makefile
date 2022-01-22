@@ -43,7 +43,7 @@ test: $(filter-out %main.o,$(OBJS))
 cmp: CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic-errors -Wshadow -DSTD
 cmp: $(filter-out %main.o,$(OBJS)) srcs/main.cpp
 	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o std
-	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n\t=> $(BLU)std$(NC)" 
+	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)std$(NC)" 
 
 .PHONY: ref
 ref:

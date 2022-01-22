@@ -32,10 +32,13 @@ int main() {
   // wtf
   std::cout << std::boolalpha << (beginit == endit) << std::endl;
   for (size_t i = 0; i < 100; i++) {
-    beginit++;
-    if (beginit == endit) {
-      std::cout << "i: " << i << std::endl;
+    if (*beginit != 0) {
+      std::cout << "i: " << i << ", *gebinit = " << *beginit << std::endl;
     }
+    beginit++;
   }
+  std::cout << std::boolalpha << (beginit == endit) << std::endl;
+  std::cout << *(--endit) << std::endl;
+
   return 0;
 }
