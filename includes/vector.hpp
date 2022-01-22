@@ -54,10 +54,10 @@ public:
   allocator_type    get_allocator() const { return _alloc; }
 
   // == element access ==
-  reference         operator[](size_type n) { return _begin[n]; };
-  const_reference   operator[](size_type n) const { return _begin[n]; };
-  // reference       at(size_type n);
-  // const_reference at(size_type n) const;
+  reference         operator[](size_type pos) { return _begin[pos]; };
+  const_reference   operator[](size_type pos) const { return _begin[pos]; };
+  reference         at(size_type pos);
+  const_reference   at(size_type pos) const;
   reference         front() { return *_begin; };
   const_reference   front() const { return *_begin; };
   reference         back() { return *(_end - 1); };
@@ -150,6 +150,22 @@ vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
 //     _begin = new_data;
 //   }
 // }
+
+// == element access ==
+template <class T, class Alloc>
+typename vector<T, Alloc>::reference vector<T, Alloc>::at(size_type pos) {
+  if (pos >= size())
+    throw std::out_of_range("input index is out of range.");
+  return _begin[pos];
+}
+
+template <class T, class Alloc>
+typename vector<T, Alloc>::const_reference vector<T, Alloc>::at(
+    size_type pos) const {
+  if (pos >= size())
+    throw std::out_of_range("input index is out of range.");
+  return _begin[pos];
+}
 
 }  // namespace ft
 

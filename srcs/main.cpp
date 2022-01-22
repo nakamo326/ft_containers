@@ -8,6 +8,7 @@ int main() {
   v[0]  = 42;
   v[99] = 9999;
   std::cout << v[30] << std::endl;
+  std::cout << v.at(0) << std::endl;
   std::cout << v.front() << std::endl;
   std::cout << v.back() << std::endl;
   std::cout << v.size() << std::endl;
