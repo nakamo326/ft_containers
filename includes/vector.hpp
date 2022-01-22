@@ -77,16 +77,16 @@ public:
 
   // == capacity ==
   bool              empty() const { return _begin == _end; };
-  size_type         size() const { return _end - _begin; };
-  size_type         max_size() const {
+  size_type size() const { return static_cast<size_type>(_end - _begin); };
+  size_type capacity() const { return static_cast<size_type>(_cap - _begin); };
+  size_type max_size() const {
     return std::min<size_type>(_alloc.max_size(),
                                std::numeric_limits<difference_type>::max());
   };
-  size_type capacity() const { return static_cast<size_type>(_cap - _begin); };
   // void      reserve(size_type new_cap);
 
   // == modifiers ==
-  void      clear() { _end = _begin; };
+  void clear() { _end = _begin; };
 
   // iterator          insert(iterator pos, const T& value);
   // void              insert(iterator pos, size_type count, const T& value);

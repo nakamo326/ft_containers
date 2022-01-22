@@ -18,5 +18,16 @@ int main() {
   std::cout << v.capacity() << std::endl;
   std::cout << typeid(v.get_allocator()).name() << std::endl;
 
+  std::vector<int> other(100);
+  std::vector<int> dest;
+  std::cout << dest.size() << std::endl;
+  dest = other;
+  std::cout << dest.size() << std::endl;
+  std::cout << dest.capacity() << std::endl;
+  dest.push_back(5);
+  std::cout << dest.size() << std::endl;
+  std::cout << dest.capacity() << std::endl;
+  std::cout << other.size() << std::endl;
+  std::cout << other.capacity() << std::endl;
   return 0;
 }
