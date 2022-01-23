@@ -84,44 +84,43 @@ reverse_iterator<T> operator+(typename reverse_iterator<T>::difference_type n,
 }
 
 template <class T>
-bool operator==(const reverse_iterator<T>& rhs,
-                const reverse_iterator<T>& lhs) {
-  return rhs.base() == lhs.base();
+typename reverse_iterator<T>::difference_type operator-(
+    const reverse_iterator<T>& lhs, const reverse_iterator<T>& rhs) {
+  return rhs.base() - lhs.base();
 }
 
-// これがないとconstと比較できないかも。確認！
-// template <class T, class U>
-// bool operator==(const reverse_iterator<T>& rhs,
-//                 const reverse_iterator<U>& lhs) {
-//   return rhs.base() == lhs.base();
-// }
-
-template <class T>
-bool operator!=(const reverse_iterator<T>& rhs,
-                const reverse_iterator<T>& lhs) {
-  return !(rhs == lhs);
+template <class T, class U>
+bool operator==(const reverse_iterator<T>& lhs,
+                const reverse_iterator<U>& rhs) {
+  return lhs.base() == rhs.base();
 }
 
-template <class T>
-bool operator<(const reverse_iterator<T>& rhs, const reverse_iterator<T>& lhs) {
-  return rhs.base() < lhs.base();
+template <class T, class U>
+bool operator!=(const reverse_iterator<T>& lhs,
+                const reverse_iterator<U>& rhs) {
+  return !(lhs == rhs);
 }
 
-template <class T>
-bool operator>(const reverse_iterator<T>& rhs, const reverse_iterator<T>& lhs) {
-  return lhs < rhs;
+template <class T, class U>
+bool operator<(const reverse_iterator<T>& lhs, const reverse_iterator<U>& rhs) {
+  return lhs.base() > rhs.base();
 }
 
-template <class T>
-bool operator>=(const reverse_iterator<T>& rhs,
-                const reverse_iterator<T>& lhs) {
-  return !(rhs < lhs);
+template <class T, class U>
+bool operator>(const reverse_iterator<T>& lhs, const reverse_iterator<U>& rhs) {
+  return rhs < lhs;
 }
 
-template <class T>
-bool operator<=(const reverse_iterator<T>& rhs,
-                const reverse_iterator<T>& lhs) {
+template <class T, class U>
+bool operator>=(const reverse_iterator<T>& lhs,
+                const reverse_iterator<U>& rhs) {
   return !(lhs < rhs);
+}
+
+template <class T, class U>
+bool operator<=(const reverse_iterator<T>& lhs,
+                const reverse_iterator<U>& rhs) {
+  return !(rhs < lhs);
 }
 
 }  // namespace ft

@@ -75,34 +75,40 @@ vector_iterator<T> operator+(typename vector_iterator<T>::difference_type n,
   return x;
 }
 
-template <class T, class U>
-bool operator==(const vector_iterator<T>& rhs, const vector_iterator<U>& lhs) {
-  return rhs.base() == lhs.base();
+template <class _Iter1, class _Iter2>
+typename vector_iterator<_Iter1>::difference_type operator-(
+    const vector_iterator<_Iter1>& lhs, const vector_iterator<_Iter2>& rhs) {
+  return lhs.base() - rhs.base();
 }
 
 template <class T, class U>
-bool operator!=(const vector_iterator<T>& rhs, const vector_iterator<U>& lhs) {
-  return !(rhs == lhs);
+bool operator==(const vector_iterator<T>& lhs, const vector_iterator<U>& rhs) {
+  return lhs.base() == rhs.base();
 }
 
 template <class T, class U>
-bool operator<(const vector_iterator<T>& rhs, const vector_iterator<U>& lhs) {
-  return rhs.base() < lhs.base();
+bool operator!=(const vector_iterator<T>& lhs, const vector_iterator<U>& rhs) {
+  return !(lhs == rhs);
 }
 
 template <class T, class U>
-bool operator>(const vector_iterator<T>& rhs, const vector_iterator<U>& lhs) {
-  return lhs < rhs;
+bool operator<(const vector_iterator<T>& lhs, const vector_iterator<U>& rhs) {
+  return lhs.base() < rhs.base();
 }
 
 template <class T, class U>
-bool operator>=(const vector_iterator<T>& rhs, const vector_iterator<U>& lhs) {
-  return !(rhs < lhs);
+bool operator>(const vector_iterator<T>& lhs, const vector_iterator<U>& rhs) {
+  return rhs < lhs;
 }
 
 template <class T, class U>
-bool operator<=(const vector_iterator<T>& rhs, const vector_iterator<U>& lhs) {
+bool operator>=(const vector_iterator<T>& lhs, const vector_iterator<U>& rhs) {
   return !(lhs < rhs);
+}
+
+template <class T, class U>
+bool operator<=(const vector_iterator<T>& lhs, const vector_iterator<U>& rhs) {
+  return !(rhs < lhs);
 }
 
 // hituyou?
