@@ -38,7 +38,7 @@ TEST(VectorTest, BeginAndEnd) {
   EXPECT_EQ(it, f.end());
 }
 
-TEST(VectorTest, IteratorConstructor) {
+TEST(VectorTest, Iterator) {
   ft::vector<int> f(10);
   for (size_t i = 0; i < 10; i++) {
     f[i] = i;
@@ -73,4 +73,8 @@ TEST(VectorTest, IteratorConstructor) {
   EXPECT_EQ(true, (it < cit));
   EXPECT_EQ(false, (it > it2));
   EXPECT_EQ(false, (it > cit));
+  cit += 9;
+  it2 += 9;
+  EXPECT_EQ(true, (it2 == f.end()));
+  EXPECT_EQ(true, (cit == f.end()));
 }
