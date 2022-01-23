@@ -37,3 +37,40 @@ TEST(VectorTest, BeginAndEnd) {
   }
   EXPECT_EQ(it, f.end());
 }
+
+TEST(VectorTest, IteratorConstructor) {
+  ft::vector<int> f(10);
+  for (size_t i = 0; i < 10; i++) {
+    f[i] = i;
+  }
+  ft::vector<int>::iterator       it = f.begin();
+  ft::vector<int>::iterator       it2(it);
+  ft::vector<int>::const_iterator cit = f.begin();
+  EXPECT_EQ(true, (it == it2));
+  EXPECT_EQ(true, (it == cit));
+  EXPECT_EQ(true, (cit == it));
+  EXPECT_EQ(false, (it != it2));
+  EXPECT_EQ(false, (it != cit));
+  EXPECT_EQ(true, (it <= it2));
+  EXPECT_EQ(true, (it <= cit));
+  EXPECT_EQ(true, (it >= it2));
+  EXPECT_EQ(true, (it >= cit));
+  EXPECT_EQ(false, (it < it2));
+  EXPECT_EQ(false, (it < cit));
+  EXPECT_EQ(false, (it > it2));
+  EXPECT_EQ(false, (it > cit));
+  cit++;
+  it2++;
+  EXPECT_EQ(false, (it == it2));
+  EXPECT_EQ(false, (it == cit));
+  EXPECT_EQ(true, (it != it2));
+  EXPECT_EQ(true, (it != cit));
+  EXPECT_EQ(true, (it <= it2));
+  EXPECT_EQ(true, (it <= cit));
+  EXPECT_EQ(false, (it >= it2));
+  EXPECT_EQ(false, (it >= cit));
+  EXPECT_EQ(true, (it < it2));
+  EXPECT_EQ(true, (it < cit));
+  EXPECT_EQ(false, (it > it2));
+  EXPECT_EQ(false, (it > cit));
+}

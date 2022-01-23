@@ -14,18 +14,18 @@ namespace ft {
 template <class T, class Alloc = std::allocator<T> >
 struct vector {
 public:
-  typedef T                                     value_type;
-  typedef Alloc                                 allocator_type;
-  typedef typename Alloc::reference             reference;
-  typedef typename Alloc::const_reference       const_reference;
-  typedef typename Alloc::size_type             size_type;
-  typedef typename Alloc::difference_type       difference_type;
-  typedef typename Alloc::pointer               pointer;
-  typedef typename Alloc::const_pointer         const_pointer;
-  typedef _vector_iterator<T>                   iterator;
-  typedef _vector_iterator<T const>             const_iterator;
-  typedef std::reverse_iterator<iterator>       reverse_iterator;
-  typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+  typedef T                                    value_type;
+  typedef Alloc                                allocator_type;
+  typedef typename Alloc::reference            reference;
+  typedef typename Alloc::const_reference      const_reference;
+  typedef typename Alloc::size_type            size_type;
+  typedef typename Alloc::difference_type      difference_type;
+  typedef typename Alloc::pointer              pointer;
+  typedef typename Alloc::const_pointer        const_pointer;
+  typedef vector_iterator<T>                   iterator;
+  typedef vector_iterator<T const>             const_iterator;
+  typedef ft::reverse_iterator<iterator>       reverse_iterator;
+  typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 private:
   pointer        _begin;
@@ -69,10 +69,10 @@ public:
   const value_type* data() const { return _begin; };
 
   // == iterator ==
-  iterator          begin() { return _vector_iterator<T>(_begin); };
-  const_iterator    begin() const { return _vector_iterator<T const>(_begin); };
-  iterator          end() { return _vector_iterator<T>(_end); };
-  const_iterator    end() const { return _vector_iterator<T const>(_end); };
+  iterator          begin() { return vector_iterator<T>(_begin); };
+  const_iterator    begin() const { return vector_iterator<T const>(_begin); };
+  iterator          end() { return vector_iterator<T>(_end); };
+  const_iterator    end() const { return vector_iterator<T const>(_end); };
   reverse_iterator  rbegin() { return ft::reverse_iterator<iterator>(end()); };
   const_reverse_iterator rbegin() const {
     return ft::reverse_iterator<iterator>(end());

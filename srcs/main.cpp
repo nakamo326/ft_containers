@@ -42,5 +42,13 @@ int main() {
   std::cout << *(--endit) << std::endl;
   beginit = 50 + v.begin();
   std::cout << *beginit << std::endl;
+
+  {
+    std::vector<int>           s(10);
+    std::vector<int>::iterator it1 = s.begin();
+    std::vector<int>::iterator it2(it1);
+    std::cout << std::boolalpha << (it1 == it2) << std::endl;
+  }
+
   return 0;
 }
