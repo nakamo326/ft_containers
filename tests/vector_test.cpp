@@ -84,6 +84,7 @@ TEST(VectorTest, Iterator) {
   it2 += 9;
   EXPECT_EQ(true, (it2 == f.end()));
   EXPECT_EQ(true, (cit == f.end()));
+  EXPECT_EQ((s.end() - s.begin()), (f.end() - f.begin()));
 }
 
 TEST(VectorTest, ReverseIterator) {
@@ -132,4 +133,5 @@ TEST(VectorTest, ReverseIterator) {
   it2 += 9;
   EXPECT_EQ(true, (it2 == f.rend()));
   EXPECT_EQ(true, (cit == f.rend()));
+  EXPECT_EQ((s.rend() - s.rbegin()), (f.rend() - f.rbegin()));
 }
