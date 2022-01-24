@@ -75,11 +75,11 @@ public:
   const_iterator    end() const { return vector_iterator<T const>(_end); };
   reverse_iterator  rbegin() { return ft::reverse_iterator<iterator>(end()); };
   const_reverse_iterator rbegin() const {
-    return ft::reverse_iterator<iterator>(end());
+    return ft::const_reverse_iterator<iterator>(end());
   };
   reverse_iterator rend() { return ft::reverse_iterator<iterator>(begin()); };
   const_reverse_iterator rend() const {
-    return ft::reverse_iterator<iterator>(begin());
+    return ft::const_reverse_iterator<iterator>(begin());
   };
 
   // == capacity ==
