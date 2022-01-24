@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 #include "reverse_iterator.hpp"
+#include "type_trait.hpp"
 #include "vector_iterator.hpp"
 
 namespace ft {
