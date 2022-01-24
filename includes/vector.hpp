@@ -35,9 +35,9 @@ private:
 
 public:
   // == constructor ==
-  vector() : _alloc(Alloc()), _begin(NULL), _end(NULL), _cap(NULL) {}
+  vector() : _begin(NULL), _end(NULL), _cap(NULL), _alloc(Alloc()) {}
   explicit vector(const Alloc& alloc)
-      : _alloc(alloc), _begin(NULL), _end(NULL), _cap(NULL) {}
+      : _begin(NULL), _end(NULL), _cap(NULL), _alloc(alloc) {}
   vector(size_type n, const T& value = T(), const Alloc& alloc = Alloc());
   // template <class InputIt>
   // vector(InputIt first, InputIt last, const Alloc& alloc = Alloc());
@@ -75,11 +75,11 @@ public:
   const_iterator    end() const { return vector_iterator<T const>(_end); };
   reverse_iterator  rbegin() { return ft::reverse_iterator<iterator>(end()); };
   const_reverse_iterator rbegin() const {
-    return ft::const_reverse_iterator<iterator>(end());
+    return ft::reverse_iterator<const_iterator>(end());
   };
   reverse_iterator rend() { return ft::reverse_iterator<iterator>(begin()); };
   const_reverse_iterator rend() const {
-    return ft::const_reverse_iterator<iterator>(begin());
+    return ft::reverse_iterator<const_iterator>(begin());
   };
 
   // == capacity ==
@@ -90,7 +90,7 @@ public:
     return std::min<size_type>(_alloc.max_size(),
                                std::numeric_limits<difference_type>::max());
   };
-  // void      reserve(size_type new_cap);
+  void reserve(size_type new_cap);
 
   // == modifiers ==
   void clear() { _end = _begin; };
@@ -103,7 +103,7 @@ public:
   // iterator          erase(iterator pos);
   // iterator          erase(iterator first, iterator last);
 
-  // void              push_back(const T& value);
+  void push_back(const T& value);
   // void              pop_back();
   // void              resize(size_type count, T value = T());
   // void              swap(vector& other);
@@ -147,6 +147,14 @@ vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
   }
 }
 
+// template <class T, class Alloc>
+// template <class InputIt>
+// vector<T, Alloc>::vector(InputIt first, InputIt last, const Alloc& alloc) {
+//   for (; first != last; ++first) {
+//     push_back(*first);
+//   }
+// }
+
 // == destructor ==
 template <class T, class Alloc>
 vector<T, Alloc>::~vector() {
@@ -171,20 +179,34 @@ typename vector<T, Alloc>::const_reference vector<T, Alloc>::at(
 }
 
 // == capacity ==
-// template <class T, class Alloc>
-// void vector<T, Alloc>::reserve(size_type new_cap) {
-//   if (new_cap > capacity()) {
-//     if (new_cap > max_size())
-//       throw std::range_error();
-//     pointer new_data = _alloc.allocate(new_cap);
-//     // try catch
-//     std::uninitialized_copy(begin(), end(), new_data);
-//     _alloc.deallocate(_begin, size());
-//     _begin = new_data;
-//   }
-// }
+template <class T, class Alloc>
+void vector<T, Alloc>::reserve(size_type new_cap) {
+  if (new_cap > capacity()) {
+    if (new_cap > max_size()) {
+      throw std::length_error("vector::reserve");
+    }
+    pointer new_data = _alloc.allocate(new_cap);
+    std::uninitialized_copy(begin(), end(), new_data);
+    typename vector<T, Alloc>::size_type sz = size();
+    _alloc.deallocate(_begin, sz);
+    _begin = new_data;
+    _end   = _begin + sz;
+    _cap   = _begin + new_cap;
+  }
+}
 
 // == modifiers ==
+template <class T, class Alloc>
+void vector<T, Alloc>::push_back(const T& value) {
+  if (_end != _cap) {
+    this->_alloc.construct(_end, value);
+    ++_end;
+  } else {
+    reserve(size() * 2);
+    this->_alloc.construct(_end, value);
+    ++_end;
+  }
+}
 
 }  // namespace ft
 

@@ -135,3 +135,15 @@ TEST(VectorTest, ReverseIterator) {
   EXPECT_EQ(true, (cit == f.rend()));
   EXPECT_EQ((s.rend() - s.rbegin()), (f.rend() - f.rbegin()));
 }
+
+TEST(VectorTest, Pushback) {
+  std::vector<int> s(10);
+  ft::vector<int>  f(10);
+  for (size_t i = 0; i < 100000; i++) {
+    s.push_back(i);
+    f.push_back(i);
+    EXPECT_EQ(s[i], f[i]);
+    EXPECT_EQ(s.size(), f.size());
+    EXPECT_EQ(s.capacity(), f.capacity());
+  }
+}
