@@ -59,7 +59,10 @@ fclean: clean
 re: fclean
 	$(MAKE) all
 
-.PHONY: all clean fclean re debug test cmp
+run: all
+	./$(NAME)
+
+.PHONY: all clean fclean re debug test cmp run
 
 # ==== Color define ==== #
 YLW := \033[33m
@@ -77,5 +80,6 @@ else
 	procs := $$(expr $$(system_profiler SPHardwareDataType | grep Total | sed 's/[^0-9]//g') + 1)
 endif
 
+.PHONY: proc
 proc:
 	@echo -e "please do $(CYN)export MAKEFLAGS=-j$(procs)$(NC)"

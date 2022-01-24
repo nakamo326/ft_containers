@@ -39,9 +39,9 @@ public:
   explicit vector(const Alloc& alloc)
       : _begin(NULL), _end(NULL), _cap(NULL), _alloc(alloc) {}
   vector(size_type n, const T& value = T(), const Alloc& alloc = Alloc());
-  // template <class InputIt>
-  // vector(InputIt first, InputIt last, const Alloc& alloc = Alloc());
-  // vector(const vector& other);
+  template <class InputIt>
+  vector(InputIt first, InputIt last, const Alloc& alloc = Alloc());
+  vector(const vector& other);
 
   // == destructor ==
   ~vector();
@@ -147,13 +147,25 @@ vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
   }
 }
 
-// template <class T, class Alloc>
-// template <class InputIt>
-// vector<T, Alloc>::vector(InputIt first, InputIt last, const Alloc& alloc) {
-//   for (; first != last; ++first) {
-//     push_back(*first);
-//   }
-// }
+template <class T, class Alloc>
+template <class InputIt>
+vector<T, Alloc>::vector(InputIt first, InputIt last, const Alloc& alloc)
+    : _alloc(alloc) {
+  _end = _begin = _alloc.allocate(last - first);
+  for (; first != last; ++first) {
+    *_end = *first;
+    ++_end;
+  }
+  _cap = _end;
+}
+
+template <class T, class Alloc>
+vector<T, Alloc>::vector(const vector& other) {
+  _begin = _alloc.allocate(other.capacity());
+  std::uninitialized_copy(other.begin(), other.end(), _begin);
+  _end = other._end;
+  _cap = other._cap;
+}
 
 // == destructor ==
 template <class T, class Alloc>
