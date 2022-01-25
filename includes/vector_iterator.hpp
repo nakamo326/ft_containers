@@ -75,9 +75,9 @@ vector_iterator<T> operator+(typename vector_iterator<T>::difference_type n,
   return x;
 }
 
-template <class _Iter1, class _Iter2>
-typename vector_iterator<_Iter1>::difference_type operator-(
-    const vector_iterator<_Iter1>& lhs, const vector_iterator<_Iter2>& rhs) {
+template <class T, class U>
+typename vector_iterator<T>::difference_type operator-(
+    const vector_iterator<T>& lhs, const vector_iterator<U>& rhs) {
   return lhs.base() - rhs.base();
 }
 
