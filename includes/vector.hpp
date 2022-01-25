@@ -6,7 +6,7 @@
 #include <stdexcept>
 
 #include "reverse_iterator.hpp"
-#include "type_trait.hpp"
+#include "type_traits.hpp"
 #include "vector_iterator.hpp"
 
 namespace ft {
@@ -29,19 +29,21 @@ public:
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 private:
-  pointer        _begin;
-  pointer        _end;
-  pointer        _cap;
-  allocator_type _alloc;
+  pointer        begin_;
+  pointer        end_;
+  pointer        cap_;
+  allocator_type alloc_;
 
 public:
   // == constructor ==
-  vector() : _begin(NULL), _end(NULL), _cap(NULL), _alloc(Alloc()) {}
+  vector() : begin_(NULL), end_(NULL), cap_(NULL), alloc_(Alloc()) {}
   explicit vector(const Alloc& alloc)
-      : _begin(NULL), _end(NULL), _cap(NULL), _alloc(alloc) {}
+      : begin_(NULL), end_(NULL), cap_(NULL), alloc_(alloc) {}
   vector(size_type n, const T& value = T(), const Alloc& alloc = Alloc());
   template <class InputIt>
-  vector(InputIt first, InputIt last, const Alloc& alloc = Alloc());
+  vector(InputIt                                                         first,
+         typename enable_if<!is_integral<InputIt>::value, InputIt>::type last,
+         const Alloc& alloc = Alloc());
   vector(const vector& other);
 
   // == destructor ==
@@ -55,25 +57,25 @@ public:
   // template <class InputIterator>
   // void              assign(InputIterator first, InputIterator last);
 
-  allocator_type    get_allocator() const { return _alloc; }
+  allocator_type    get_allocator() const { return alloc_; }
 
   // == element access ==
-  reference         operator[](size_type pos) { return _begin[pos]; };
-  const_reference   operator[](size_type pos) const { return _begin[pos]; };
+  reference         operator[](size_type pos) { return begin_[pos]; };
+  const_reference   operator[](size_type pos) const { return begin_[pos]; };
   reference         at(size_type pos);
   const_reference   at(size_type pos) const;
-  reference         front() { return *_begin; };
-  const_reference   front() const { return *_begin; };
-  reference         back() { return *(_end - 1); };
-  const_reference   back() const { return *(_end - 1); };
-  value_type*       data() { return _begin; };
-  const value_type* data() const { return _begin; };
+  reference         front() { return *begin_; };
+  const_reference   front() const { return *begin_; };
+  reference         back() { return *(end_ - 1); };
+  const_reference   back() const { return *(end_ - 1); };
+  value_type*       data() { return begin_; };
+  const value_type* data() const { return begin_; };
 
   // == iterator ==
-  iterator          begin() { return vector_iterator<T>(_begin); };
-  const_iterator    begin() const { return vector_iterator<T const>(_begin); };
-  iterator          end() { return vector_iterator<T>(_end); };
-  const_iterator    end() const { return vector_iterator<T const>(_end); };
+  iterator          begin() { return vector_iterator<T>(begin_); };
+  const_iterator    begin() const { return vector_iterator<T const>(begin_); };
+  iterator          end() { return vector_iterator<T>(end_); };
+  const_iterator    end() const { return vector_iterator<T const>(end_); };
   reverse_iterator  rbegin() { return ft::reverse_iterator<iterator>(end()); };
   const_reverse_iterator rbegin() const {
     return ft::reverse_iterator<const_iterator>(end());
@@ -84,17 +86,17 @@ public:
   };
 
   // == capacity ==
-  bool      empty() const { return _begin == _end; };
-  size_type size() const { return static_cast<size_type>(_end - _begin); };
-  size_type capacity() const { return static_cast<size_type>(_cap - _begin); };
+  bool      empty() const { return begin_ == end_; };
+  size_type size() const { return static_cast<size_type>(end_ - begin_); };
+  size_type capacity() const { return static_cast<size_type>(cap_ - begin_); };
   size_type max_size() const {
-    return std::min<size_type>(_alloc.max_size(),
+    return std::min<size_type>(alloc_.max_size(),
                                std::numeric_limits<difference_type>::max());
   };
   void reserve(size_type new_cap);
 
   // == modifiers ==
-  void clear() { _end = _begin; };
+  void clear() { end_ = begin_; };
 
   // iterator          insert(iterator pos, const T& value);
   // void              insert(iterator pos, size_type count, const T& value);
@@ -136,43 +138,45 @@ public:
 // == constructor ==
 template <class T, class Alloc>
 vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
-    : _alloc(alloc) {
-  _begin = _end = _cap = _alloc.allocate(n);
+    : alloc_(alloc) {
+  begin_ = alloc_.allocate(n);
   try {
-    std::uninitialized_fill_n(_begin, n, value);
-    _end = _begin + n;
-    _cap = _end;
+    std::uninitialized_fill_n(begin_, n, value);
+    cap_ = end_ = begin_ + n;
   } catch (...) {
-    _alloc.deallocate(_begin, n);
+    alloc_.deallocate(begin_, n);
     throw;
   }
 }
 
 template <class T, class Alloc>
 template <class InputIt>
-vector<T, Alloc>::vector(InputIt first, InputIt last, const Alloc& alloc)
-    : _alloc(alloc) {
-  _end = _begin = _alloc.allocate(last - first);
+vector<T, Alloc>::vector(
+    InputIt                                                         first,
+    typename enable_if<!is_integral<InputIt>::value, InputIt>::type last,
+    const Alloc&                                                    alloc)
+    : alloc_(alloc) {
+  end_ = begin_ = alloc_.allocate(last - first);
   for (; first != last; ++first) {
-    *_end = *first;
-    ++_end;
+    *end_ = *first;
+    ++end_;
   }
-  _cap = _end;
+  cap_ = end_;
 }
 
 template <class T, class Alloc>
 vector<T, Alloc>::vector(const vector& other) {
-  _begin = _alloc.allocate(other.capacity());
-  std::uninitialized_copy(other.begin(), other.end(), _begin);
-  _end = other._end;
-  _cap = other._cap;
+  begin_ = alloc_.allocate(other.capacity());
+  std::uninitialized_copy(other.begin(), other.end(), begin_);
+  end_ = other.end_;
+  cap_ = other.cap_;
 }
 
 // == destructor ==
 template <class T, class Alloc>
 vector<T, Alloc>::~vector() {
-  if (_begin != NULL)
-    _alloc.deallocate(_begin, capacity());
+  if (begin_ != NULL)
+    alloc_.deallocate(begin_, capacity());
 }
 
 // == element access ==
@@ -180,7 +184,7 @@ template <class T, class Alloc>
 typename vector<T, Alloc>::reference vector<T, Alloc>::at(size_type pos) {
   if (pos >= size())
     throw std::out_of_range("input index is out of range.");
-  return _begin[pos];
+  return begin_[pos];
 }
 
 template <class T, class Alloc>
@@ -188,7 +192,7 @@ typename vector<T, Alloc>::const_reference vector<T, Alloc>::at(
     size_type pos) const {
   if (pos >= size())
     throw std::out_of_range("input index is out of range.");
-  return _begin[pos];
+  return begin_[pos];
 }
 
 // == capacity ==
@@ -198,26 +202,26 @@ void vector<T, Alloc>::reserve(size_type new_cap) {
     if (new_cap > max_size()) {
       throw std::length_error("vector::reserve");
     }
-    pointer new_data = _alloc.allocate(new_cap);
+    pointer new_data = alloc_.allocate(new_cap);
     std::uninitialized_copy(begin(), end(), new_data);
     typename vector<T, Alloc>::size_type sz = size();
-    _alloc.deallocate(_begin, sz);
-    _begin = new_data;
-    _end   = _begin + sz;
-    _cap   = _begin + new_cap;
+    alloc_.deallocate(begin_, sz);
+    begin_ = new_data;
+    end_   = begin_ + sz;
+    cap_   = begin_ + new_cap;
   }
 }
 
 // == modifiers ==
 template <class T, class Alloc>
 void vector<T, Alloc>::push_back(const T& value) {
-  if (_end != _cap) {
-    this->_alloc.construct(_end, value);
-    ++_end;
+  if (end_ != cap_) {
+    this->alloc_.construct(end_, value);
+    ++end_;
   } else {
     reserve(size() * 2);
-    this->_alloc.construct(_end, value);
-    ++_end;
+    this->alloc_.construct(end_, value);
+    ++end_;
   }
 }
 

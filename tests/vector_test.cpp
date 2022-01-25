@@ -32,18 +32,17 @@ TEST(VectorTest, ConstructorWithSize) {
   EXPECT_EQ(s.get_allocator(), f.get_allocator());
 }
 
-// iteratorのコンストラクタを呼んじゃう。要修正、enable_if？
-// TEST(VectorTest, ConstructorWithValue) {
-//   std::vector<int>    s(100, 55);
-//   ft::vector<int>     f(100, 55);
-//   EXPECT_EQ(s.size(), f.size());
-//   EXPECT_EQ(s.max_size(), f.max_size());
-//   EXPECT_EQ(s.capacity(), f.capacity());
-//   EXPECT_EQ(s.get_allocator(), f.get_allocator());
-//   for (size_t i = 0; i < 100; i++) {
-//     EXPECT_EQ(s[i], f[i]);
-//   }
-// }
+TEST(VectorTest, ConstructorWithValue) {
+  std::vector<int> s(100, 55);
+  ft::vector<int>  f(100, 55);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.max_size(), f.max_size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  EXPECT_EQ(s.get_allocator(), f.get_allocator());
+  for (size_t i = 0; i < 100; i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
+}
 
 TEST(VectorTest, At) {
   std::vector<int> s(10);
