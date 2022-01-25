@@ -198,6 +198,8 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(const vector& x) {
   if (x.capacity() > capacity()) {
     pointer new_data = alloc_.allocate(x.capacity());
     std::uninitialized_copy(x.begin(), x.end(), new_data);
+    // deallocate()の前にclear?
+    // destroy呼ばないとheapが確保されていた時リークしそう
     deallocate();
     begin_ = new_data;
     cap_   = begin_ + x.capacity();
@@ -229,15 +231,14 @@ void vector<T, Alloc>::assign(size_type n, const value_type& u) {
   }
 }
 
-template <class T, class Alloc>
-template <class InputIt>
-void vector<T, Alloc>::assign(
-    InputIt                                                         first,
-    typename enable_if<!is_integral<InputIt>::value, InputIt>::type last) {
-  // tmp
-  (void)first;
-  (void)last;
-}
+// template <class T, class Alloc>
+// template <class InputIt>
+// void vector<T, Alloc>::assign(
+//     InputIt                                                         first,
+//     typename enable_if<!is_integral<InputIt>::value, InputIt>::type last) {
+//   (void)first;
+//   (void)last;
+// }
 
 // == element access ==
 template <class T, class Alloc>
