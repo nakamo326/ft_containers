@@ -56,7 +56,7 @@ public:
   vector&           operator=(const vector& x);
 
   // == assign ==
-  // void    assign(size_type n, const value_type& u);
+  void              assign(size_type n, const value_type& u);
   // template <class InputIterator>
   // void              assign(InputIterator first, InputIterator last);
 
@@ -204,6 +204,25 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(const vector& x) {
   }
   end_ = begin_ + x.size();
   return *this;
+}
+
+// == assign ==
+template <class T, class Alloc>
+void vector<T, Alloc>::assign(size_type n, const value_type& u) {
+  if (n > capacity()) {
+    if (n > max_size()) {
+      throw std::length_error(
+          "cannot create ft::vector larger than max_size()");
+    }
+    pointer new_data = alloc_.allocate(n);
+    std::uninitialized_fill_n(new_data, n, u);
+    deallocate();
+    begin_ = new_data;
+    cap_ = end_ = new_data + n;
+  } else {
+    std::uninitialized_fill_n(begin_, n, u);
+    end_ = begin_ + n;
+  }
 }
 
 // == element access ==
