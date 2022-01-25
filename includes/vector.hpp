@@ -142,6 +142,8 @@ public:
 
 // == helper private func ==
 
+// くだらないコメント
+
 // FIXME: use clear
 template <class T, class Alloc>
 void vector<T, Alloc>::deallocate() {
