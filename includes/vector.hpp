@@ -193,12 +193,16 @@ vector<T, Alloc>::~vector() {
 // == assignation overload ==
 template <class T, class Alloc>
 vector<T, Alloc>& vector<T, Alloc>::operator=(const vector& x) {
-  pointer new_data = alloc_.allocate(x.capacity());
-  std::uninitialized_copy(x.begin(), x.end(), new_data);
-  deallocate();
-  begin_ = new_data;
-  end_   = begin_ + x.size();
-  cap_   = begin_ + x.capacity();
+  if (x.capacity() > capacity()) {
+    pointer new_data = alloc_.allocate(x.capacity());
+    std::uninitialized_copy(x.begin(), x.end(), new_data);
+    deallocate();
+    begin_ = new_data;
+    cap_   = begin_ + x.capacity();
+  } else {
+    std::uninitialized_copy(x.begin(), x.end(), begin_);
+  }
+  end_ = begin_ + x.size();
   return *this;
 }
 

@@ -44,8 +44,23 @@ TEST(VectorTest, ConstructorWithValue) {
   }
 }
 
+TEST(VectorTest, RangeConstructor) {
+  std::vector<int> s(1000);
+  for (size_t i = 0; i < 1000; i++) {
+    s[i] = i;
+  }
+  ft::vector<int> f(s.begin(), s.end());
+  EXPECT_EQ(f.size(), s.size());
+  EXPECT_EQ(f.max_size(), s.max_size());
+  EXPECT_EQ(f.capacity(), s.capacity());
+  EXPECT_EQ(f.get_allocator(), s.get_allocator());
+  for (size_t i = 0; i < 1000; i++) {
+    EXPECT_EQ(f[i], s[i]);
+  }
+}
+
 TEST(VectorTest, CopyConstructor) {
-  ft::vector<int> f(1000, 55);
+  ft::vector<int> f(1000);
   for (size_t i = 0; i < 1000; i++) {
     f[i] = i;
   }
@@ -60,19 +75,53 @@ TEST(VectorTest, CopyConstructor) {
 }
 
 TEST(VectorTest, AssignationOverload) {
-  ft::vector<int> f(1000, 55);
-  for (size_t i = 0; i < 1000; i++) {
-    f[i] = i;
+  // big to small
+  {
+    ft::vector<int>  f(1000);
+    std::vector<int> s(1000);
+    for (size_t i = 0; i < 1000; i++) {
+      f[i] = i;
+      s[i] = i;
+    }
+    ft::vector<int>  cf(100);
+    std::vector<int> cs(100);
+    cf = f;
+    cs = s;
+    EXPECT_EQ(cf.size(), cs.size());
+    EXPECT_EQ(cf.max_size(), cs.max_size());
+    EXPECT_EQ(cf.capacity(), cs.capacity());
+    EXPECT_EQ(cf.get_allocator(), cs.get_allocator());
+    for (size_t i = 0; i < 1000; i++) {
+      EXPECT_EQ(cf[i], cs[i]);
+    }
   }
-  ft::vector<int> c(100);
-  c = f;
-  EXPECT_EQ(f.size(), c.size());
-  EXPECT_EQ(f.max_size(), c.max_size());
-  EXPECT_EQ(f.capacity(), c.capacity());
-  EXPECT_EQ(f.get_allocator(), c.get_allocator());
-  for (size_t i = 0; i < 1000; i++) {
-    EXPECT_EQ(f[i], c[i]);
+
+  // small to big
+  {
+    ft::vector<int>  f(1000);
+    std::vector<int> s(1000);
+    for (size_t i = 0; i < 1000; i++) {
+      f[i] = i;
+      s[i] = i;
+    }
+    ft::vector<int>  cf(10000);
+    std::vector<int> cs(10000);
+    cf = f;
+    cs = s;
+    EXPECT_EQ(cf.size(), cs.size());
+    EXPECT_EQ(cf.capacity(), cs.capacity());
+    for (size_t i = 0; i < 1000; i++) {
+      EXPECT_EQ(cf[i], cs[i]);
+    }
   }
+}
+
+TEST(VectorTest, Destructor) {
+  ft::vector<int> *f = new ft::vector<int>(1000);
+  for (size_t i = 0; i < 1000; i++) {
+    (*f)[i] = i;
+  }
+  delete f;
 }
 
 TEST(VectorTest, At) {
