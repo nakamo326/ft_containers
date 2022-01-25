@@ -156,6 +156,48 @@ TEST(VectorTest, AssignFunc) {
   }
 }
 
+/*
+TEST(VectorTest, AssignFuncIter) {
+  // big to small
+  {
+    std::vector<int> s(1000);
+    ft::vector<int>  f(1000);
+    std::vector<int> src(10000);
+    for (size_t i = 0; i < 10000; i++) {
+      src[i] = i;
+    }
+    s.assign(src.begin(), src.end());
+    f.assign(src.begin(), src.end());
+    EXPECT_EQ(s.size(), f.size());
+    EXPECT_EQ(s.max_size(), f.max_size());
+    EXPECT_EQ(s.capacity(), f.capacity());
+    EXPECT_EQ(s.get_allocator(), f.get_allocator());
+    for (size_t i = 0; i < 10000; i++) {
+      EXPECT_EQ(s[i], f[i]);
+    }
+  }
+
+  // small to big
+  {
+    std::vector<int> s(1000);
+    ft::vector<int>  f(1000);
+    std::vector<int> src(100);
+    for (size_t i = 0; i < 100; i++) {
+      src[i] = i;
+    }
+    s.assign(src.begin(), src.end());
+    f.assign(src.begin(), src.end());
+    EXPECT_EQ(s.size(), f.size());
+    EXPECT_EQ(s.max_size(), f.max_size());
+    EXPECT_EQ(s.capacity(), f.capacity());
+    EXPECT_EQ(s.get_allocator(), f.get_allocator());
+    for (size_t i = 0; i < 1000; i++) {
+      EXPECT_EQ(s[i], f[i]);
+    }
+  }
+}
+*/
+
 TEST(VectorTest, Destructor) {
   ft::vector<int> *f = new ft::vector<int>(1000);
   for (size_t i = 0; i < 1000; i++) {

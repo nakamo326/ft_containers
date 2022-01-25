@@ -53,12 +53,14 @@ public:
   ~vector();
 
   // == assignation overload ==
-  vector&           operator=(const vector& x);
+  vector& operator=(const vector& x);
 
   // == assign ==
-  void              assign(size_type n, const value_type& u);
-  // template <class InputIterator>
-  // void              assign(InputIterator first, InputIterator last);
+  void    assign(size_type n, const value_type& u);
+  template <class InputIt>
+  void assign(
+      InputIt                                                         first,
+      typename enable_if<!is_integral<InputIt>::value, InputIt>::type last);
 
   allocator_type    get_allocator() const { return alloc_; }
 
@@ -200,6 +202,7 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(const vector& x) {
     begin_ = new_data;
     cap_   = begin_ + x.capacity();
   } else {
+    // 初期化済み領域へのcopyには適さないかも
     std::uninitialized_copy(x.begin(), x.end(), begin_);
   }
   end_ = begin_ + x.size();
@@ -220,9 +223,20 @@ void vector<T, Alloc>::assign(size_type n, const value_type& u) {
     begin_ = new_data;
     cap_ = end_ = new_data + n;
   } else {
+    // 初期化済み領域へのcopyには適さないかも
     std::uninitialized_fill_n(begin_, n, u);
     end_ = begin_ + n;
   }
+}
+
+template <class T, class Alloc>
+template <class InputIt>
+void vector<T, Alloc>::assign(
+    InputIt                                                         first,
+    typename enable_if<!is_integral<InputIt>::value, InputIt>::type last) {
+  // tmp
+  (void)first;
+  (void)last;
 }
 
 // == element access ==
