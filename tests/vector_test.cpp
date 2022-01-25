@@ -243,3 +243,5 @@ TEST(VectorTest, Pushback) {
     EXPECT_EQ(s.capacity(), f.capacity());
   }
 }
+
+TEST(VectorTest, Clear) {}
