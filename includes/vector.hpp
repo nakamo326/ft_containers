@@ -101,7 +101,7 @@ public:
   void reserve(size_type new_cap);
 
   // == modifiers ==
-  void clear() { end_ = begin_; };
+  void clear();
 
   // iterator          insert(iterator pos, const T& value);
   // void              insert(iterator pos, size_type count, const T& value);
@@ -141,6 +141,8 @@ public:
 // void swap(vector<T, Alloc>& lhs, vector<T, Alloc>& rhs);
 
 // == helper private func ==
+
+// FIXME: use clear
 template <class T, class Alloc>
 void vector<T, Alloc>::deallocate() {
   if (begin_ != NULL) {
@@ -186,6 +188,7 @@ vector<T, Alloc>::vector(const vector& other) {
 }
 
 // == destructor ==
+// FIXME: use destroy
 template <class T, class Alloc>
 vector<T, Alloc>::~vector() {
   // need to fix?
@@ -193,6 +196,8 @@ vector<T, Alloc>::~vector() {
 }
 
 // == assignation overload ==
+
+// FIXME: use construct?
 template <class T, class Alloc>
 vector<T, Alloc>& vector<T, Alloc>::operator=(const vector& x) {
   if (x.capacity() > capacity()) {
@@ -212,6 +217,8 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(const vector& x) {
 }
 
 // == assign ==
+
+// FIXME: use construct?
 template <class T, class Alloc>
 void vector<T, Alloc>::assign(size_type n, const value_type& u) {
   if (n > capacity()) {
@@ -257,6 +264,8 @@ typename vector<T, Alloc>::const_reference vector<T, Alloc>::at(
 }
 
 // == capacity ==
+
+// FIXME: use construct?
 template <class T, class Alloc>
 void vector<T, Alloc>::reserve(size_type new_cap) {
   if (new_cap > capacity()) {
@@ -274,6 +283,13 @@ void vector<T, Alloc>::reserve(size_type new_cap) {
 }
 
 // == modifiers ==
+
+// FIXME: use destroy
+template <class T, class Alloc>
+void vector<T, Alloc>::clear() {
+  end_ = begin_;
+};
+
 template <class T, class Alloc>
 void vector<T, Alloc>::push_back(const T& value) {
   if (end_ == cap_) {
