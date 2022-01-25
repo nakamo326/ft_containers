@@ -33,14 +33,45 @@ TEST(VectorTest, ConstructorWithSize) {
 }
 
 TEST(VectorTest, ConstructorWithValue) {
-  std::vector<int> s(100, 55);
-  ft::vector<int>  f(100, 55);
+  std::vector<int> s(1000, 55);
+  ft::vector<int>  f(1000, 55);
   EXPECT_EQ(s.size(), f.size());
   EXPECT_EQ(s.max_size(), f.max_size());
   EXPECT_EQ(s.capacity(), f.capacity());
   EXPECT_EQ(s.get_allocator(), f.get_allocator());
-  for (size_t i = 0; i < 100; i++) {
+  for (size_t i = 0; i < 1000; i++) {
     EXPECT_EQ(s[i], f[i]);
+  }
+}
+
+TEST(VectorTest, CopyConstructor) {
+  ft::vector<int> f(1000, 55);
+  for (size_t i = 0; i < 1000; i++) {
+    f[i] = i;
+  }
+  ft::vector<int> c(f);
+  EXPECT_EQ(f.size(), c.size());
+  EXPECT_EQ(f.max_size(), c.max_size());
+  EXPECT_EQ(f.capacity(), c.capacity());
+  EXPECT_EQ(f.get_allocator(), c.get_allocator());
+  for (size_t i = 0; i < 1000; i++) {
+    EXPECT_EQ(f[i], c[i]);
+  }
+}
+
+TEST(VectorTest, AssignationOverload) {
+  ft::vector<int> f(1000, 55);
+  for (size_t i = 0; i < 1000; i++) {
+    f[i] = i;
+  }
+  ft::vector<int> c(100);
+  c = f;
+  EXPECT_EQ(f.size(), c.size());
+  EXPECT_EQ(f.max_size(), c.max_size());
+  EXPECT_EQ(f.capacity(), c.capacity());
+  EXPECT_EQ(f.get_allocator(), c.get_allocator());
+  for (size_t i = 0; i < 1000; i++) {
+    EXPECT_EQ(f[i], c[i]);
   }
 }
 

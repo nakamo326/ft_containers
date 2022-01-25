@@ -34,12 +34,15 @@ private:
   pointer        cap_;
   allocator_type alloc_;
 
+  void           deallocate();
+
 public:
   // == constructor ==
   vector() : begin_(NULL), end_(NULL), cap_(NULL), alloc_(Alloc()) {}
   explicit vector(const Alloc& alloc)
       : begin_(NULL), end_(NULL), cap_(NULL), alloc_(alloc) {}
-  vector(size_type n, const T& value = T(), const Alloc& alloc = Alloc());
+  explicit vector(size_type n, const T& value = T(),
+                  const Alloc& alloc = Alloc());
   template <class InputIt>
   vector(InputIt                                                         first,
          typename enable_if<!is_integral<InputIt>::value, InputIt>::type last,
@@ -50,7 +53,7 @@ public:
   ~vector();
 
   // == assignation overload ==
-  // vector&           operator=(const vector& x);
+  vector&           operator=(const vector& x);
 
   // == assign ==
   // void    assign(size_type n, const value_type& u);
@@ -135,6 +138,14 @@ public:
 // template <class T, class Alloc>
 // void swap(vector<T, Alloc>& lhs, vector<T, Alloc>& rhs);
 
+// == helper private func ==
+template <class T, class Alloc>
+void vector<T, Alloc>::deallocate() {
+  if (begin_ != NULL) {
+    alloc_.deallocate(begin_, capacity());
+  }
+}
+
 // == constructor ==
 template <class T, class Alloc>
 vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
@@ -168,15 +179,27 @@ template <class T, class Alloc>
 vector<T, Alloc>::vector(const vector& other) {
   begin_ = alloc_.allocate(other.capacity());
   std::uninitialized_copy(other.begin(), other.end(), begin_);
-  end_ = other.end_;
-  cap_ = other.cap_;
+  end_ = begin_ + other.size();
+  cap_ = begin_ + other.capacity();
 }
 
 // == destructor ==
 template <class T, class Alloc>
 vector<T, Alloc>::~vector() {
-  if (begin_ != NULL)
-    alloc_.deallocate(begin_, capacity());
+  // need to fix?
+  deallocate();
+}
+
+// == assignation overload ==
+template <class T, class Alloc>
+vector<T, Alloc>& vector<T, Alloc>::operator=(const vector& x) {
+  pointer new_data = alloc_.allocate(x.capacity());
+  std::uninitialized_copy(x.begin(), x.end(), new_data);
+  deallocate();
+  begin_ = new_data;
+  end_   = begin_ + x.size();
+  cap_   = begin_ + x.capacity();
+  return *this;
 }
 
 // == element access ==
@@ -205,7 +228,7 @@ void vector<T, Alloc>::reserve(size_type new_cap) {
     pointer new_data = alloc_.allocate(new_cap);
     std::uninitialized_copy(begin(), end(), new_data);
     typename vector<T, Alloc>::size_type sz = size();
-    alloc_.deallocate(begin_, sz);
+    deallocate();
     begin_ = new_data;
     end_   = begin_ + sz;
     cap_   = begin_ + new_cap;
@@ -215,14 +238,11 @@ void vector<T, Alloc>::reserve(size_type new_cap) {
 // == modifiers ==
 template <class T, class Alloc>
 void vector<T, Alloc>::push_back(const T& value) {
-  if (end_ != cap_) {
-    this->alloc_.construct(end_, value);
-    ++end_;
-  } else {
+  if (end_ == cap_) {
     reserve(size() * 2);
-    this->alloc_.construct(end_, value);
-    ++end_;
   }
+  this->alloc_.construct(end_, value);
+  ++end_;
 }
 
 }  // namespace ft
