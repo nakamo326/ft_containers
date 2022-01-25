@@ -283,12 +283,14 @@ void vector<T, Alloc>::reserve(size_type new_cap) {
 }
 
 // == modifiers ==
-
-// FIXME: use destroy
 template <class T, class Alloc>
 void vector<T, Alloc>::clear() {
+  pointer ptr = end_;
+  while (begin_ != ptr) {
+    alloc_.destroy(--ptr);
+  }
   end_ = begin_;
-};
+}
 
 template <class T, class Alloc>
 void vector<T, Alloc>::push_back(const T& value) {

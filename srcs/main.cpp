@@ -2,6 +2,11 @@
 
 #include "ft_container.hpp"
 
+struct s_test {
+  static const int a = 5;
+  s_test() {}
+};
+
 int main() {
   std::vector<int> v(100);
   v[0]  = 42;
@@ -21,6 +26,7 @@ int main() {
   std::cout << a.size() << std::endl;
   std::cout << a.capacity() << std::endl;
   std::cout << std::hex << a.data() << std::endl;
-
+  std::vector<s_test> test(5);
+  std::cout << test[1].a << std::endl;
   return 0;
 }
