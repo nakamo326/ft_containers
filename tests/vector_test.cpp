@@ -156,7 +156,6 @@ TEST(VectorTest, AssignFunc) {
   }
 }
 
-/*
 TEST(VectorTest, AssignFuncIter) {
   // big to small
   {
@@ -196,7 +195,6 @@ TEST(VectorTest, AssignFuncIter) {
     }
   }
 }
-*/
 
 TEST(VectorTest, Destructor) {
   ft::vector<int> *f = new ft::vector<int>(1000);

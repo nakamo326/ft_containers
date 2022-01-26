@@ -229,14 +229,24 @@ void vector<T, Alloc>::assign(size_type n, const value_type& u) {
   }
 }
 
-// template <class T, class Alloc>
-// template <class InputIt>
-// void vector<T, Alloc>::assign(
-//     InputIt                                                         first,
-//     typename enable_if<!is_integral<InputIt>::value, InputIt>::type last) {
-//   (void)first;
-//   (void)last;
-// }
+template <class T, class Alloc>
+template <class InputIt>
+void vector<T, Alloc>::assign(
+    InputIt                                                         first,
+    typename enable_if<!is_integral<InputIt>::value, InputIt>::type last) {
+  difference_type len = std::distance(first, last);
+  if (len > capacity()) {
+    pointer new_data = alloc_.allocate(len);
+    std::uninitialized_copy(first, last, new_data);
+    clear();
+    deallocate();
+    begin_ = new_data;
+    end_ = cap_ = begin_ + len;
+  } else {
+    std::copy(first, last, begin());
+    end_ = begin_ + len;
+  }
+}
 
 // == element access ==
 template <class T, class Alloc>
