@@ -295,25 +295,42 @@ void vector<T, Alloc>::clear() {
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
                                                              const T& value) {
-  difference_type n = pos - begin();
+  difference_type len = pos - begin();
   if (end_ == cap_) {
     reserve(size() * 2);
-    pos = begin() + n;
+    pos = begin() + len;
   }
   if (pos == end()) {
     push_back(value);
   } else {
-    alloc_.construct(end_ + 1, T());
+    alloc_.construct(end_, T());
     std::copy_backward(pos, end(), end() + 1);
     *pos = value;
     ++end_;
   }
-  return vector_iterator<T>(pos);
+  return begin() + len;
 }
 
 // template <class T, class Alloc>
 // void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value)
-// {}
+// {
+//   // posからcount分valueを挿入
+//   difference_type len = pos - begin();
+//   if (size() + count > capacity()) {
+//     if (count <= size()) {
+//       reserve(size() * 2);
+//     } else {
+//       reserve(size() + count);
+//     }
+//     pos = begin() + len;
+//   }
+//   if (pos == end()) {
+//     std::uninitialized_fill_n(end(), count, value);
+//     end_ += count;
+//   } else {
+//     // construct at end (len);
+//   }
+// }
 
 // template <class T, class Alloc>
 // template <class InputIt>

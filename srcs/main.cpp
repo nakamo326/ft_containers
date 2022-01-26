@@ -8,12 +8,12 @@ struct s_test {
 };
 
 int main() {
-  ft::vector<int> v(100);
-  std::cout << v.size() << std::endl;
-  std::cout << v.capacity() << std::endl;
-  ft::vector<int>::iterator it = v.begin();
+  std::vector<int>           v(100);
+  // std::cout << v.size() << std::endl;
+  // std::cout << v.capacity() << std::endl;
+  std::vector<int>::iterator it = v.begin();
   it += 50;
-  v.insert(it, 42);
+  v.insert(it, 150, 42);
   std::cout << v.size() << std::endl;
   std::cout << v.capacity() << std::endl;
   v.insert(v.end(), 42);
