@@ -141,10 +141,6 @@ public:
 // void swap(vector<T, Alloc>& lhs, vector<T, Alloc>& rhs);
 
 // == helper private func ==
-
-// くだらないコメント
-
-// FIXME: use clear
 template <class T, class Alloc>
 void vector<T, Alloc>::deallocate() {
   if (begin_ != NULL) {
@@ -190,37 +186,30 @@ vector<T, Alloc>::vector(const vector& other) {
 }
 
 // == destructor ==
-// FIXME: use destroy
 template <class T, class Alloc>
 vector<T, Alloc>::~vector() {
-  // need to fix?
+  clear();
   deallocate();
 }
 
 // == assignation overload ==
-
-// FIXME: use construct?
 template <class T, class Alloc>
 vector<T, Alloc>& vector<T, Alloc>::operator=(const vector& x) {
   if (x.capacity() > capacity()) {
     pointer new_data = alloc_.allocate(x.capacity());
     std::uninitialized_copy(x.begin(), x.end(), new_data);
-    // deallocate()の前にclear?
-    // destroy呼ばないとheapが確保されていた時リークしそう
+    clear();
     deallocate();
     begin_ = new_data;
     cap_   = begin_ + x.capacity();
   } else {
-    // 初期化済み領域へのcopyには適さないかも
-    std::uninitialized_copy(x.begin(), x.end(), begin_);
+    std::copy(x.begin(), x.end(), begin());
   }
   end_ = begin_ + x.size();
   return *this;
 }
 
 // == assign ==
-
-// FIXME: use construct?
 template <class T, class Alloc>
 void vector<T, Alloc>::assign(size_type n, const value_type& u) {
   if (n > capacity()) {
@@ -230,12 +219,12 @@ void vector<T, Alloc>::assign(size_type n, const value_type& u) {
     }
     pointer new_data = alloc_.allocate(n);
     std::uninitialized_fill_n(new_data, n, u);
+    clear();
     deallocate();
     begin_ = new_data;
     cap_ = end_ = new_data + n;
   } else {
-    // 初期化済み領域へのcopyには適さないかも
-    std::uninitialized_fill_n(begin_, n, u);
+    std::fill(begin(), begin() + n, u);
     end_ = begin_ + n;
   }
 }
@@ -266,22 +255,21 @@ typename vector<T, Alloc>::const_reference vector<T, Alloc>::at(
 }
 
 // == capacity ==
-
-// FIXME: use construct?
 template <class T, class Alloc>
 void vector<T, Alloc>::reserve(size_type new_cap) {
-  if (new_cap > capacity()) {
-    if (new_cap > max_size()) {
-      throw std::length_error("vector::reserve");
-    }
-    pointer new_data = alloc_.allocate(new_cap);
-    std::uninitialized_copy(begin(), end(), new_data);
-    typename vector<T, Alloc>::size_type sz = size();
-    deallocate();
-    begin_ = new_data;
-    end_   = begin_ + sz;
-    cap_   = begin_ + new_cap;
+  if (capacity() >= new_cap)
+    return;
+  if (new_cap > max_size()) {
+    throw std::length_error("vector::reserve");
   }
+  pointer   new_data = alloc_.allocate(new_cap);
+  size_type sz       = size();
+  std::uninitialized_copy(begin(), end(), new_data);
+  clear();
+  deallocate();
+  begin_ = new_data;
+  end_   = begin_ + sz;
+  cap_   = begin_ + new_cap;
 }
 
 // == modifiers ==
