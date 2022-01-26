@@ -243,3 +243,20 @@ TEST(VectorTest, Pushback) {
 }
 
 TEST(VectorTest, Clear) {}
+
+TEST(VectorTest, InsertWithValue) {
+  std::vector<int> s(10);
+  ft::vector<int>  f(10);
+  s.insert(s.begin() + 5, 42);
+  f.insert(f.begin() + 5, 42);
+  EXPECT_EQ(s[5], 42);
+  EXPECT_EQ(f[5], 42);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  s.insert(s.end(), 42);
+  f.insert(f.end(), 42);
+  EXPECT_EQ(s[5], 42);
+  EXPECT_EQ(f[5], 42);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+}

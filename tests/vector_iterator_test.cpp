@@ -2,7 +2,7 @@
 
 #include "vector.hpp"
 
-TEST(VectorTest, Iterator) {
+TEST(VectorIteratorTest, Iterator) {
   std::vector<int> s(10);
   ft::vector<int>  f(10);
   for (size_t i = 0; i < 10; i++) {
@@ -51,7 +51,7 @@ TEST(VectorTest, Iterator) {
   EXPECT_EQ((s.end() - s.begin()), (f.end() - f.begin()));
 }
 
-TEST(VectorTest, ReverseIterator) {
+TEST(VectorIteratorTest, ReverseIterator) {
   std::vector<int> s(10);
   ft::vector<int>  f(10);
   for (size_t i = 0; i < 10; i++) {

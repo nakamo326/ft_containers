@@ -98,20 +98,20 @@ public:
     return std::min<size_type>(alloc_.max_size(),
                                std::numeric_limits<difference_type>::max());
   };
-  void reserve(size_type new_cap);
+  void     reserve(size_type new_cap);
 
   // == modifiers ==
-  void clear();
+  void     clear();
 
-  // iterator          insert(iterator pos, const T& value);
-  // void              insert(iterator pos, size_type count, const T& value);
+  iterator insert(iterator pos, const T& value);
+  // void     insert(iterator pos, size_type count, const T& value);
   // template <class InputIt>
   // void insert(iterator pos, InputIt first, InputIt last);
 
   // iterator          erase(iterator pos);
   // iterator          erase(iterator first, iterator last);
 
-  void push_back(const T& value);
+  void     push_back(const T& value);
   // void              pop_back();
   // void              resize(size_type count, T value = T());
   // void              swap(vector& other);
@@ -293,11 +293,38 @@ void vector<T, Alloc>::clear() {
 }
 
 template <class T, class Alloc>
+typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
+                                                             const T& value) {
+  difference_type n = pos - begin();
+  if (end_ == cap_) {
+    reserve(size() * 2);
+    pos = begin() + n;
+  }
+  if (pos == end()) {
+    push_back(value);
+  } else {
+    alloc_.construct(end_ + 1, T());
+    std::copy_backward(pos, end(), end() + 1);
+    *pos = value;
+    ++end_;
+  }
+  return vector_iterator<T>(pos);
+}
+
+// template <class T, class Alloc>
+// void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value)
+// {}
+
+// template <class T, class Alloc>
+// template <class InputIt>
+// void vector<T, Alloc>::insert(iterator pos, InputIt first, InputIt last) {}
+
+template <class T, class Alloc>
 void vector<T, Alloc>::push_back(const T& value) {
   if (end_ == cap_) {
     reserve(size() * 2);
   }
-  this->alloc_.construct(end_, value);
+  alloc_.construct(end_, value);
   ++end_;
 }
 
