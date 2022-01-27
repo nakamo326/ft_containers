@@ -35,6 +35,7 @@ private:
 
   void           vallocate(size_type n);
   void           vdeallocate();
+  size_type      recommend(size_type new_size) const;
 
 public:
   // == constructor ==
@@ -158,21 +159,23 @@ void vector<T, Alloc>::vallocate(size_type n) {
   cap_          = begin_ + n;
 }
 
-// template <class T, class Alloc>
-// vector<T, Alloc>::size_type vector<T, Alloc>::check_len(size_type   __n,
-//                                                         const char* __s)
-//                                                         const {
-//   if (max_size() - size() < __n)
-//     __throw_length_error(__N(__s));
-//   const size_type __len = size() + std::max(size(), __n);
-//   return (__len < size() || __len > max_size()) ? max_size() : __len;
-// }
+template <class T, class Alloc>
+typename vector<T, Alloc>::size_type vector<T, Alloc>::recommend(
+    size_type new_size) const {
+  const size_type _max_size = max_size();
+  if (new_size > _max_size)
+    throw std::length_error("vector");
+  const size_type _capacity = capacity();
+  if (_capacity >= _max_size / 2)
+    return _max_size;
+  return std::max<size_type>(2 * _capacity, new_size);
+}
 
 // == constructor ==
 template <class T, class Alloc>
 vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
     : alloc_(alloc) {
-  begin_ = alloc_.allocate(n);
+  vallocate(n);
   try {
     std::uninitialized_fill_n(begin_, n, value);
     cap_ = end_ = begin_ + n;
@@ -312,7 +315,7 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
                                                              const T& value) {
   difference_type len = pos - begin();
   if (end_ == cap_) {
-    reserve(size() * 2);
+    reserve(recommend(size() + 1));
     pos = begin() + len;
   }
   if (pos == end()) {
@@ -326,27 +329,22 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
   return begin() + len;
 }
 
-// template <class T, class Alloc>
-// void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value)
-// {
-//   // posからcount分valueを挿入
-//   difference_type len = pos - begin();
-//   if (size() + count > capacity()) {
-//     if (count <= size()) {
-//       reserve(size() * 2);
-//     } else {
-//       reserve(size() + count);
-//     }
-//     pos = begin() + len;
-//   }
-//   if (pos == end()) {
-//     std::uninitialized_fill_n(end(), count, value);
-//   } else {
-//     // construct at end (len);
-//     std::fill(pos, pos + count, value);
-//   }
-//   end_ += count;
-// }
+template <class T, class Alloc>
+void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value) {
+  // posからcount分valueを挿入
+  difference_type len = pos - begin();
+  if (size() + count > capacity()) {
+    reserve(recommend(size() + count));
+    pos = begin() + len;
+  }
+  if (pos == end()) {
+    std::uninitialized_fill_n(end(), count, value);
+  } else {
+    // construct at end (len);
+    std::fill(pos, pos + count, value);
+  }
+  end_ += count;
+}
 
 // template <class T, class Alloc>
 // template <class InputIt>
@@ -355,7 +353,7 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
 template <class T, class Alloc>
 void vector<T, Alloc>::push_back(const T& value) {
   if (end_ == cap_) {
-    reserve(size() * 2);
+    reserve(recommend(size() + 1));
   }
   alloc_.construct(end_, value);
   ++end_;
