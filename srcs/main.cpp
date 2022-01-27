@@ -19,5 +19,7 @@ int main() {
   v.insert(v.end(), 42);
   std::cout << v.size() << std::endl;
   std::cout << v.capacity() << std::endl;
+
+  std::cout << v.max_size() << std::endl;
   return 0;
 }

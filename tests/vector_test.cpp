@@ -261,19 +261,18 @@ TEST(VectorTest, InsertWithValue) {
   EXPECT_EQ(s.capacity(), f.capacity());
 }
 
-// TEST(VectorTest, InsertWithCount) {
-//   std::vector<int> s(10);
-//   ft::vector<int>  f(10);
-//   s.insert(s.begin() + 5, 5, 42);
-//   f.insert(f.begin() + 5, 5, 42);
-//   for (size_t i = 5; i < 10; i++) {
-//     EXPECT_EQ(s[i], 42);
-//     EXPECT_EQ(f[i], 42);
-//   }
-//   EXPECT_EQ(s.size(), f.size());
-//   EXPECT_EQ(s.capacity(), f.capacity());
-//   s.insert(s.begin() + 5, 40, 42);
-//   f.insert(f.begin() + 5, 40, 42);
-//   EXPECT_EQ(s.size(), f.size());
-//   EXPECT_EQ(s.capacity(), f.capacity());
-// }
+TEST(VectorTest, InsertWithCount) {
+  std::vector<int> s(10);
+  ft::vector<int>  f(10);
+  s.insert(s.begin() + 5, 5, 42);
+  f.insert(f.begin() + 5, 5, 42);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  s.insert(s.begin() + 5, 40, 57);
+  f.insert(f.begin() + 5, 40, 57);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  for (size_t i = 0; i < s.size(); i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
+}

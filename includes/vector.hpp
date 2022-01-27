@@ -340,7 +340,10 @@ void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value) {
   if (pos == end()) {
     std::uninitialized_fill_n(end(), count, value);
   } else {
-    // construct at end (len);
+    for (pointer start = end_; start < end_ + count; start++) {
+      alloc_.construct(start, T());
+    }
+    std::copy_backward(pos, end(), end() + count);
     std::fill(pos, pos + count, value);
   }
   end_ += count;
