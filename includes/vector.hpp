@@ -377,7 +377,7 @@ void vector<T, Alloc>::insert(
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator pos) {
   std::copy(pos + 1, end(), pos);
-  alloc_.destroy(end_);
+  alloc_.destroy(end_ - 1);
   --end_;
   return pos;
 }
