@@ -212,6 +212,7 @@ vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
   }
 }
 
+// TODO: fix to use vallocate()
 template <class T, class Alloc>
 template <class InputIt>
 vector<T, Alloc>::vector(
@@ -219,11 +220,9 @@ vector<T, Alloc>::vector(
     typename enable_if<!is_integral<InputIt>::value, InputIt>::type last,
     const Alloc&                                                    alloc)
     : alloc_(alloc) {
-  end_ = begin_ = alloc_.allocate(last - first);
-  for (; first != last; ++first) {
-    *end_ = *first;
-    ++end_;
-  }
+  begin_ = alloc_.allocate(last - first);
+  std::uninitialized_copy(first, last, begin_);
+  end_ = begin_ + std::distance(first, last);
   cap_ = end_;
 }
 
