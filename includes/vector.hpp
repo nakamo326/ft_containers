@@ -119,7 +119,7 @@ public:
   void     push_back(const T& value);
   void     pop_back();
   void     resize(size_type count, T value = T());
-  // void              swap(vector& other);
+  void     swap(vector& other);
 };
 
 // == non-member functions ==
@@ -229,16 +229,7 @@ vector<T, Alloc>::~vector() {
 // == assignation overload ==
 template <class T, class Alloc>
 vector<T, Alloc>& vector<T, Alloc>::operator=(const vector& x) {
-  if (x.capacity() > capacity()) {
-    pointer new_data = alloc_.allocate(x.capacity());
-    std::uninitialized_copy(x.begin(), x.end(), new_data);
-    vdeallocate();
-    begin_ = new_data;
-    cap_   = begin_ + x.capacity();
-  } else {
-    std::copy(x.begin(), x.end(), begin());
-  }
-  end_ = begin_ + x.size();
+  assign(x.begin(), x.end());
   return *this;
 }
 
@@ -430,7 +421,12 @@ void vector<T, Alloc>::resize(size_type count, T value) {
   }
 }
 
-// void              swap(vector& other);
+template <class T, class Alloc>
+void vector<T, Alloc>::swap(vector& other) {
+  vector<T, Alloc> tmp(*this);
+  this  = other;
+  other = tmp;
+}
 
 }  // namespace ft
 
