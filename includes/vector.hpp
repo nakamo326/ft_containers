@@ -11,7 +11,6 @@
 
 namespace ft {
 
-// 後でinlineにすること！
 template <class T, class Alloc = std::allocator<T> >
 struct vector {
 public:
@@ -34,7 +33,8 @@ private:
   pointer        cap_;
   allocator_type alloc_;
 
-  void           deallocate();
+  void           vallocate(size_type n);
+  void           vdeallocate();
 
 public:
   // == constructor ==
@@ -104,7 +104,7 @@ public:
   void     clear();
 
   iterator insert(iterator pos, const T& value);
-  // void     insert(iterator pos, size_type count, const T& value);
+  void     insert(iterator pos, size_type count, const T& value);
   // template <class InputIt>
   // void insert(iterator pos, InputIt first, InputIt last);
 
@@ -142,11 +142,31 @@ public:
 
 // == helper private func ==
 template <class T, class Alloc>
-void vector<T, Alloc>::deallocate() {
+void vector<T, Alloc>::vdeallocate() {
   if (begin_ != NULL) {
+    clear();
     alloc_.deallocate(begin_, capacity());
+    begin_ = end_ = cap_ = NULL;
   }
 }
+
+template <class T, class Alloc>
+void vector<T, Alloc>::vallocate(size_type n) {
+  if (n > max_size())
+    throw std::length_error("cannot create ft::vector larger than max_size()");
+  begin_ = end_ = alloc_.allocate(n);
+  cap_          = begin_ + n;
+}
+
+// template <class T, class Alloc>
+// vector<T, Alloc>::size_type vector<T, Alloc>::check_len(size_type   __n,
+//                                                         const char* __s)
+//                                                         const {
+//   if (max_size() - size() < __n)
+//     __throw_length_error(__N(__s));
+//   const size_type __len = size() + std::max(size(), __n);
+//   return (__len < size() || __len > max_size()) ? max_size() : __len;
+// }
 
 // == constructor ==
 template <class T, class Alloc>
@@ -188,8 +208,7 @@ vector<T, Alloc>::vector(const vector& other) {
 // == destructor ==
 template <class T, class Alloc>
 vector<T, Alloc>::~vector() {
-  clear();
-  deallocate();
+  vdeallocate();
 }
 
 // == assignation overload ==
@@ -198,8 +217,7 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(const vector& x) {
   if (x.capacity() > capacity()) {
     pointer new_data = alloc_.allocate(x.capacity());
     std::uninitialized_copy(x.begin(), x.end(), new_data);
-    clear();
-    deallocate();
+    vdeallocate();
     begin_ = new_data;
     cap_   = begin_ + x.capacity();
   } else {
@@ -219,10 +237,9 @@ void vector<T, Alloc>::assign(size_type n, const value_type& u) {
     }
     pointer new_data = alloc_.allocate(n);
     std::uninitialized_fill_n(new_data, n, u);
-    clear();
-    deallocate();
+    vdeallocate();
     begin_ = new_data;
-    cap_ = end_ = new_data + n;
+    cap_ = end_ = begin_ + n;
   } else {
     std::fill(begin(), begin() + n, u);
     end_ = begin_ + n;
@@ -238,8 +255,7 @@ void vector<T, Alloc>::assign(
   if (len > capacity()) {
     pointer new_data = alloc_.allocate(len);
     std::uninitialized_copy(first, last, new_data);
-    clear();
-    deallocate();
+    vdeallocate();
     begin_ = new_data;
     end_ = cap_ = begin_ + len;
   } else {
@@ -275,8 +291,7 @@ void vector<T, Alloc>::reserve(size_type new_cap) {
   pointer   new_data = alloc_.allocate(new_cap);
   size_type sz       = size();
   std::uninitialized_copy(begin(), end(), new_data);
-  clear();
-  deallocate();
+  vdeallocate();
   begin_ = new_data;
   end_   = begin_ + sz;
   cap_   = begin_ + new_cap;
@@ -326,10 +341,11 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
 //   }
 //   if (pos == end()) {
 //     std::uninitialized_fill_n(end(), count, value);
-//     end_ += count;
 //   } else {
 //     // construct at end (len);
+//     std::fill(pos, pos + count, value);
 //   }
+//   end_ += count;
 // }
 
 // template <class T, class Alloc>
