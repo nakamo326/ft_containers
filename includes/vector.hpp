@@ -116,7 +116,7 @@ public:
   iterator erase(iterator first, iterator last);
 
   void     push_back(const T& value);
-  // void              pop_back();
+  void     pop_back();
   // void              resize(size_type count, T value = T());
   // void              swap(vector& other);
 };
@@ -405,7 +405,12 @@ void vector<T, Alloc>::push_back(const T& value) {
   ++end_;
 }
 
-// void              pop_back();
+template <class T, class Alloc>
+void vector<T, Alloc>::pop_back() {
+  alloc_.destroy(end_ - 1);
+  --end_;
+}
+
 // void              resize(size_type count, T value = T());
 // void              swap(vector& other);
 

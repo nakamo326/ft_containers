@@ -348,3 +348,21 @@ TEST(VectorTest, EraseIter) {
     EXPECT_EQ(s[i], f[i]);
   }
 }
+
+TEST(VectorTest, PopBack) {
+  std::vector<int> s(100);
+  ft::vector<int>  f(100);
+  for (size_t i = 0; i < 100; i++) {
+    s[i] = i;
+    f[i] = i;
+  }
+  for (size_t i = 0; i < 100; i++) {
+    s.pop_back();
+    f.pop_back();
+    EXPECT_EQ(s.size(), f.size());
+    EXPECT_EQ(s.capacity(), f.capacity());
+    for (size_t j = 0; j < s.size(); j++) {
+      EXPECT_EQ(s[i], f[i]);
+    }
+  }
+}
