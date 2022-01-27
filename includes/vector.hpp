@@ -112,10 +112,10 @@ public:
       typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
       InputIt                                                         last);
 
-  // iterator          erase(iterator pos);
-  // iterator          erase(iterator first, iterator last);
+  iterator erase(iterator pos);
+  iterator erase(iterator first, iterator last);
 
-  void push_back(const T& value);
+  void     push_back(const T& value);
   // void              pop_back();
   // void              resize(size_type count, T value = T());
   // void              swap(vector& other);
@@ -374,6 +374,27 @@ void vector<T, Alloc>::insert(
   }
   end_ += offset;
 }
+template <class T, class Alloc>
+typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator pos) {
+  std::copy(pos + 1, end(), pos);
+  alloc_.destroy(end_);
+  --end_;
+  return pos;
+}
+
+template <class T, class Alloc>
+typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator first,
+                                                            iterator last) {
+  if (first == last)
+    return last;
+  std::copy(last, end(), first);
+  pointer new_end = end_ - std::distance(first, last);
+  for (pointer p = new_end; p <= end_; p++) {
+    alloc_.destroy(p);
+  }
+  end_ = new_end;
+  return first;
+}
 
 template <class T, class Alloc>
 void vector<T, Alloc>::push_back(const T& value) {
@@ -383,6 +404,10 @@ void vector<T, Alloc>::push_back(const T& value) {
   alloc_.construct(end_, value);
   ++end_;
 }
+
+// void              pop_back();
+// void              resize(size_type count, T value = T());
+// void              swap(vector& other);
 
 }  // namespace ft
 

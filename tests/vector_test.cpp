@@ -296,3 +296,55 @@ TEST(VectorTest, InsertWithIter) {
     EXPECT_EQ(s[i], f[i]);
   }
 }
+
+TEST(VectorTest, EraseOne) {
+  std::vector<int> s(100);
+  ft::vector<int>  f(100);
+  for (size_t i = 0; i < 100; i++) {
+    s[i] = i;
+    f[i] = i;
+  }
+  auto sret = s.erase(s.begin() + 50);
+  auto fret = f.erase(f.begin() + 50);
+  EXPECT_EQ(*sret, *fret);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  for (size_t i = 0; i < s.size(); i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
+  sret = s.erase(s.end() - 1);
+  fret = f.erase(f.end() - 1);
+  EXPECT_EQ(sret, s.end());
+  EXPECT_EQ(fret, f.end());
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  for (size_t i = 0; i < s.size(); i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
+}
+
+TEST(VectorTest, EraseIter) {
+  std::vector<int> s(100);
+  ft::vector<int>  f(100);
+  for (size_t i = 0; i < 100; i++) {
+    s[i] = i;
+    f[i] = i;
+  }
+  auto sret = s.erase(s.begin() + 50, s.begin() + 60);
+  auto fret = f.erase(f.begin() + 50, f.begin() + 60);
+  EXPECT_EQ(*sret, *fret);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  for (size_t i = 0; i < s.size(); i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
+  sret = s.erase(s.begin() + 80, s.end());
+  fret = f.erase(f.begin() + 80, f.end());
+  EXPECT_EQ(sret, s.end());
+  EXPECT_EQ(fret, f.end());
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  for (size_t i = 0; i < s.size(); i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
+}
