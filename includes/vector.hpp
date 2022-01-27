@@ -423,9 +423,9 @@ void vector<T, Alloc>::resize(size_type count, T value) {
 
 template <class T, class Alloc>
 void vector<T, Alloc>::swap(vector& other) {
-  vector<T, Alloc> tmp(*this);
-  this  = other;
-  other = tmp;
+  std::swap(this->begin_, other.begin_);
+  std::swap(this->end_, other.end_);
+  std::swap(this->cap_, other.cap_);
 }
 
 }  // namespace ft

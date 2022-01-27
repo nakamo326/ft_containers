@@ -392,3 +392,25 @@ TEST(VectorTest, Resize) {
     EXPECT_EQ(s[i], f[i]);
   }
 }
+
+TEST(VectorTest, Swap) {
+  std::vector<int> s(100);
+  ft::vector<int>  f(100);
+  for (size_t i = 0; i < 100; i++) {
+    s[i] = i + 1;
+    f[i] = i + 1;
+  }
+  std::vector<int> ts(50);
+  ft::vector<int>  tf(50);
+  for (size_t i = 0; i < 50; i++) {
+    s[i] = 50 - i;
+    f[i] = 50 - i;
+  }
+  s.swap(ts);
+  f.swap(tf);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  for (size_t i = 0; i < s.size(); i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
+}
