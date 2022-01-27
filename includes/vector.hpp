@@ -36,6 +36,7 @@ private:
   void           vallocate(size_type n);
   void           vdeallocate();
   size_type      recommend(size_type new_size) const;
+  void           destruct_at_end(pointer new_end);
 
 public:
   // == constructor ==
@@ -117,7 +118,7 @@ public:
 
   void     push_back(const T& value);
   void     pop_back();
-  // void              resize(size_type count, T value = T());
+  void     resize(size_type count, T value = T());
   // void              swap(vector& other);
 };
 
@@ -172,6 +173,14 @@ typename vector<T, Alloc>::size_type vector<T, Alloc>::recommend(
   if (_capacity >= _max_size / 2)
     return _max_size;
   return std::max<size_type>(2 * _capacity, new_size);
+}
+
+template <class T, class Alloc>
+void vector<T, Alloc>::destruct_at_end(pointer new_end) {
+  for (pointer p = new_end; p <= end_; p++) {
+    alloc_.destroy(p);
+  }
+  end_ = new_end;
 }
 
 // == constructor ==
@@ -377,8 +386,7 @@ void vector<T, Alloc>::insert(
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator pos) {
   std::copy(pos + 1, end(), pos);
-  alloc_.destroy(end_ - 1);
-  --end_;
+  pop_back();
   return pos;
 }
 
@@ -389,10 +397,7 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator first,
     return last;
   std::copy(last, end(), first);
   pointer new_end = end_ - std::distance(first, last);
-  for (pointer p = new_end; p <= end_; p++) {
-    alloc_.destroy(p);
-  }
-  end_ = new_end;
+  destruct_at_end(new_end);
   return first;
 }
 
@@ -411,7 +416,20 @@ void vector<T, Alloc>::pop_back() {
   --end_;
 }
 
-// void              resize(size_type count, T value = T());
+template <class T, class Alloc>
+void vector<T, Alloc>::resize(size_type count, T value) {
+  if (count > capacity()) {
+    reserve(recommend(count));
+  }
+  if (count > size()) {
+    std::uninitialized_fill_n(end(), count - size(), value);
+    end_ += count - size();
+  } else {
+    pointer new_end = begin_ + count;
+    destruct_at_end(new_end);
+  }
+}
+
 // void              swap(vector& other);
 
 }  // namespace ft

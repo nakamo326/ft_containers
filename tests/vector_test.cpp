@@ -366,3 +366,29 @@ TEST(VectorTest, PopBack) {
     }
   }
 }
+
+TEST(VectorTest, Resize) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  s.resize(100, 42);
+  f.resize(100, 42);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  for (size_t i = 0; i < s.size(); i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
+  s.resize(50, 3);
+  f.resize(50, 3);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  for (size_t i = 0; i < s.size(); i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
+  s.resize(200, 3);
+  f.resize(200, 3);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  for (size_t i = 0; i < s.size(); i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
+}

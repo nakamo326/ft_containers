@@ -8,18 +8,15 @@ struct s_test {
 };
 
 int main() {
-  std::vector<int>           v(100);
+  std::vector<int> v(100);
+  std::cout << v.size() << std::endl;
+  std::cout << v.capacity() << std::endl;
+  // v.resize(50);
   // std::cout << v.size() << std::endl;
   // std::cout << v.capacity() << std::endl;
-  std::vector<int>::iterator it = v.begin();
-  it += 50;
-  v.insert(it, 150, 42);
-  std::cout << v.size() << std::endl;
-  std::cout << v.capacity() << std::endl;
-  v.insert(v.end(), 42);
-  std::cout << v.size() << std::endl;
-  std::cout << v.capacity() << std::endl;
 
-  std::cout << v.max_size() << std::endl;
+  v.resize(125);
+  std::cout << v.size() << std::endl;
+  std::cout << v.capacity() << std::endl;
   return 0;
 }
