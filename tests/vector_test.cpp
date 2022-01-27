@@ -276,3 +276,23 @@ TEST(VectorTest, InsertWithCount) {
     EXPECT_EQ(s[i], f[i]);
   }
 }
+
+TEST(VectorTest, InsertWithIter) {
+  std::vector<int> s(10);
+  ft::vector<int>  f(10);
+  s.insert(s.begin() + 5, 5, 42);
+  f.insert(f.begin() + 5, 5, 42);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  std::vector<int> input(100);
+  for (size_t i = 0; i < 100; i++) {
+    input[i] = i;
+  }
+  s.insert(s.begin() + 5, input.begin(), input.end());
+  f.insert(f.begin() + 5, input.begin(), input.end());
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  for (size_t i = 0; i < s.size(); i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
+}

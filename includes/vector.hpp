@@ -106,13 +106,16 @@ public:
 
   iterator insert(iterator pos, const T& value);
   void     insert(iterator pos, size_type count, const T& value);
-  // template <class InputIt>
-  // void insert(iterator pos, InputIt first, InputIt last);
+  template <class InputIt>
+  void insert(
+      iterator                                                        pos,
+      typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
+      InputIt                                                         last);
 
   // iterator          erase(iterator pos);
   // iterator          erase(iterator first, iterator last);
 
-  void     push_back(const T& value);
+  void push_back(const T& value);
   // void              pop_back();
   // void              resize(size_type count, T value = T());
   // void              swap(vector& other);
@@ -331,7 +334,6 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
 
 template <class T, class Alloc>
 void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value) {
-  // posからcount分valueを挿入
   difference_type len = pos - begin();
   if (size() + count > capacity()) {
     reserve(recommend(size() + count));
@@ -340,8 +342,8 @@ void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value) {
   if (pos == end()) {
     std::uninitialized_fill_n(end(), count, value);
   } else {
-    for (pointer start = end_; start < end_ + count; start++) {
-      alloc_.construct(start, T());
+    for (pointer p = end_; p < end_ + count; p++) {
+      alloc_.construct(p, T());
     }
     std::copy_backward(pos, end(), end() + count);
     std::fill(pos, pos + count, value);
@@ -349,9 +351,29 @@ void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value) {
   end_ += count;
 }
 
-// template <class T, class Alloc>
-// template <class InputIt>
-// void vector<T, Alloc>::insert(iterator pos, InputIt first, InputIt last) {}
+template <class T, class Alloc>
+template <class InputIt>
+void vector<T, Alloc>::insert(
+    iterator                                                        pos,
+    typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
+    InputIt                                                         last) {
+  difference_type len    = pos - begin();
+  difference_type offset = std::distance(first, last);
+  if (size() + offset > capacity()) {
+    reserve(recommend(size() + offset));
+    pos = begin() + len;
+  }
+  if (pos == end()) {
+    std::uninitialized_copy(first, last, end());
+  } else {
+    for (pointer p = end_; p < end_ + offset; p++) {
+      alloc_.construct(p, T());
+    }
+    std::copy_backward(pos, end(), end() + offset);
+    std::copy(first, last, pos);
+  }
+  end_ += offset;
+}
 
 template <class T, class Alloc>
 void vector<T, Alloc>::push_back(const T& value) {
