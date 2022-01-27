@@ -421,3 +421,42 @@ TEST(VectorTest, Swap) {
     EXPECT_EQ(s[i], f[i]);
   }
 }
+
+TEST(VectorTest, Comparison) {
+  ft::vector<int>  f(100);
+  ft::vector<int>  cf(100);
+  std::vector<int> s(100);
+  std::vector<int> cs(100);
+  for (size_t i = 0; i < 100; i++) {
+    f[i] = cf[i] = i + 1;
+    s[i] = cs[i] = i + 1;
+  }
+  EXPECT_EQ(cf, f);
+  EXPECT_EQ(f, cf);
+  EXPECT_EQ(cs == s, cf == f);
+  EXPECT_EQ(s == cs, f == cf);
+  EXPECT_EQ(cs != s, cf != f);
+  EXPECT_EQ(s != cs, f != cf);
+  EXPECT_EQ(cs <= s, cf <= f);
+  EXPECT_EQ(s <= cs, f <= cf);
+  EXPECT_EQ(cs >= s, cf >= f);
+  EXPECT_EQ(s >= cs, f >= cf);
+  EXPECT_EQ(cs > s, cf > f);
+  EXPECT_EQ(s > cs, f > cf);
+  EXPECT_EQ(cs < s, cf < f);
+  EXPECT_EQ(s < cs, f < cf);
+  cf.push_back(42);
+  cs.push_back(42);
+  EXPECT_EQ(cs == s, cf == f);
+  EXPECT_EQ(s == cs, f == cf);
+  EXPECT_EQ(cs != s, cf != f);
+  EXPECT_EQ(s != cs, f != cf);
+  EXPECT_EQ(cs <= s, cf <= f);
+  EXPECT_EQ(s <= cs, f <= cf);
+  EXPECT_EQ(cs >= s, cf >= f);
+  EXPECT_EQ(s >= cs, f >= cf);
+  EXPECT_EQ(cs > s, cf > f);
+  EXPECT_EQ(s > cs, f > cf);
+  EXPECT_EQ(cs < s, cf < f);
+  EXPECT_EQ(s < cs, f < cf);
+}
