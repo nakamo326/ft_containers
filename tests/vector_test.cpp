@@ -413,4 +413,11 @@ TEST(VectorTest, Swap) {
   for (size_t i = 0; i < s.size(); i++) {
     EXPECT_EQ(s[i], f[i]);
   }
+  std::swap(s, ts);
+  ft::swap(f, tf);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  for (size_t i = 0; i < s.size(); i++) {
+    EXPECT_EQ(s[i], f[i]);
+  }
 }

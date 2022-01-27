@@ -7,6 +7,7 @@
 
 #include "reverse_iterator.hpp"
 #include "type_traits.hpp"
+#include "utils.hpp"
 #include "vector_iterator.hpp"
 
 namespace ft {
@@ -123,27 +124,41 @@ public:
 };
 
 // == non-member functions ==
-// template <class T, class Alloc>
-// bool operator==(const std::vector<T, Alloc>& lhs,
-//                 const std::vector<T, Alloc>& rhs);
-// template <class T, class Alloc>
-// bool operator!=(const std::vector<T, Alloc>& lhs,
-//                 const std::vector<T, Alloc>& rhs);
-// template <class T, class Alloc>
-// bool operator<(const std::vector<T, Alloc>& lhs,
-//                const std::vector<T, Alloc>& rhs);
-// template <class T, class Alloc>
-// bool operator<=(const std::vector<T, Alloc>& lhs,
-//                 const std::vector<T, Alloc>& rhs);
-// template <class T, class Alloc>
-// bool operator>(const std::vector<T, Alloc>& lhs,
-//                const std::vector<T, Alloc>& rhs);
-// template <class T, class Alloc>
-// bool operator>=(const std::vector<T, Alloc>& lhs,
-//                 const std::vector<T, Alloc>& rhs);
+template <class T, class Alloc>
+bool operator==(const vector<T, Alloc>& __x, const vector<T, Alloc>& __y) {
+  const typename vector<T, Alloc>::size_type __sz = __x.size();
+  return __sz == __y.size() && equal(__x.begin(), __x.end(), __y.begin());
+}
 
-// template <class T, class Alloc>
-// void swap(vector<T, Alloc>& lhs, vector<T, Alloc>& rhs);
+template <class T, class Alloc>
+bool operator!=(const vector<T, Alloc>& __x, const vector<T, Alloc>& __y) {
+  return !(__x == __y);
+}
+
+template <class T, class Alloc>
+bool operator<(const vector<T, Alloc>& __x, const vector<T, Alloc>& __y) {
+  return lexicographical_compare(
+      __x.begin(), __x.end(), __y.begin(), __y.end());
+}
+
+template <class T, class Alloc>
+bool operator>(const vector<T, Alloc>& __x, const vector<T, Alloc>& __y) {
+  return __y < __x;
+}
+
+template <class T, class Alloc>
+bool operator>=(const vector<T, Alloc>& __x, const vector<T, Alloc>& __y) {
+  return !(__x < __y);
+}
+
+template <class T, class Alloc>
+bool operator<=(const vector<T, Alloc>& __x, const vector<T, Alloc>& __y) {
+  return !(__y < __x);
+}
+template <class T, class Alloc>
+void swap(vector<T, Alloc>& __x, vector<T, Alloc>& __y) {
+  __x.swap(__y);
+}
 
 // == helper private func ==
 template <class T, class Alloc>
