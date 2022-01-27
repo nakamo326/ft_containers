@@ -13,7 +13,7 @@
 namespace ft {
 
 template <class T, class Alloc = std::allocator<T> >
-struct vector {
+class vector {
 public:
   typedef T                                    value_type;
   typedef Alloc                                allocator_type;
