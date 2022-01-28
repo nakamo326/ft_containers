@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 
+#include "stack.hpp"
 #include "vector.hpp"
 
 #ifdef STD

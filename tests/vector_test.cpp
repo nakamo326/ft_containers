@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+#include <vector>
+
 TEST(VectorTest, DefaultConstructor) {
   std::vector<int> s;
   ft::vector<int>  f;
