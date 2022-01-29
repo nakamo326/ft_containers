@@ -9,12 +9,12 @@ TEST(VectorIteratorTest, Iterator) {
     s[i] = i;
     f[i] = i;
   }
-  ft::vector<int>::iterator  it = f.begin();
-  ft::vector<int>::iterator  it2(it);
-  ft::vector<int>::iterator  cit = f.begin();
-  std::vector<int>::iterator sit = s.begin();
-  std::vector<int>::iterator sit2(sit);
-  std::vector<int>::iterator scit = s.begin();
+  ft::vector<int>::iterator        it = f.begin();
+  ft::vector<int>::iterator        it2(it);
+  ft::vector<int>::const_iterator  cit = f.begin();
+  std::vector<int>::iterator       sit = s.begin();
+  std::vector<int>::iterator       sit2(sit);
+  std::vector<int>::const_iterator scit = s.begin();
   EXPECT_EQ((sit == sit2), (it == it2));
   EXPECT_EQ((sit == scit), (it == cit));
   EXPECT_EQ((scit == sit), (cit == it));
