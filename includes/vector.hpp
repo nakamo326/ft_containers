@@ -345,6 +345,7 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
   return begin() + len;
 }
 
+// FIXME: countがend_超えるときの挙動チェック,recommendあってる？
 template <class T, class Alloc>
 void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value) {
   difference_type len = pos - begin();

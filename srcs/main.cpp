@@ -5,9 +5,9 @@
 #include "ft_container.hpp"
 
 int main() {
-  std::stack<int> s;
-  std::cout << s.top() << std::endl;
-  std::pair<int, int> p;
-  std::map<int, int>  m;
+  std::vector<int>                 v;
+  std::vector<int>::const_iterator cit = v.begin();
+  std::pair<int, int>              p;
+  (void)p;
   return 0;
 }
