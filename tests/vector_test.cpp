@@ -214,6 +214,12 @@ TEST(VectorTest, At) {
   f[5] = 10;
   EXPECT_EQ(s.at(0), f.at(0));
   EXPECT_EQ(s.at(5), f.at(5));
+  s.at(5) = 42;
+  f.at(5) = 42;
+  EXPECT_EQ(s.at(0), f.at(0));
+  EXPECT_EQ(s.at(5), f.at(5));
+  EXPECT_EQ(s.at(5), 42);
+  EXPECT_EQ(f.at(5), 42);
   EXPECT_THROW(s.at(20), std::out_of_range);
   EXPECT_THROW(f.at(20), std::out_of_range);
 }
