@@ -71,26 +71,24 @@ public:
       InputIt                                                         first,
       typename enable_if<!is_integral<InputIt>::value, InputIt>::type last);
 
-  allocator_type    get_allocator() const { return alloc_; }
+  allocator_type   get_allocator() const { return alloc_; }
 
   // == element access ==
-  reference         operator[](size_type pos) { return begin_[pos]; };
-  const_reference   operator[](size_type pos) const { return begin_[pos]; };
-  reference         at(size_type pos);
-  const_reference   at(size_type pos) const;
-  reference         front() { return *begin_; };
-  const_reference   front() const { return *begin_; };
-  reference         back() { return *(end_ - 1); };
-  const_reference   back() const { return *(end_ - 1); };
-  value_type*       data() { return begin_; };
-  const value_type* data() const { return begin_; };
+  reference        operator[](size_type pos) { return begin_[pos]; };
+  const_reference  operator[](size_type pos) const { return begin_[pos]; };
+  reference        at(size_type pos);
+  const_reference  at(size_type pos) const;
+  reference        front() { return *begin_; };
+  const_reference  front() const { return *begin_; };
+  reference        back() { return *(end_ - 1); };
+  const_reference  back() const { return *(end_ - 1); };
 
   // == iterator ==
-  iterator          begin() { return vector_iterator<T>(begin_); };
-  const_iterator    begin() const { return vector_iterator<T const>(begin_); };
-  iterator          end() { return vector_iterator<T>(end_); };
-  const_iterator    end() const { return vector_iterator<T const>(end_); };
-  reverse_iterator  rbegin() { return ft::reverse_iterator<iterator>(end()); };
+  iterator         begin() { return vector_iterator<T>(begin_); };
+  const_iterator   begin() const { return vector_iterator<T const>(begin_); };
+  iterator         end() { return vector_iterator<T>(end_); };
+  const_iterator   end() const { return vector_iterator<T const>(end_); };
+  reverse_iterator rbegin() { return ft::reverse_iterator<iterator>(end()); };
   const_reverse_iterator rbegin() const {
     return ft::reverse_iterator<const_iterator>(end());
   };
