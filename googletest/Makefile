@@ -37,7 +37,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(GTOBJS) $(TOBJS)
 	$(CXX) $(CXXFLAGS) $^ $(INCLUDES) $(LIBS) -o $@
-	./$@
+	./$@ || :
 	$(RM) $@
 
 $(GTOBJDIR)/%.o: $(GTSRCDIR)/%.cc
