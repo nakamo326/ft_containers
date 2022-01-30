@@ -267,10 +267,7 @@ TEST_F(VectorTest, InsertWithValue) {
   EXPECT_EQ(s.capacity(), f.capacity());
 }
 
-// TODO: check recommend implemantation of c++11
 TEST_F(VectorTest, InsertWithCount) {
-  std::cout << s.capacity() << std::endl;
-  std::cout << f.capacity() << std::endl;
   s.insert(s.begin(), 1000, 42);
   f.insert(f.begin(), 1000, 42);
   EXPECT_EQ(s.size(), f.size());
