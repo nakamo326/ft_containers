@@ -18,6 +18,23 @@ protected:
   }
 };
 
+TEST(VectorHelperTest, vallocate) {
+  ft::vector<int> v;
+  // EXPECT_THROW(v.vallocate(v.max_size()), std::bad_alloc);
+  EXPECT_THROW(v.vallocate(v.max_size() + 1), std::length_error);
+  v.vallocate(100);
+  EXPECT_EQ(v.size(), 0);
+  EXPECT_EQ(v.capacity(), 100);
+}
+
+TEST(VectorHelperTest, vdeallocate) {
+  ft::vector<int> v;
+  v.vallocate(100);
+  v.vdeallocate();
+  EXPECT_EQ(v.size(), 0);
+  EXPECT_EQ(v.capacity(), 0);
+}
+
 TEST(VectorConstructorTest, DefaultConstructor) {
   std::vector<int> s;
   ft::vector<int>  f;
@@ -168,7 +185,6 @@ TEST_F(VectorTest, AssignFuncIter) {
       EXPECT_EQ(s[i], f[i]);
     }
   }
-
   // small to big
   {
     std::vector<int> src(100);

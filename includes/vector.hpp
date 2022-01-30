@@ -34,10 +34,16 @@ private:
   pointer        cap_;
   allocator_type alloc_;
 
-  void           vallocate(size_type n);
-  void           vdeallocate();
-  size_type      recommend(size_type new_size) const;
-  void           destruct_at_end(pointer new_end);
+#ifdef DEBUG
+public:
+#else
+private:
+#endif
+
+  void      vallocate(size_type n);
+  void      vdeallocate();
+  size_type recommend(size_type new_size) const;
+  void      destruct_at_end(pointer new_end);
 
 public:
   // == constructor ==
@@ -220,7 +226,7 @@ vector<T, Alloc>::vector(
     const Alloc&                                                    alloc)
     : alloc_(alloc) {
   difference_type len = std::distance(first, last);
-  begin_              = alloc_.allocate(len);
+  vallocate(len);
   std::uninitialized_copy(first, last, begin_);
   cap_ = end_ = begin_ + len;
 }
