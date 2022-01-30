@@ -40,7 +40,6 @@ TEST(VectorConstructorTest, DefaultConstructor) {
   ft::vector<int>  f;
   EXPECT_EQ(s.size(), f.size());
   EXPECT_EQ(s.max_size(), f.max_size());
-  EXPECT_EQ(s.data(), f.data());
   EXPECT_EQ(s.capacity(), f.capacity());
   EXPECT_EQ(s.get_allocator(), f.get_allocator());
 }
@@ -51,7 +50,6 @@ TEST(VectorConstructorTest, ConstructorWithAllocator) {
   ft::vector<int>     f(alloc);
   EXPECT_EQ(s.size(), f.size());
   EXPECT_EQ(s.max_size(), f.max_size());
-  EXPECT_EQ(s.data(), f.data());
   EXPECT_EQ(s.capacity(), f.capacity());
   EXPECT_EQ(s.get_allocator(), f.get_allocator());
 }
@@ -271,10 +269,10 @@ TEST_F(VectorTest, InsertWithValue) {
 
 // TODO: check recommend implemantation of c++11
 TEST_F(VectorTest, InsertWithCount) {
-  // std::cout << s.capacity() << std::endl;
-  // std::cout << f.capacity() << std::endl;
-  s.insert(s.begin(), 2000, 42);
-  f.insert(f.begin(), 2000, 42);
+  std::cout << s.capacity() << std::endl;
+  std::cout << f.capacity() << std::endl;
+  s.insert(s.begin(), 1000, 42);
+  f.insert(f.begin(), 1000, 42);
   EXPECT_EQ(s.size(), f.size());
   EXPECT_EQ(s.capacity(), f.capacity());
   s.insert(s.begin() + 5, 4000, 57);
