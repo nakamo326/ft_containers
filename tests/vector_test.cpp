@@ -33,6 +33,7 @@ TEST(VectorHelperTest, vdeallocate) {
   v.vdeallocate();
   EXPECT_EQ(v.size(), 0);
   EXPECT_EQ(v.capacity(), 0);
+  v.vdeallocate();
 }
 
 TEST(VectorConstructorTest, DefaultConstructor) {
@@ -224,6 +225,33 @@ TEST_F(VectorTest, At) {
   EXPECT_THROW(f.at(f.size()), std::out_of_range);
 }
 
+TEST_F(VectorTest, Front) {
+  EXPECT_EQ(s.front(), f.front());
+  s.front() = 42;
+  f.front() = 42;
+  EXPECT_EQ(s.front(), f.front());
+  EXPECT_EQ(s.front(), 42);
+  EXPECT_EQ(f.front(), 42);
+}
+
+TEST_F(VectorTest, Back) {
+  EXPECT_EQ(s.back(), f.back());
+  s.back() = 42;
+  f.back() = 42;
+  EXPECT_EQ(s.back(), f.back());
+  EXPECT_EQ(s.back(), 42);
+  EXPECT_EQ(f.back(), 42);
+}
+
+TEST_F(VectorTest, Reserve) {
+  s.reserve(1000);
+  f.reserve(1000);
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
+  EXPECT_THROW(s.reserve(s.max_size() + 1), std::length_error);
+  EXPECT_THROW(f.reserve(f.max_size() + 1), std::length_error);
+}
+
 TEST_F(VectorTest, BeginAndEnd) {
   auto sit = s.begin();
   auto fit = f.begin();
@@ -253,18 +281,16 @@ TEST_F(VectorTest, Pushback) {
 TEST_F(VectorTest, Clear) {}
 
 TEST_F(VectorTest, InsertWithValue) {
-  s.insert(s.begin() + 5, 42);
-  f.insert(f.begin() + 5, 42);
-  EXPECT_EQ(s[5], 42);
-  EXPECT_EQ(f[5], 42);
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  s.insert(s.end(), 42);
-  f.insert(f.end(), 42);
-  EXPECT_EQ(s[s.size() - 1], 42);
-  EXPECT_EQ(f[f.size() - 1], 42);
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
+  std::vector<int> ts;
+  ft::vector<int>  tf;
+  for (size_t i = 0; i < 1000; i++) {
+    ts.insert(ts.begin(), i);
+    tf.insert(tf.begin(), i);
+    EXPECT_EQ(ts[0], i);
+    EXPECT_EQ(tf[0], i);
+    EXPECT_EQ(ts.size(), tf.size());
+    EXPECT_EQ(ts.capacity(), tf.capacity());
+  }
 }
 
 TEST_F(VectorTest, InsertWithCount) {
