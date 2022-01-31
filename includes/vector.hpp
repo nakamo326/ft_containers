@@ -344,10 +344,10 @@ void vector<T, Alloc>::clear() {
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
                                                              const T& value) {
-  difference_type len = pos - begin();
+  difference_type offset = pos - begin();
   if (end_ == cap_) {
-    reserve(recommend(size() + 1));
-    pos = begin() + len;
+    reserve(check_len(1));
+    pos = begin() + offset;
   }
   if (pos == end()) {
     push_back(value);
@@ -357,7 +357,7 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
     *pos = value;
     ++end_;
   }
-  return begin() + len;
+  return begin() + offset;
 }
 
 template <class T, class Alloc>
