@@ -349,14 +349,26 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
   return begin() + len;
 }
 
+// size_type _M_check_len(size_type __n, const char* __s) const {
+//   if (max_size() - size() < __n)
+//     __throw_length_error(__N(__s));
+
+//   const size_type __len = size() + (std::max)(size(), __n);
+//   return (__len < size() || __len > max_size()) ? max_size() : __len;
+// }
+
 template <class T, class Alloc>
 void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value) {
-  difference_type len = pos - begin();
   if (count <= 0)
     return;
+  difference_type offset = pos - begin();
+  // if (max_size() - size() < count)
+  //   throw std::length_error("ft::vector::insert");
   if (size() + count > capacity()) {
+    // size_type tmp = size() + (std::max)(size(), count);
+    // tmp           = (tmp < size() || tmp > max_size()) ? max_size() : tmp;
     reserve(std::max(size() * 2, size() + count));
-    pos = begin() + len;
+    pos = begin() + offset;
   }
   if (pos == end()) {
     std::uninitialized_fill_n(end(), count, value);
@@ -376,22 +388,22 @@ void vector<T, Alloc>::insert(
     iterator                                                        pos,
     typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
     InputIt                                                         last) {
-  difference_type len    = pos - begin();
-  difference_type offset = std::distance(first, last);
-  if (size() + offset > capacity()) {
-    reserve(recommend(size() + offset));
-    pos = begin() + len;
+  difference_type offset = pos - begin();
+  difference_type len    = std::distance(first, last);
+  if (size() + len > capacity()) {
+    reserve(recommend(size() + len));
+    pos = begin() + offset;
   }
   if (pos == end()) {
     std::uninitialized_copy(first, last, end());
   } else {
-    for (pointer p = end_; p < end_ + offset; p++) {
+    for (pointer p = end_; p < end_ + len; p++) {
       alloc_.construct(p, T());
     }
-    std::copy_backward(pos, end(), end() + offset);
+    std::copy_backward(pos, end(), end() + len);
     std::copy(first, last, pos);
   }
-  end_ += offset;
+  end_ += len;
 }
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator pos) {
