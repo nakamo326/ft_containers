@@ -43,6 +43,7 @@ private:
   void      vallocate(size_type n);
   void      vdeallocate();
   size_type recommend(size_type new_size) const;
+  size_type check_len(size_type count) const;
   void      destruct_at_end(pointer new_end);
 
 public:
@@ -192,6 +193,16 @@ typename vector<T, Alloc>::size_type vector<T, Alloc>::recommend(
   if (_capacity >= _max_size / 2)
     return _max_size;
   return std::max<size_type>(2 * _capacity, new_size);
+}
+
+template <class T, class Alloc>
+typename vector<T, Alloc>::size_type vector<T, Alloc>::check_len(
+    size_type count) const {
+  if (max_size() - size() < count)
+    throw std::length_error("ft::vector::insert");
+
+  const size_type len = size() + std::max<size_type>(size(), count);
+  return (len < size() || len > max_size()) ? max_size() : len;
 }
 
 template <class T, class Alloc>
@@ -349,25 +360,13 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
   return begin() + len;
 }
 
-// size_type _M_check_len(size_type __n, const char* __s) const {
-//   if (max_size() - size() < __n)
-//     __throw_length_error(__N(__s));
-
-//   const size_type __len = size() + (std::max)(size(), __n);
-//   return (__len < size() || __len > max_size()) ? max_size() : __len;
-// }
-
 template <class T, class Alloc>
 void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value) {
   if (count <= 0)
     return;
   difference_type offset = pos - begin();
-  // if (max_size() - size() < count)
-  //   throw std::length_error("ft::vector::insert");
   if (size() + count > capacity()) {
-    // size_type tmp = size() + (std::max)(size(), count);
-    // tmp           = (tmp < size() || tmp > max_size()) ? max_size() : tmp;
-    reserve(std::max(size() * 2, size() + count));
+    reserve(check_len(count));
     pos = begin() + offset;
   }
   if (pos == end()) {
@@ -389,21 +388,21 @@ void vector<T, Alloc>::insert(
     typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
     InputIt                                                         last) {
   difference_type offset = pos - begin();
-  difference_type len    = std::distance(first, last);
-  if (size() + len > capacity()) {
-    reserve(recommend(size() + len));
+  size_type       count  = std::distance(first, last);
+  if (size() + count > capacity()) {
+    reserve(check_len(count));
     pos = begin() + offset;
   }
   if (pos == end()) {
     std::uninitialized_copy(first, last, end());
   } else {
-    for (pointer p = end_; p < end_ + len; p++) {
+    for (pointer p = end_; p < end_ + count; p++) {
       alloc_.construct(p, T());
     }
-    std::copy_backward(pos, end(), end() + len);
+    std::copy_backward(pos, end(), end() + count);
     std::copy(first, last, pos);
   }
-  end_ += len;
+  end_ += count;
 }
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator pos) {
