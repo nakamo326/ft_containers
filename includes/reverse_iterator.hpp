@@ -8,13 +8,12 @@ namespace ft {
 template <class Iter>
 struct reverse_iterator {
 public:
-  typedef Iter iterator_type;
-  typedef
-      typename ft::iterator_traits<Iter>::iterator_category   iterator_category;
-  typedef typename ft::iterator_traits<Iter>::value_type      value_type;
-  typedef typename ft::iterator_traits<Iter>::pointer         pointer;
-  typedef typename ft::iterator_traits<Iter>::reference       reference;
-  typedef typename ft::iterator_traits<Iter>::difference_type difference_type;
+  typedef Iter                                              iterator_type;
+  typedef typename iterator_traits<Iter>::iterator_category iterator_category;
+  typedef typename iterator_traits<Iter>::value_type        value_type;
+  typedef typename iterator_traits<Iter>::pointer           pointer;
+  typedef typename iterator_traits<Iter>::reference         reference;
+  typedef typename iterator_traits<Iter>::difference_type   difference_type;
 
 private:
   Iter _current;

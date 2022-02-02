@@ -20,7 +20,7 @@ private:
 public:
   vector_iterator() : _ptr(NULL) {}
   vector_iterator(T* p) : _ptr(p) {}
-  // vector_iterator(vector_iterator const& other) : _ptr(other._ptr) {}
+  vector_iterator(vector_iterator const& other) : _ptr(other._ptr) {}
   template <typename _Iter>
   vector_iterator(const vector_iterator<_Iter>& __x) : _ptr(__x.base()) {}
 
