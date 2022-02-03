@@ -2,7 +2,8 @@ NAME := tester
 
 SHELL := /bin/bash
 CXX := clang++
-CXXFLAGS := -std=c++11 -MMD -MP -DDEBUG -g -fsanitize=integer -fsanitize=address
+# CXXFLAGS = -std=c++11 -MMD -MP -DDEBUG -g -fsanitize=integer -fsanitize=address
+CXXFLAGS = -std=c++11 -MMD -MP -DDEBUG -g -fsanitize=integer -fsanitize=address -fprofile-arcs -ftest-coverage
 LIBS := -lpthread
 INCLUDES := -I. -I../includes
 
@@ -59,9 +60,19 @@ $(GTEST_RELEASE):
 	if [ ! -f $(notdir $(GTEST_URL)) ]; then curl -OL $(GTEST_URL); fi
 	tar -xzf $(notdir $(GTEST_URL)) $(GTEST_RELEASE) && $(RM) $(notdir $(GTEST_URL))
 
+cav: re
+	lcov -c -b . -d . -o cov_test.info
+	genhtml cov_test.info -o cov_test
+
 clean:
 	$(RM) $(TOBJS)
 	$(RM) -r $(TOBJDIR)
+	$(RM) -r cov_test.info
+	$(RM) -r tester
+	$(RM) -r *.gcda
+	$(RM) -r *.gcno
+	$(RM) -r *.info
+	$(RM) -r cov_test
 
 fclean: clean
 	$(RM) $(NAME)
@@ -69,4 +80,4 @@ fclean: clean
 re : fclean
 	$(MAKE) all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re cav

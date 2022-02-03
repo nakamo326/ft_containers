@@ -40,6 +40,9 @@ debug: re
 test: $(filter-out %main.o,$(OBJS))
 	$(MAKE) -C $(GTESTDIR)
 
+cav: $(filter-out %main.o,$(OBJS))
+	$(MAKE) -C $(GTESTDIR) cav
+
 cmp: CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic-errors -Wshadow -DSTD
 cmp: $(filter-out %main.o,$(OBJS)) srcs/main.cpp
 	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o std
