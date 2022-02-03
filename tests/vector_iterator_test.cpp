@@ -98,4 +98,14 @@ TEST(VectorIteratorTest, ReverseIterator) {
   EXPECT_EQ(true, (it2 == f.rend()));
   EXPECT_EQ(true, (cit == f.rend()));
   EXPECT_EQ((s.rend() - s.rbegin()), (f.rend() - f.rbegin()));
+
+  ft::vector<int> tmp(100);
+  for (size_t i = 0; i < 100; i++) {
+    tmp.push_back(i);
+  }
+  auto crit = tmp.rbegin();
+  for (size_t i = 0; i < 100; i++) {
+    EXPECT_EQ(*crit, 99 - i);
+    crit++;
+  }
 }
