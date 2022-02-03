@@ -28,7 +28,7 @@ public:
 
   reference     operator*() const {
     Iter tmp = _current;
-    return *--_current;
+    return *--tmp;
   }
   pointer operator->() const {
     Iter tmp = _current;
