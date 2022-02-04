@@ -50,7 +50,7 @@ private:
         parent->right_         = new_node;
         new_node->parent_      = parent;
         new_node->isLeftChild_ = false;
-        return /* check_color */;
+        return checkColor(new_node);
       }
       return add(parent->right_, new_node);
     } else {  // parent >= new_node -> left
@@ -58,7 +58,7 @@ private:
         parent->left_          = new_node;
         new_node->parent_      = parent;
         new_node->isLeftChild_ = true;
-        return /* check_color */;
+        return checkColor(new_node);
       }
       return add(parent->left_, new_node);
     }
@@ -67,7 +67,7 @@ private:
   void checkColor(node_pointer node) {
     if (node == root_)
       return;
-    if (!node->isBlack_ && node->parent_->isBlack_)
+    if (!node->isBlack_ && !node->parent_->isBlack_)
       correctTree(node);
     checkColor(node->parent_);
   }
