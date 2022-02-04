@@ -29,6 +29,8 @@ public:
         parent_(NULL),
         isLeftChild_(false),
         isBlack_(false) {}
+
+  _RBnode(_RBnode& other) {}
 };
 
 template <typename K, typename V, typename Comp>
@@ -131,6 +133,33 @@ private:
       node->left_->isBlack_  = false;
       return;
     }
+  }
+
+  void leftRotate(node_pointer node) {
+    node_pointer tmp = node->right_;
+    node->right_     = tmp.left_;
+    if (node->right_ != NULL) {
+      node->right_->parent_     = node;
+      node->right_->isLeftChild = false;
+    }
+    if (node->parent_ == NULL) {
+      // node is root now and new root is tmp.
+      root_        = tmp;
+      tmp->parent_ = NULL;
+    } else {
+      tmp->parent_ = node->parent_;
+      if (node->isLeftChild_) {
+        tmp->isLeftChild_   = true;
+        tmp->parent_->left_ = tmp;
+      } else {
+        tmp->isLeftChild_    = false;
+        tmp->parent_->right_ = tmp;
+      }
+    }
+    tmp->left_         = node;
+    node->isLeftChild_ = true;
+    node->parent_      = tmp;
+    // need to delete old node.right_
   }
 
 public:
