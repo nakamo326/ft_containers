@@ -64,6 +64,45 @@ private:
     }
   }
 
+  void checkColor(node_pointer node) {
+    if (node == root_)
+      return;
+    if (!node->isBlack_ && node->parent_->isBlack_)
+      correctTree(node);
+    checkColor(node->parent_);
+  }
+
+  // red aunt color flip, black aunt rotate.
+
+  void correctTree(node_pointer node) {
+    // aunt is node.parent.parent.right
+    if (node->parent_->isLeft_) {
+      if (node->parent_->parent_->right_ == NULL ||
+          node->parent_->parent_->right_.isBlack_)
+        return rotate(node);
+      if (node->parent_->parent_->right_ != NULL)
+        node->parent_->parent_->right_.isBlack_ = true;
+      node->parent_->parent_.isBlack_ = false;
+      node->parent_.isBlack_          = true;
+      return;
+    }
+    // aunt is grandpa.left
+    if (node->parent_->parent_->left_ == NULL ||
+        node->parent_->parent_->left_.isBlack_)
+      return rotate(node);
+    if (node->parent_->parent_->left_ != NULL)
+      node->parent_->parent_->left_.isBlack_ = true;
+    node->parent_->parent_.isBlack_ = false;
+    node->parent_.isBlack_          = true;
+    return;
+  }
+
+  // left child left subtree imbalance right rotation
+  // right child right subtree imbalance right rotation
+  // left, right -> left,right right,left -> right, left
+
+  void rotate(node_pointer node) {}
+
 public:
   RBtree() : root_(NULL), size_(0), comp_(Comp()) {}
 
