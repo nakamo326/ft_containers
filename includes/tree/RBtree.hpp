@@ -120,7 +120,7 @@ private:
   void rotate(node_pointer node) {
     if (node->isLeftChild_) {
       if (node->parent_->isLeftChild_) {
-        // rightRotate(node->parent_->parent_);
+        rightRotate(node->parent_->parent_);
         node->isBlack_          = false;
         node->parent_->isBlack_ = true;
         if (node->parent_->right_ != NULL)
@@ -172,6 +172,32 @@ private:
     }
     tmp->left_         = node;
     node->isLeftChild_ = true;
+    node->parent_      = tmp;
+  }
+
+  void rightRotate(node_pointer node) {
+    node_pointer tmp = node->left_;
+    node->left_      = tmp->right_;
+    if (node->left_ != NULL) {
+      node->left_->parent_      = node;
+      node->left_->isLeftChild_ = true;
+    }
+    if (node->parent_ == NULL) {
+      // node is root now and new root is tmp.
+      root_        = tmp;
+      tmp->parent_ = NULL;
+    } else {
+      tmp->parent_ = node->parent_;
+      if (node->isLeftChild_) {
+        tmp->isLeftChild_   = true;
+        tmp->parent_->left_ = tmp;
+      } else {
+        tmp->isLeftChild_    = false;
+        tmp->parent_->right_ = tmp;
+      }
+    }
+    tmp->right_        = node;
+    node->isLeftChild_ = false;
     node->parent_      = tmp;
   }
 
