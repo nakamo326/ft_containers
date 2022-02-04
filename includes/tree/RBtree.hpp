@@ -78,12 +78,12 @@ private:
     // aunt is node.parent.parent.right
     if (node->parent_->isLeftChild_) {
       if (node->parent_->parent_->right_ == NULL ||
-          node->parent_->parent_->right_.isBlack_)
+          node->parent_->parent_->right_->isBlack_)
         return rotate(node);
       if (node->parent_->parent_->right_ != NULL)
-        node->parent_->parent_->right_.isBlack_ = true;
-      node->parent_->parent_.isBlack_ = false;
-      node->parent_.isBlack_          = true;
+        node->parent_->parent_->right_->isBlack_ = true;
+      node->parent_->parent_->isBlack_ = false;
+      node->parent_->isBlack_          = true;
       return;
     }
     // aunt is grandpa.left
@@ -91,9 +91,9 @@ private:
         node->parent_->parent_->left_.isBlack_)
       return rotate(node);
     if (node->parent_->parent_->left_ != NULL)
-      node->parent_->parent_->left_.isBlack_ = true;
-    node->parent_->parent_.isBlack_ = false;
-    node->parent_.isBlack_          = true;
+      node->parent_->parent_->left_->isBlack_ = true;
+    node->parent_->parent_->isBlack_ = false;
+    node->parent_->isBlack_          = true;
     return;
   }
 
@@ -101,7 +101,37 @@ private:
   // right child right subtree imbalance right rotation
   // left, right -> left,right right,left -> right, left
 
-  void rotate(node_pointer node) { if (node->isLeftChild_) }
+  void rotate(node_pointer node) {
+    if (node->isLeftChild_) {
+      if (node->parent_->isLeftChild_) {
+        rightRotate(node->parent_->parent_);
+        node->isBlack_          = false;
+        node->parent_->isBlack_ = true;
+        if (node->parent_->right_ != NULL)
+          node->parent_->right_ = false;
+        return;
+      }
+      rightLeftRotate(node->parent_->parent_);
+      node->isBlack_         = true;
+      node->right_->isBlack_ = false;
+      node->left_->isBlack_  = false;
+      return;
+    } else {
+      if (!node->parent_->isLeftChild_) {
+        leftRotate(node->parent_->parent_);
+        node->isBlack_          = false;
+        node->parent_->isBlack_ = true;
+        if (node->parent_->right_ != NULL)
+          node->parent_->right_ = false;
+        return;
+      }
+      rightLeftRotate(node->parent_->parent_);
+      node->isBlack_         = true;
+      node->right_->isBlack_ = false;
+      node->left_->isBlack_  = false;
+      return;
+    }
+  }
 
 public:
   RBtree() : root_(NULL), size_(0), comp_(Comp()) {}
