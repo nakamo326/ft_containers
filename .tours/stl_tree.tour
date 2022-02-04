@@ -1,0 +1,57 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "stl_tree",
+  "steps": [
+    {
+      "file": "ref/stl_tree.hpp",
+      "description": "ノードの基底クラス\\\nノードの色、親、左右の子\\\n関数として、左右の最下の子孫を返す関数。",
+      "line": 20
+    },
+    {
+      "file": "ref/stl_tree.hpp",
+      "description": "基底クラスを継承するノードクラス。\\\nポインターを_Link_typeとしてtypedef。\\\nvalueを_M_value_field変数として持つ。\\\nvalueのポインタを返すメンバ関数。",
+      "line": 92,
+      "selection": {
+        "start": {
+          "line": 95,
+          "character": 10
+        },
+        "end": {
+          "line": 95,
+          "character": 24
+        }
+      }
+    },
+    {
+      "file": "ref/stl_tree.hpp",
+      "description": "ノードをインクリメント、デクリメントする外部関数？",
+      "line": 102
+    },
+    {
+      "file": "ref/stl_tree.hpp",
+      "description": "ノードのカウンタ(size)とヘッダー（root）の上？を管理するためのヘルパークラス。",
+      "line": 63
+    },
+    {
+      "file": "ref/stl_tree.hpp",
+      "description": "イテレーター\\\n後で読む",
+      "line": 111
+    },
+    {
+      "file": "ref/stl_tree.hpp",
+      "description": "コンストイテレーター\\\n後で読む",
+      "line": 169
+    },
+    {
+      "file": "ref/stl_tree.hpp",
+      "description": "この二つのstructはallocateのためのもの、多分",
+      "line": 261
+    },
+    {
+      "file": "ref/stl_tree.hpp",
+      "description": "Node_allocator(allocator<Rb_tree_node\\<val\\>>),\\\nkey_compare,\\\ntree_headerを継承した、木構造。",
+      "line": 405
+    }
+  ],
+  "ref": "main"
+}

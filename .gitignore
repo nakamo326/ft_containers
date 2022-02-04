@@ -30,6 +30,8 @@ googletest/*
 # Reference
 ref/*
 !ref/make_ref.sh
+!ref/stl_tree.hpp
+
 
 # VScode settings
 .vscode
