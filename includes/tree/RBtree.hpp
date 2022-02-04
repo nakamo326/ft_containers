@@ -18,7 +18,7 @@ private:
   K          key_;
   V          value_;
   link_type *left_, *right_, *parent_;
-  bool       isLeft_, isBlack_;
+  bool       isLeftChild_, isBlack_;
 
 public:
   _RBnode(K key, V value)
@@ -27,7 +27,7 @@ public:
         left_(NULL),
         right_(NULL),
         parent_(NULL),
-        isLeft_(false),
+        isLeftChild_(false),
         isBlack_(false) {}
 };
 
@@ -45,19 +45,19 @@ private:
 
 private:
   void add(node_pointer parent, node_pointer new_node) {
-    if (comp_(parent->key_, new_node->key_)) {  // parent < new_node => right
+    if (comp_(parent->key_, new_node->key_)) {  // parent < new_node -> right
       if (parent->right_ == NULL) {
-        parent->right_    = new_node;
-        new_node->parent_ = parent;
-        new_node->isLeft_ = false;
+        parent->right_         = new_node;
+        new_node->parent_      = parent;
+        new_node->isLeftChild_ = false;
         return /* check_color */;
       }
       return add(parent->right_, new_node);
-    } else {  // parent >= new_node => left
+    } else {  // parent >= new_node -> left
       if (parent->left_ == NULL) {
-        parent->left_     = new_node;
-        new_node->parent_ = parent;
-        new_node->isLeft_ = true;
+        parent->left_          = new_node;
+        new_node->parent_      = parent;
+        new_node->isLeftChild_ = true;
         return /* check_color */;
       }
       return add(parent->left_, new_node);
@@ -76,7 +76,7 @@ private:
 
   void correctTree(node_pointer node) {
     // aunt is node.parent.parent.right
-    if (node->parent_->isLeft_) {
+    if (node->parent_->isLeftChild_) {
       if (node->parent_->parent_->right_ == NULL ||
           node->parent_->parent_->right_.isBlack_)
         return rotate(node);
@@ -101,7 +101,7 @@ private:
   // right child right subtree imbalance right rotation
   // left, right -> left,right right,left -> right, left
 
-  void rotate(node_pointer node) {}
+  void rotate(node_pointer node) { if (node->isLeftChild_) }
 
 public:
   RBtree() : root_(NULL), size_(0), comp_(Comp()) {}
