@@ -5,6 +5,8 @@
 #include <iostream>
 #include <memory>
 
+#include "Color.hpp"
+
 namespace ft {
 
 enum _RBtree_color { e_red = false, e_black = true };
@@ -43,7 +45,11 @@ public:
     std::cout << "left   : " << std::hex << left_ << std::dec << std::endl;
     std::cout << "right  : " << std::hex << right_ << std::dec << std::endl;
     std::cout << "isLeft : " << std::boolalpha << isLeftChild_ << std::endl;
-    std::cout << "isBlack: " << std::boolalpha << isBlack_ << std::endl;
+    std::cout << "isBlack: ";
+    if (isBlack_)
+      std::cout << BLU << std::boolalpha << isBlack_ << NC << std::endl;
+    else
+      std::cout << RED << std::boolalpha << isBlack_ << NC << std::endl;
   }
 };
 
