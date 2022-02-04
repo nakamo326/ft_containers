@@ -59,6 +59,7 @@ public:
   typedef _RBnode<K, V>                  node_type;
   typedef node_type*                     node_pointer;
   typedef std::allocator<_RBnode<K, V> > node_allocator;
+  typedef size_t                         size_type;
 
 private:
   node_pointer root_;
@@ -133,7 +134,7 @@ private:
           node->parent_->right_->isBlack_ = false;
         return;
       }
-      // rightLeftRotate(node->parent_->parent_);
+      rightLeftRotate(node->parent_->parent_);
       node->isBlack_         = true;
       node->right_->isBlack_ = false;
       node->left_->isBlack_  = false;
@@ -147,7 +148,7 @@ private:
           node->parent_->right_->isBlack_ = false;
         return;
       }
-      // leftRightRotate(node->parent_->parent_);
+      leftRightRotate(node->parent_->parent_);
       node->isBlack_         = true;
       node->right_->isBlack_ = false;
       node->left_->isBlack_  = false;
@@ -207,6 +208,44 @@ private:
     node->parent_      = tmp;
   }
 
+  void leftRightRotate(node_pointer node) {
+    leftRotate(node->left_);
+    rightRotate(node);
+  }
+
+  void rightLeftRotate(node_pointer node) {
+    rightRotate(node->right_);
+    leftRotate(node);
+  }
+
+  size_type height(node_pointer node) {
+    if (node == NULL)
+      return 0;
+    size_type leftHeight  = height(node->left_) + 1;
+    size_type rightHeight = height(node->right_) + 1;
+    return std::max(leftHeight, rightHeight);
+  }
+
+  size_type height() {
+    if (root_ == NULL)
+      return 0;
+    return height(root_) - 1;
+  }
+
+  size_type blackNodes(node_pointer node) {
+    if (node == NULL)
+      return 1;
+    size_type leftBlackNodes  = blackNodes(node->right_);
+    size_type rightBlackNodes = blackNodes(node->left_);
+    if (leftBlackNodes != rightBlackNodes) {
+      // need to fix tree
+      std::cout << "this tree is imbalance" << std::endl;
+    }
+    if (node->isBlack_)
+      leftBlackNodes++;
+    return leftBlackNodes;
+  }
+
 public:
   RBtree() : root_(NULL), size_(0), comp_(Comp()) {}
 
@@ -232,6 +271,8 @@ public:
     outputTree(node->right_);
     return;
   }
+
+  void checkBlackNodes() { blackNodes(root_); }
 };
 
 }  // namespace ft
