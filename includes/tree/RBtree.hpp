@@ -125,7 +125,7 @@ private:
           node->parent_->right_ = false;
         return;
       }
-      rightLeftRotate(node->parent_->parent_);
+      leftRightRotate(node->parent_->parent_);
       node->isBlack_         = true;
       node->right_->isBlack_ = false;
       node->left_->isBlack_  = false;
