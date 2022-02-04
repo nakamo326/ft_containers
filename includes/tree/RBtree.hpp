@@ -2,6 +2,7 @@
 #define FT_CONTAINERS_INCLUDES_TREE_RBTREE_HPP
 
 #include <cstddef>
+#include <iostream>
 #include <memory>
 
 namespace ft {
@@ -9,16 +10,17 @@ namespace ft {
 enum _RBtree_color { e_red = false, e_black = true };
 
 template <typename K, typename V>
-class _RBnode {
+struct _RBnode {
 public:
   typedef _RBnode<K, V> node_type;
-  typedef node_type*    link_type;
+  typedef node_type*    node_pointer;
 
-private:
-  K          key_;
-  V          value_;
-  link_type *left_, *right_, *parent_;
-  bool       isLeftChild_, isBlack_;
+  K            key_;
+  V            value_;
+  node_pointer left_;
+  node_pointer right_;
+  node_pointer parent_;
+  bool         isLeftChild_, isBlack_;
 
 public:
   _RBnode(K key, V value)
@@ -30,15 +32,27 @@ public:
         isLeftChild_(false),
         isBlack_(false) {}
 
-  _RBnode(_RBnode& other) {}
+  // _RBnode(_RBnode &other) {}
+
+  void outputInfo() {
+    std::cout << "------------------------------" << std::endl;
+    std::cout << "&this  : " << std::hex << this << std::dec << std::endl;
+    std::cout << "key    : " << key_ << std::endl;
+    std::cout << "value  : " << value_ << std::endl;
+    std::cout << "parent : " << std::hex << parent_ << std::dec << std::endl;
+    std::cout << "left   : " << std::hex << left_ << std::dec << std::endl;
+    std::cout << "right  : " << std::hex << right_ << std::dec << std::endl;
+    std::cout << "isLeft : " << std::boolalpha << isLeftChild_ << std::endl;
+    std::cout << "isBlack: " << std::boolalpha << isBlack_ << std::endl;
+  }
 };
 
 template <typename K, typename V, typename Comp>
 class RBtree {
 public:
-  typedef _RBnode<K, V>                 node_type;
-  typedef node_type*                    node_pointer;
-  typedef std::allocator<_RBnode<K, V>> node_allocator;
+  typedef _RBnode<K, V>                  node_type;
+  typedef node_type*                     node_pointer;
+  typedef std::allocator<_RBnode<K, V> > node_allocator;
 
 private:
   node_pointer root_;
@@ -90,7 +104,7 @@ private:
     }
     // aunt is grandpa.left
     if (node->parent_->parent_->left_ == NULL ||
-        node->parent_->parent_->left_.isBlack_)
+        node->parent_->parent_->left_->isBlack_)
       return rotate(node);
     if (node->parent_->parent_->left_ != NULL)
       node->parent_->parent_->left_->isBlack_ = true;
@@ -106,14 +120,14 @@ private:
   void rotate(node_pointer node) {
     if (node->isLeftChild_) {
       if (node->parent_->isLeftChild_) {
-        rightRotate(node->parent_->parent_);
+        // rightRotate(node->parent_->parent_);
         node->isBlack_          = false;
         node->parent_->isBlack_ = true;
         if (node->parent_->right_ != NULL)
-          node->parent_->right_ = false;
+          node->parent_->right_->isBlack_ = false;
         return;
       }
-      rightLeftRotate(node->parent_->parent_);
+      // rightLeftRotate(node->parent_->parent_);
       node->isBlack_         = true;
       node->right_->isBlack_ = false;
       node->left_->isBlack_  = false;
@@ -124,10 +138,10 @@ private:
         node->isBlack_          = false;
         node->parent_->isBlack_ = true;
         if (node->parent_->right_ != NULL)
-          node->parent_->right_ = false;
+          node->parent_->right_->isBlack_ = false;
         return;
       }
-      leftRightRotate(node->parent_->parent_);
+      // leftRightRotate(node->parent_->parent_);
       node->isBlack_         = true;
       node->right_->isBlack_ = false;
       node->left_->isBlack_  = false;
@@ -137,10 +151,10 @@ private:
 
   void leftRotate(node_pointer node) {
     node_pointer tmp = node->right_;
-    node->right_     = tmp.left_;
+    node->right_     = tmp->left_;
     if (node->right_ != NULL) {
-      node->right_->parent_     = node;
-      node->right_->isLeftChild = false;
+      node->right_->parent_      = node;
+      node->right_->isLeftChild_ = false;
     }
     if (node->parent_ == NULL) {
       // node is root now and new root is tmp.
@@ -159,7 +173,6 @@ private:
     tmp->left_         = node;
     node->isLeftChild_ = true;
     node->parent_      = tmp;
-    // need to delete old node.right_
   }
 
 public:
@@ -175,6 +188,17 @@ public:
     }
     add(root_, new_node);
     size_++;
+  }
+
+  void outputAllTree() { outputTree(root_); }
+
+  void outputTree(node_pointer node) {
+    if (node == NULL)
+      return;
+    node->outputInfo();
+    outputTree(node->left_);
+    outputTree(node->right_);
+    return;
   }
 };
 
