@@ -188,8 +188,6 @@ private:
     tmp->left_         = node;
     node->isLeftChild_ = true;
     node->parent_      = tmp;
-    tmp->isBlack_      = true;
-    node->isBlack_     = false;
   }
 
   void rightRotate(node_pointer node) {
@@ -217,8 +215,6 @@ private:
     tmp->right_        = node;
     node->isLeftChild_ = false;
     node->parent_      = tmp;
-    tmp->isBlack_      = true;
-    node->isBlack_     = false;
   }
 
   void leftRightRotate(node_pointer node) {
