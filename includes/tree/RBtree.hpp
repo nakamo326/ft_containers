@@ -94,7 +94,8 @@ private:
     }
     if (!node->isBlack_ && !node->parent_->isBlack_)
       correctTree(node);
-    checkColor(node->parent_);
+    if (node->parent_ != NULL)
+      checkColor(node->parent_);
   }
 
   // isUncleBlack
@@ -130,6 +131,7 @@ private:
   // left, right -> left,right
   // right,left -> right, left
 
+  // FIXME: changing color after rotation is wrong
   void rotate(node_pointer node) {
     std::cout << "call rotate method." << std::endl;
     if (node->isLeftChild_) {
@@ -267,8 +269,17 @@ private:
            checkConsecutiveRed(node->right_);
   }
 
+  void deleteAllNodes(node_pointer node) {
+    if (node == NULL)
+      return;
+    deleteAllNodes(node->left_);
+    deleteAllNodes(node->right_);
+    delete node;
+  }
+
 public:
   RBtree() : root_(NULL), size_(0), comp_(Comp()) {}
+  ~RBtree() { deleteAllNodes(root_); }
 
   void add(K key, V value) {
     // FIXME: use allocator
