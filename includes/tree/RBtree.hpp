@@ -32,8 +32,6 @@ struct _RBnode {
         isLeftChild_(false),
         isBlack_(false) {}
 
-  // _RBnode(_RBnode &other) {}
-
   void outputInfo() {
     std::cout << "------------------------------" << std::endl;
     std::cout << "&this  : " << std::hex << this << std::dec << std::endl;
@@ -67,7 +65,7 @@ private:
 private:
   void add(node_pointer parent, node_pointer new_node) {
     std::cout << "call add method. key is " << new_node->key_ << std::endl;
-    if (comp_(parent->key_, new_node->key_)) {  // parent < new_node -> right
+    if (comp_(parent->key_, new_node->key_)) {
       if (parent->right_ == NULL) {
         parent->right_         = new_node;
         new_node->parent_      = parent;
@@ -75,7 +73,7 @@ private:
         return checkColor(new_node);
       }
       return add(parent->right_, new_node);
-    } else {  // parent >= new_node -> left
+    } else {
       if (parent->left_ == NULL) {
         parent->left_          = new_node;
         new_node->parent_      = parent;
@@ -98,7 +96,7 @@ private:
     checkColor(node->parent_);
   }
 
-  // red aunt color flip, black aunt rotate.
+  // isUncleBlack
 
   bool isBlackOrNull(node_pointer node) {
     return node == NULL || node->isBlack_;
@@ -111,6 +109,8 @@ private:
     node->parent_->parent_->right_->isBlack_ = true;
   }
 
+  // precondition: node has parent
+  // root is black always
   void correctTree(node_pointer node) {
     std::cout << "call correctTree" << std::endl;
     if (node->parent_->isLeftChild_) {
@@ -126,7 +126,8 @@ private:
 
   // left child left subtree imbalance right rotation
   // right child right subtree imbalance right rotation
-  // left, right -> left,right right,left -> right, left
+  // left, right -> left,right
+  // right,left -> right, left
 
   void rotate(node_pointer node) {
     std::cout << "call rotate method." << std::endl;
