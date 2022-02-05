@@ -84,6 +84,19 @@ private:
     node->color_ = e_red;
   }
 
+  // == helpers ==
+  bool isUncleNodeBlack(node_pointer node) {
+    if (node->parent_->isLeftChild_)
+      return isBlack(node->parent_->parent_->right_);
+    return isBlack(node->parent_->parent_->left_);
+  }
+
+  void flipColor(node_pointer node) {
+    setRed(node->parent_->parent_);
+    setBlack(node->parent_->parent_->left_);
+    setBlack(node->parent_->parent_->right_);
+  }
+
   // == add ==
   // after adding node, we need to fix tree if there're imbalance
   void add(node_pointer parent, node_pointer new_node) {
@@ -125,18 +138,6 @@ private:
     flipColor(node);
   }
 
-  bool isUncleNodeBlack(node_pointer node) {
-    if (node->parent_->isLeftChild_)
-      return isBlack(node->parent_->parent_->right_);
-    return isBlack(node->parent_->parent_->left_);
-  }
-
-  void flipColor(node_pointer node) {
-    setRed(node->parent_->parent_);
-    setBlack(node->parent_->parent_->left_);
-    setBlack(node->parent_->parent_->right_);
-  }
-
   // == rotate ==
   void rotate(node_pointer node) {
     node_pointer new_parent;
@@ -159,6 +160,16 @@ private:
     setBlack(parent);
     setRed(parent->left_);
     setRed(parent->right_);
+  }
+
+  node_pointer leftRightRotate(node_pointer node) {
+    leftRotate(node->left_);
+    return rightRotate(node);
+  }
+
+  node_pointer rightLeftRotate(node_pointer node) {
+    rightRotate(node->right_);
+    return leftRotate(node);
   }
 
   node_pointer leftRotate(node_pointer node) {
@@ -213,16 +224,9 @@ private:
     return tmp;
   }
 
-  node_pointer leftRightRotate(node_pointer node) {
-    leftRotate(node->left_);
-    return rightRotate(node);
-  }
+  // == delete ==
 
-  node_pointer rightLeftRotate(node_pointer node) {
-    rightRotate(node->right_);
-    return leftRotate(node);
-  }
-
+  // == height ==
   size_type height(node_pointer node) {
     if (node == NULL)
       return 0;

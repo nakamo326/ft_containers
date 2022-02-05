@@ -11,12 +11,22 @@ TEST(RBnodeTest, constructor) {
 }
 
 TEST(RBtreeTest, add) {
-  std::random_device                    rand;
-  ft::RBtree<int, int, std::less<int> > tree;
-  int                                   times = 1000;
-  for (size_t i = 0; i < times; i++) {
-    int tmp = rand() % times;
-    tree.add(tmp, 0);
-    EXPECT_EQ(tree.isValidTree(), true);
+  std::random_device rand;
+  {
+    ft::RBtree<int, int, std::less<int> > tree;
+    int                                   times = 1000;
+    for (size_t i = 0; i < times; i++) {
+      tree.add(i, 0);
+      EXPECT_EQ(tree.isValidTree(), true);
+    }
+  }
+  {
+    ft::RBtree<int, int, std::less<int> > tree;
+    int                                   times = 1000;
+    for (size_t i = 0; i < times; i++) {
+      int tmp = rand() % times;
+      tree.add(tmp, 0);
+      EXPECT_EQ(tree.isValidTree(), true);
+    }
   }
 }
