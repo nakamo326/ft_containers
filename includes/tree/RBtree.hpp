@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 
 #include "Color.hpp"
 
@@ -250,12 +251,24 @@ private:
     size_type leftBlackNodes  = blackNodes(node->right_);
     size_type rightBlackNodes = blackNodes(node->left_);
     if (leftBlackNodes != rightBlackNodes) {
-      // need to fix tree
-      std::cout << "this tree is imbalance" << std::endl;
+      throw std::logic_error("this tree is imbalance");
     }
     if (node->isBlack_)
       leftBlackNodes++;
     return leftBlackNodes;
+  }
+
+  bool checkConsecutiveRed(node_pointer node) {
+    if (node == NULL)
+      return true;
+    if (!node->isBlack_) {
+      if (node->left_ != NULL && !node->left_->isBlack_)
+        return false;
+      if (node->right_ != NULL && !node->right_->isBlack_)
+        return false;
+    }
+    return checkConsecutiveRed(node->left_) &&
+           checkConsecutiveRed(node->right_);
   }
 
 public:
@@ -286,6 +299,18 @@ public:
   }
 
   void checkBlackNodes() { blackNodes(root_); }
+
+  bool isValidTree() {
+    if (!root_->isBlack_)
+      return false;
+    try {
+      checkBlackNodes();
+    } catch (const std::exception& e) {
+      std::cerr << e.what() << '\n';
+      return false;
+    }
+    return checkConsecutiveRed(root_);
+  }
 };
 
 }  // namespace ft
