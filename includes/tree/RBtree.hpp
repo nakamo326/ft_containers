@@ -13,7 +13,6 @@ enum _RBtree_color { e_red = false, e_black = true };
 
 template <typename K, typename V>
 struct _RBnode {
-public:
   typedef _RBnode<K, V> node_type;
   typedef node_type*    node_pointer;
 
@@ -24,7 +23,6 @@ public:
   node_pointer parent_;
   bool         isLeftChild_, isBlack_;
 
-public:
   _RBnode(K key, V value)
       : key_(key),
         value_(value),
@@ -40,7 +38,7 @@ public:
     std::cout << "------------------------------" << std::endl;
     std::cout << "&this  : " << std::hex << this << std::dec << std::endl;
     std::cout << "key    : " << key_ << std::endl;
-    std::cout << "value  : " << value_ << std::endl;
+    // std::cout << "value  : " << value_ << std::endl;
     std::cout << "parent : " << std::hex << parent_ << std::dec << std::endl;
     std::cout << "left   : " << std::hex << left_ << std::dec << std::endl;
     std::cout << "right  : " << std::hex << right_ << std::dec << std::endl;
@@ -68,6 +66,7 @@ private:
 
 private:
   void add(node_pointer parent, node_pointer new_node) {
+    std::cout << "call add method. key is " << new_node->key_ << std::endl;
     if (comp_(parent->key_, new_node->key_)) {  // parent < new_node -> right
       if (parent->right_ == NULL) {
         parent->right_         = new_node;
@@ -88,8 +87,12 @@ private:
   }
 
   void checkColor(node_pointer node) {
-    if (node == root_)
+    std::cout << "call checkColor method." << std::endl;
+    if (node == root_) {
+      if (node->isBlack_ == false)
+        node->isBlack_ = true;
       return;
+    }
     if (!node->isBlack_ && !node->parent_->isBlack_)
       correctTree(node);
     checkColor(node->parent_);
@@ -97,27 +100,28 @@ private:
 
   // red aunt color flip, black aunt rotate.
 
+  bool isBlackOrNull(node_pointer node) {
+    return node == NULL || node->isBlack_;
+  }
+
+  void flipColor(node_pointer node) {
+    std::cout << "call flipColor" << std::endl;
+    node->parent_->parent_->isBlack_         = false;
+    node->parent_->parent_->left_->isBlack_  = true;
+    node->parent_->parent_->right_->isBlack_ = true;
+  }
+
   void correctTree(node_pointer node) {
-    // aunt is node.parent.parent.right
+    std::cout << "call correctTree" << std::endl;
     if (node->parent_->isLeftChild_) {
-      if (node->parent_->parent_->right_ == NULL ||
-          node->parent_->parent_->right_->isBlack_)
+      if (isBlackOrNull(node->parent_->parent_->right_))
         return rotate(node);
-      if (node->parent_->parent_->right_ != NULL)
-        node->parent_->parent_->right_->isBlack_ = true;
-      node->parent_->parent_->isBlack_ = false;
-      node->parent_->isBlack_          = true;
-      return;
+      flipColor(node);
+    } else {
+      if (isBlackOrNull(node->parent_->parent_->left_))
+        return rotate(node);
+      flipColor(node);
     }
-    // aunt is grandpa.left
-    if (node->parent_->parent_->left_ == NULL ||
-        node->parent_->parent_->left_->isBlack_)
-      return rotate(node);
-    if (node->parent_->parent_->left_ != NULL)
-      node->parent_->parent_->left_->isBlack_ = true;
-    node->parent_->parent_->isBlack_ = false;
-    node->parent_->isBlack_          = true;
-    return;
   }
 
   // left child left subtree imbalance right rotation
@@ -125,6 +129,7 @@ private:
   // left, right -> left,right right,left -> right, left
 
   void rotate(node_pointer node) {
+    std::cout << "call rotate method." << std::endl;
     if (node->isLeftChild_) {
       if (node->parent_->isLeftChild_) {
         rightRotate(node->parent_->parent_);
@@ -144,8 +149,8 @@ private:
         leftRotate(node->parent_->parent_);
         node->isBlack_          = false;
         node->parent_->isBlack_ = true;
-        if (node->parent_->right_ != NULL)
-          node->parent_->right_->isBlack_ = false;
+        if (node->parent_->left_ != NULL)
+          node->parent_->left_->isBlack_ = false;
         return;
       }
       leftRightRotate(node->parent_->parent_);
@@ -157,6 +162,7 @@ private:
   }
 
   void leftRotate(node_pointer node) {
+    std::cout << "leftRotate" << std::endl;
     node_pointer tmp = node->right_;
     node->right_     = tmp->left_;
     if (node->right_ != NULL) {
@@ -180,9 +186,12 @@ private:
     tmp->left_         = node;
     node->isLeftChild_ = true;
     node->parent_      = tmp;
+    tmp->isBlack_      = true;
+    node->isBlack_     = false;
   }
 
   void rightRotate(node_pointer node) {
+    std::cout << "rightRotate" << std::endl;
     node_pointer tmp = node->left_;
     node->left_      = tmp->right_;
     if (node->left_ != NULL) {
@@ -206,6 +215,8 @@ private:
     tmp->right_        = node;
     node->isLeftChild_ = false;
     node->parent_      = tmp;
+    tmp->isBlack_      = true;
+    node->isBlack_     = false;
   }
 
   void leftRightRotate(node_pointer node) {
@@ -250,7 +261,8 @@ public:
   RBtree() : root_(NULL), size_(0), comp_(Comp()) {}
 
   void add(K key, V value) {
-    node_pointer new_node = new node_type(key, value);  // FIXME: use allocator
+    // FIXME: use allocator
+    node_pointer new_node = new node_type(key, value);
     if (root_ == NULL) {
       root_           = new_node;
       root_->isBlack_ = true;
