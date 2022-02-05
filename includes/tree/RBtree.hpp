@@ -34,9 +34,6 @@ struct _RBnode {
         isLeftChild_(false),
         color_(e_red) {}
 
-  bool isRed() { return color_ == e_red; }
-  bool isBlack() { return color_ == e_black; }
-
   void outputInfo() {
     std::cout << "------------------------------" << std::endl;
     std::cout << "&this  : " << std::hex << this << std::dec << std::endl;
@@ -68,8 +65,28 @@ private:
   Comp         comp_;
 
 private:
+  // == accessor ==
+  bool isBlack(node_pointer node) {
+    return node == NULL || node->color_ == e_black;
+  }
+
+  bool isRed(node_pointer node) { return node->color_ == e_red; }
+
+  void setBlack(node_pointer node) {
+    if (node == NULL)
+      return;
+    node->color_ = e_black;
+  }
+
+  void setRed(node_pointer node) {
+    if (node == NULL)
+      return;
+    node->color_ = e_red;
+  }
+
+  // == add ==
+  // after adding node, we need to fix tree if there're imbalance
   void add(node_pointer parent, node_pointer new_node) {
-    std::cout << "call add method. key is " << new_node->key_ << std::endl;
     if (comp_(parent->key_, new_node->key_)) {
       if (parent->right_ == NULL) {
         parent->right_         = new_node;
@@ -90,30 +107,22 @@ private:
   }
 
   void checkColor(node_pointer node) {
-    std::cout << "call checkColor method." << std::endl;
     if (node == root_) {
-      if (node->isRed())
+      if (isRed(node))
         setBlack(node);
       return;
     }
-    if (node->isRed() && node->parent_->isRed())
+    if (isRed(node) && isRed(node->parent_))
       correctTree(node);
     if (node->parent_ != NULL)
       checkColor(node->parent_);
   }
 
-  bool isBlack(node_pointer node) { return node == NULL || node->isBlack(); }
-
-  void setBlack(node_pointer node) {
-    if (node == NULL)
-      return;
-    node->color_ = e_black;
-  }
-
-  void setRed(node_pointer node) {
-    if (node == NULL)
-      return;
-    node->color_ = e_red;
+  // black uncle rotate, red uncle color flip
+  void correctTree(node_pointer node) {
+    if (isUncleNodeBlack(node))
+      return rotate(node);
+    flipColor(node);
   }
 
   bool isUncleNodeBlack(node_pointer node) {
@@ -123,32 +132,12 @@ private:
   }
 
   void flipColor(node_pointer node) {
-    std::cout << "call flipColor" << std::endl;
     setRed(node->parent_->parent_);
     setBlack(node->parent_->parent_->left_);
     setBlack(node->parent_->parent_->right_);
   }
 
-  // precondition: node has parent
-  // root is black always
-  void correctTree(node_pointer node) {
-    std::cout << "call correctTree" << std::endl;
-    if (isUncleNodeBlack(node))
-      return rotate(node);
-    flipColor(node);
-  }
-
-  // left child left subtree imbalance right rotation
-  // right child right subtree imbalance right rotation
-  // left, right -> left,right
-  // right,left -> right, left
-
-  void setFamilyColor(node_pointer parent) {
-    setBlack(parent);
-    setRed(parent->left_);
-    setRed(parent->right_);
-  }
-
+  // == rotate ==
   void rotate(node_pointer node) {
     node_pointer new_parent;
     if (node->isLeftChild_) {
@@ -166,8 +155,13 @@ private:
     return;
   }
 
+  void setFamilyColor(node_pointer parent) {
+    setBlack(parent);
+    setRed(parent->left_);
+    setRed(parent->right_);
+  }
+
   node_pointer leftRotate(node_pointer node) {
-    std::cout << "leftRotate" << std::endl;
     node_pointer tmp = node->right_;
     node->right_     = tmp->left_;
     if (node->right_ != NULL) {
@@ -194,7 +188,6 @@ private:
   }
 
   node_pointer rightRotate(node_pointer node) {
-    std::cout << "rightRotate" << std::endl;
     node_pointer tmp = node->left_;
     node->left_      = tmp->right_;
     if (node->left_ != NULL) {
@@ -252,7 +245,7 @@ private:
     if (leftBlackNodes != rightBlackNodes) {
       throw std::logic_error("this tree is imbalance");
     }
-    if (node->isBlack())
+    if (isBlack(node))
       leftBlackNodes++;
     return leftBlackNodes;
   }
@@ -260,16 +253,17 @@ private:
   bool checkConsecutiveRed(node_pointer node) {
     if (node == NULL)
       return true;
-    if (node->isRed()) {
-      if (node->left_ != NULL && node->left_->isRed())
+    if (isRed(node)) {
+      if (node->left_ != NULL && isRed(node->left_))
         return false;
-      if (node->right_ != NULL && node->right_->isRed())
+      if (node->right_ != NULL && isRed(node->right_))
         return false;
     }
     return checkConsecutiveRed(node->left_) &&
            checkConsecutiveRed(node->right_);
   }
 
+  // FIXME: use allocator
   void deleteAllNodes(node_pointer node) {
     if (node == NULL)
       return;
@@ -295,6 +289,7 @@ public:
     size_++;
   }
 
+  // == for debug ==
   void outputAllTree() { outputTree(root_); }
 
   void outputTree(node_pointer node) {
@@ -309,7 +304,7 @@ public:
   void checkBlackNodes() { blackNodes(root_); }
 
   bool isValidTree() {
-    if (root_->isRed())
+    if (isRed(root_))
       return false;
     try {
       checkBlackNodes();
