@@ -98,10 +98,12 @@ private:
       checkColor(node->parent_);
   }
 
-  // isUncleBlack
+  bool isBlack(node_pointer node) { return node == NULL || node->isBlack_; }
 
-  bool isBlackOrNull(node_pointer node) {
-    return node == NULL || node->isBlack_;
+  bool isUncleNodeBlack(node_pointer node) {
+    if (node->parent_->isLeftChild_)
+      return isBlack(node->parent_->parent_->right_);
+    return isBlack(node->parent_->parent_->left_);
   }
 
   void flipColor(node_pointer node) {
@@ -115,15 +117,9 @@ private:
   // root is black always
   void correctTree(node_pointer node) {
     std::cout << "call correctTree" << std::endl;
-    if (node->parent_->isLeftChild_) {
-      if (isBlackOrNull(node->parent_->parent_->right_))
-        return rotate(node);
-      flipColor(node);
-    } else {
-      if (isBlackOrNull(node->parent_->parent_->left_))
-        return rotate(node);
-      flipColor(node);
-    }
+    if (isUncleNodeBlack(node))
+      return rotate(node);
+    flipColor(node);
   }
 
   // left child left subtree imbalance right rotation
