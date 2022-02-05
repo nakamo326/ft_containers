@@ -143,39 +143,30 @@ private:
   // left, right -> left,right
   // right,left -> right, left
 
-  // FIXME: changing color after rotation is wrong?
-  void rotate(node_pointer node) {
-    // std::cout << "call rotate method." << std::endl;
-    if (node->isLeftChild_) {
-      if (node->parent_->isLeftChild_) {
-        rightRotate(node->parent_->parent_);
-        setBlack(node->parent_);
-        setRed(node);
-        setRed(node->parent_->right_);
-        return;
-      }
-      rightLeftRotate(node->parent_->parent_);
-      setBlack(node);
-      setRed(node->left_);
-      setRed(node->right_);
-      return;
-    } else {
-      if (!node->parent_->isLeftChild_) {
-        leftRotate(node->parent_->parent_);
-        setBlack(node->parent_);
-        setRed(node);
-        setRed(node->parent_->left_);
-        return;
-      }
-      leftRightRotate(node->parent_->parent_);
-      setBlack(node);
-      setRed(node->left_);
-      setRed(node->right_);
-      return;
-    }
+  void setFamilyColor(node_pointer parent) {
+    setBlack(parent);
+    setRed(parent->left_);
+    setRed(parent->right_);
   }
 
-  void leftRotate(node_pointer node) {
+  void rotate(node_pointer node) {
+    node_pointer new_parent;
+    if (node->isLeftChild_) {
+      if (node->parent_->isLeftChild_)
+        new_parent = rightRotate(node->parent_->parent_);
+      else
+        new_parent = rightLeftRotate(node->parent_->parent_);
+    } else {
+      if (!node->parent_->isLeftChild_)
+        new_parent = leftRotate(node->parent_->parent_);
+      else
+        new_parent = leftRightRotate(node->parent_->parent_);
+    }
+    setFamilyColor(new_parent);
+    return;
+  }
+
+  node_pointer leftRotate(node_pointer node) {
     std::cout << "leftRotate" << std::endl;
     node_pointer tmp = node->right_;
     node->right_     = tmp->left_;
@@ -184,7 +175,6 @@ private:
       node->right_->isLeftChild_ = false;
     }
     if (node->parent_ == NULL) {
-      // node is root now and new root is tmp.
       root_        = tmp;
       tmp->parent_ = NULL;
     } else {
@@ -200,9 +190,10 @@ private:
     tmp->left_         = node;
     node->isLeftChild_ = true;
     node->parent_      = tmp;
+    return tmp;
   }
 
-  void rightRotate(node_pointer node) {
+  node_pointer rightRotate(node_pointer node) {
     std::cout << "rightRotate" << std::endl;
     node_pointer tmp = node->left_;
     node->left_      = tmp->right_;
@@ -211,7 +202,6 @@ private:
       node->left_->isLeftChild_ = true;
     }
     if (node->parent_ == NULL) {
-      // node is root now and new root is tmp.
       root_        = tmp;
       tmp->parent_ = NULL;
     } else {
@@ -227,16 +217,17 @@ private:
     tmp->right_        = node;
     node->isLeftChild_ = false;
     node->parent_      = tmp;
+    return tmp;
   }
 
-  void leftRightRotate(node_pointer node) {
+  node_pointer leftRightRotate(node_pointer node) {
     leftRotate(node->left_);
-    rightRotate(node);
+    return rightRotate(node);
   }
 
-  void rightLeftRotate(node_pointer node) {
+  node_pointer rightLeftRotate(node_pointer node) {
     rightRotate(node->right_);
-    leftRotate(node);
+    return leftRotate(node);
   }
 
   size_type height(node_pointer node) {
