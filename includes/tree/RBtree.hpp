@@ -131,14 +131,14 @@ private:
   // left, right -> left,right
   // right,left -> right, left
 
-  // FIXME: changing color after rotation is wrong
+  // FIXME: changing color after rotation is wrong?
   void rotate(node_pointer node) {
     std::cout << "call rotate method." << std::endl;
     if (node->isLeftChild_) {
       if (node->parent_->isLeftChild_) {
         rightRotate(node->parent_->parent_);
-        node->isBlack_          = false;
         node->parent_->isBlack_ = true;
+        node->isBlack_          = false;
         if (node->parent_->right_ != NULL)
           node->parent_->right_->isBlack_ = false;
         return;
@@ -151,8 +151,8 @@ private:
     } else {
       if (!node->parent_->isLeftChild_) {
         leftRotate(node->parent_->parent_);
-        node->isBlack_          = false;
         node->parent_->isBlack_ = true;
+        node->isBlack_          = false;
         if (node->parent_->left_ != NULL)
           node->parent_->left_->isBlack_ = false;
         return;
