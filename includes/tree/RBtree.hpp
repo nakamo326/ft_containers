@@ -238,12 +238,28 @@ private:
     return node;
   }
 
+  // set newNode to old position
+  transplantNodes(node_pointer old, node_pointer new_node) {
+    if (old->parent_ == NULL) {
+      // if there are header nodes its more simple
+      root_ = new_node;
+    } else if (old->isLeftChild_) {
+      old->parent_->left_ = new_node;
+    } else {
+      old->parent_->right_ = new_node;
+    }
+    new_node->parent_ = old->parent_;
+  }
+
   bool deleteNode(K key) {
-    node_pointer t = searchKey(key);
-    if (t == NULL)
+    node_pointer target = searchKey(key);
+    if (target == NULL)
       return false;
 
-    // if node has no child or one child.
+    if (!target->left_ && !target->right_) {
+      // if there are header nodes its more simple
+    } else if (target->left_ == NULL) {
+    }
   }
 
   // == height ==
