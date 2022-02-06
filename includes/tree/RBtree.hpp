@@ -225,6 +225,26 @@ private:
   }
 
   // == delete ==
+  node_pointer searchKey(K key, node_pointer node = root_) {
+    while (node != NULL) {
+      if (node->key_ == key)
+        break;
+      if (comp_(node->key_, key)) {
+        node = node->right_;
+      } else {
+        node = node->left_;
+      }
+    }
+    return node;
+  }
+
+  bool deleteNode(K key) {
+    node_pointer t = searchKey(key);
+    if (t == NULL)
+      return false;
+
+    // if node has no child or one child.
+  }
 
   // == height ==
   size_type height(node_pointer node) {
@@ -267,18 +287,21 @@ private:
            checkConsecutiveRed(node->right_);
   }
 
+  // FIXME: use allocator and func name
+  void deleteOneNode(node_pointer node) { delete node; }
+
   // FIXME: use allocator
-  void deleteAllNodes(node_pointer node) {
+  void destroyTree(node_pointer node) {
     if (node == NULL)
       return;
-    deleteAllNodes(node->left_);
-    deleteAllNodes(node->right_);
+    destroyTree(node->left_);
+    destroyTree(node->right_);
     delete node;
   }
 
 public:
   RBtree() : root_(NULL), size_(0), comp_(Comp()) {}
-  ~RBtree() { deleteAllNodes(root_); }
+  ~RBtree() { destroyTree(root_); }
 
   void add(K key, V value) {
     // FIXME: use allocator

@@ -15,10 +15,11 @@ int main() {
   tree.add(6, 0);
   tree.outputAllTree();
   std::cout << std::endl;
-  tree.add(3, 0);
-  tree.add(4, 0);
-  tree.add(5, 0);
-  tree.add(7, 0);
-  tree.outputAllTree();
+  // tree.add(3, 0);
+  // tree.add(4, 0);
+  // tree.add(5, 0);
+  // tree.add(7, 0);
+  // tree.outputAllTree();
+  std::map<int, int> map;
   return 0;
 }
