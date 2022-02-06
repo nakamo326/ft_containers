@@ -60,6 +60,7 @@ public:
   typedef size_t                         size_type;
 
 private:
+  node_pointer header_;
   node_pointer root_;
   size_t       size_;
   Comp         comp_;
@@ -127,7 +128,7 @@ private:
     }
     if (isRed(node) && isRed(node->parent_))
       correctTree(node);
-    if (node->parent_ != NULL)
+    if (node != root_)
       checkColor(node->parent_);
   }
 
@@ -179,9 +180,10 @@ private:
       node->right_->parent_      = node;
       node->right_->isLeftChild_ = false;
     }
-    if (node->parent_ == NULL) {
-      root_        = tmp;
-      tmp->parent_ = NULL;
+    if (node == root_) {
+      root_          = tmp;
+      tmp->parent_   = header_;
+      header_->left_ = tmp;
     } else {
       tmp->parent_ = node->parent_;
       if (node->isLeftChild_) {
@@ -205,9 +207,10 @@ private:
       node->left_->parent_      = node;
       node->left_->isLeftChild_ = true;
     }
-    if (node->parent_ == NULL) {
-      root_        = tmp;
-      tmp->parent_ = NULL;
+    if (node == root_) {
+      root_          = tmp;
+      tmp->parent_   = header_;
+      header_->left_ = tmp;
     } else {
       tmp->parent_ = node->parent_;
       if (node->isLeftChild_) {
@@ -240,8 +243,8 @@ private:
 
   // set newNode to old position
   void transplantNodes(node_pointer old, node_pointer new_node) {
+    // FIXME: if there are header nodes its more simple
     if (old->parent_ == NULL) {
-      // if there are header nodes its more simple
       root_ = new_node;
     } else if (old->isLeftChild_) {
       old->parent_->left_    = new_node;
@@ -259,7 +262,7 @@ private:
       return false;
 
     if (!target->left_ && !target->right_) {
-      // if there are header nodes its more simple
+      // FIXME: if there are header nodes its more simple
     } else if (target->left_ == NULL) {
     }
   }
@@ -318,14 +321,19 @@ private:
   }
 
 public:
-  RBtree() : root_(NULL), size_(0), comp_(Comp()) {}
-  ~RBtree() { destroyTree(root_); }
+  RBtree() : root_(NULL), size_(0), comp_(Comp()) {
+    header_ = new node_type(K(), V());
+    setBlack(header_);
+  }
+  ~RBtree() { destroyTree(header_); }
 
   void add(K key, V value) {
     // FIXME: use allocator
     node_pointer new_node = new node_type(key, value);
     if (root_ == NULL) {
-      root_ = new_node;
+      root_          = new_node;
+      root_->parent_ = header_;
+      header_->left_ = root_;
       setBlack(root_);
       size_++;
       return;
