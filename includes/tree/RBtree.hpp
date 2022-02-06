@@ -60,12 +60,6 @@ public:
   typedef size_t                         size_type;
 
 private:
-  node_pointer header_;
-  node_pointer root_;
-  size_t       size_;
-  Comp         comp_;
-
-private:
   // == accessor ==
   bool isBlack(node_pointer node) {
     return node == NULL || node->color_ == e_black;
@@ -363,6 +357,12 @@ private:
     destroyTree(node->right_);
     delete node;
   }
+
+private:
+  node_pointer header_;
+  node_pointer root_;
+  size_t       size_;
+  Comp         comp_;
 
 public:
   RBtree() : root_(NULL), size_(0), comp_(Comp()) {
