@@ -335,6 +335,7 @@ public:
       root_->parent_ = header_;
       header_->left_ = root_;
       setBlack(root_);
+      root_->isLeftChild_ = true;
       size_++;
       return;
     }
