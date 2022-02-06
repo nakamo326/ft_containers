@@ -303,10 +303,13 @@ private:
       }
       target = min;
     }
-    deleteOneNode(target);
-    // if (original_color == e_red)
+    deallocateNode(target);
+    if (original_color == e_red)
+      fixDeletion(x);
     return true;
   }
+
+  void fixDeletion(node_pointer node) { (void)node; }
 
   // == height ==
   size_type height(node_pointer node) {
@@ -350,7 +353,7 @@ private:
   }
 
   // FIXME: use allocator and func name
-  void deleteOneNode(node_pointer node) { delete node; }
+  void deallocateNode(node_pointer node) { delete node; }
 
   // FIXME: use allocator
   void destroyTree(node_pointer node) {
