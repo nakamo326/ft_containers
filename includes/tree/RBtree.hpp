@@ -225,7 +225,7 @@ private:
   }
 
   // == delete ==
-  node_pointer searchKey(K key, node_pointer node = root_) {
+  node_pointer searchKey(K key, node_pointer node) {
     while (node != NULL) {
       if (node->key_ == key)
         break;
@@ -239,20 +239,22 @@ private:
   }
 
   // set newNode to old position
-  transplantNodes(node_pointer old, node_pointer new_node) {
+  void transplantNodes(node_pointer old, node_pointer new_node) {
     if (old->parent_ == NULL) {
       // if there are header nodes its more simple
       root_ = new_node;
     } else if (old->isLeftChild_) {
-      old->parent_->left_ = new_node;
+      old->parent_->left_    = new_node;
+      new_node->isLeftChild_ = true;
     } else {
-      old->parent_->right_ = new_node;
+      old->parent_->right_   = new_node;
+      new_node->isLeftChild_ = false;
     }
     new_node->parent_ = old->parent_;
   }
 
   bool deleteNode(K key) {
-    node_pointer target = searchKey(key);
+    node_pointer target = searchKey(key, root_);
     if (target == NULL)
       return false;
 
