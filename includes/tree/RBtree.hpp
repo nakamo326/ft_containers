@@ -241,11 +241,19 @@ private:
     return node;
   }
 
+  node_pointer searchMinimum(node_pointer node) {
+    while (node->left_ != NULL) {
+      node = node->left_;
+    }
+    return node;
+  }
+
   // set newNode to old position
   void transplantNodes(node_pointer old, node_pointer new_node) {
-    // FIXME: if there are header nodes its more simple
-    if (old->parent_ == NULL) {
-      root_ = new_node;
+    if (old == root_) {
+      root_                  = new_node;
+      header_->left_         = new_node;
+      new_node->isLeftChild_ = true;
     } else if (old->isLeftChild_) {
       old->parent_->left_    = new_node;
       new_node->isLeftChild_ = true;
@@ -256,15 +264,48 @@ private:
     new_node->parent_ = old->parent_;
   }
 
+  void copyVal(node_pointer from, node_pointer to) {
+    to->key_   = from->key_;
+    to->value_ = from->value_;
+  }
+
   bool deleteNode(K key) {
     node_pointer target = searchKey(key, root_);
     if (target == NULL)
       return false;
 
+    _RBtree_color original_color = target->color_;
+    node_pointer  x;
     if (!target->left_ && !target->right_) {
-      // FIXME: if there are header nodes its more simple
+      if (target->isLeftChild_)
+        target->parent_->left_ = NULL;
+      else
+        target->parent_->right_ = NULL;
     } else if (target->left_ == NULL) {
+      x = target->right_;
+      transplantNodes(target, target->right_);
+    } else if (target->right_ == NULL) {
+      x = target->left_;
+      transplantNodes(target, target->left_);
+    } else {
+      node_pointer min = searchMinimum(target->right_);
+      original_color   = min->color_;
+      x                = min->right_;
+
+      copyVal(min, target);
+      if (min->right_ != NULL) {
+        transplantNodes(min, min->right_);
+      } else {
+        if (min->isLeftChild_)
+          min->parent_->left_ = NULL;
+        else
+          min->parent_->right_ = NULL;
+      }
+      target = min;
     }
+    deleteOneNode(target);
+    // if (original_color == e_red)
+    return true;
   }
 
   // == height ==
@@ -342,6 +383,8 @@ public:
     add(root_, new_node);
     size_++;
   }
+
+  bool erase(K key) { return deleteNode(key); }
 
   // == for debug ==
   void outputAllTree() { outputTree(root_); }
