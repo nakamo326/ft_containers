@@ -66,23 +66,23 @@ public:
   vector& operator=(const vector& x);
 
   // == assign ==
-  void    assign(size_type n, const value_type& u);
+  void assign(size_type n, const value_type& u);
   template <class InputIt>
   void assign(
       InputIt                                                         first,
       typename enable_if<!is_integral<InputIt>::value, InputIt>::type last);
 
-  allocator_type   get_allocator() const { return alloc_; }
+  allocator_type get_allocator() const { return alloc_; }
 
   // == element access ==
-  reference        operator[](size_type pos) { return begin_[pos]; };
-  const_reference  operator[](size_type pos) const { return begin_[pos]; };
-  reference        at(size_type pos);
-  const_reference  at(size_type pos) const;
-  reference        front() { return *begin_; };
-  const_reference  front() const { return *begin_; };
-  reference        back() { return *(end_ - 1); };
-  const_reference  back() const { return *(end_ - 1); };
+  reference       operator[](size_type pos) { return begin_[pos]; };
+  const_reference operator[](size_type pos) const { return begin_[pos]; };
+  reference       at(size_type pos);
+  const_reference at(size_type pos) const;
+  reference       front() { return *begin_; };
+  const_reference front() const { return *begin_; };
+  reference       back() { return *(end_ - 1); };
+  const_reference back() const { return *(end_ - 1); };
 
   // == iterator ==
   iterator         begin() { return vector_iterator<T>(begin_); };
@@ -106,10 +106,10 @@ public:
     return std::min<size_type>(alloc_.max_size(),
                                std::numeric_limits<difference_type>::max());
   };
-  void     reserve(size_type new_cap);
+  void reserve(size_type new_cap);
 
   // == modifiers ==
-  void     clear();
+  void clear();
 
   iterator insert(iterator pos, const T& value);
   void     insert(iterator pos, size_type count, const T& value);
@@ -122,10 +122,10 @@ public:
   iterator erase(iterator pos);
   iterator erase(iterator first, iterator last);
 
-  void     push_back(const T& value);
-  void     pop_back();
-  void     resize(size_type count, T value = T());
-  void     swap(vector& other);
+  void push_back(const T& value);
+  void pop_back();
+  void resize(size_type count, T value = T());
+  void swap(vector& other);
 };
 
 // == non-member functions ==
@@ -404,6 +404,7 @@ void vector<T, Alloc>::insert(
   }
   end_ += count;
 }
+
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator pos) {
   std::copy(pos + 1, end(), pos);
