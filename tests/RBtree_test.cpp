@@ -1,4 +1,4 @@
-#include "tree/RBtree.hpp"
+#include "RBtree.hpp"
 
 #include <gtest/gtest.h>
 
