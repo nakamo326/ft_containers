@@ -281,21 +281,71 @@ private:
       deleted_color = target->color_;
     }
     deallocateNode(target);
-    // if (deleted_color == e_black)
-    //   fixDeletion(x);
+    if (deleted_color == e_black)
+      fixDeletion(x);
     return true;
   }
 
   // node could be NULL
   void fixDeletion(node_pointer node) {
     node_pointer s;
-    if (node != root_ && node->color_ == e_black) {
+    while (node != root_ && node->color_ == e_black) {
       if (isLeftChild(node)) {
         s = node->parent_->right_;
-        if (s->color_ == e_black) {
+        if (isRed(s)) {
+          setBlack(s);
+          setRed(node->parent_);
+          leftRotate(node->parent_);
+          s = node->parent_->right_;
+        }
+
+        if (isBlack(s->left_) && isBlack(s->right_)) {
+          setRed(s);
+          node = node->parent_;
+        } else {
+          if (isBlack(s->right_)) {
+            setBlack(s->left_);
+            setRed(s);
+            rightRotate(s);
+            s = node->parent_->right_;
+          }
+
+          s->color_ = node->parent_->color_;
+          setBlack(node->parent_);
+          setBlack(s->right_);
+          leftRotate(node->parent_);
+          node = root_;
+        }
+      } else {
+        s = node->parent_->left_;
+        if (isRed(s)) {
+          setBlack(s);
+          setRed(node->parent_);
+          rightRotate(node->parent_);
+          s = node->parent_->left_;
+        }
+
+        if (isBlack(s->right_) && isBlack(s->left_)) {
+          setRed(s);
+          node = node->parent_;
+
+        } else {
+          if (isBlack(s->left_)) {
+            setBlack(s->right_);
+            setRed(s);
+            leftRotate(s);
+            s = node->parent_->left_;
+          }
+
+          s->color_ = node->parent_->color_;
+          setBlack(node->parent_);
+          setBlack(s->left_);
+          rightRotate(node->parent_);
+          node = root_;
         }
       }
     }
+    setBlack(node);
   }
 
   // == height ==
