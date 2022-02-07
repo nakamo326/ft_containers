@@ -242,7 +242,8 @@ private:
     } else {
       old->parent_->right_ = new_node;
     }
-    new_node->parent_ = old->parent_;
+    if (new_node != NULL)
+      new_node->parent_ = old->parent_;
   }
 
   void copyVal(node_pointer from, node_pointer to) {
@@ -257,12 +258,7 @@ private:
 
     _RBtree_color deleted_color = target->color_;
     node_pointer  x;
-    if (!target->left_ && !target->right_) {
-      if (isLeftChild(target))
-        target->parent_->left_ = NULL;
-      else
-        target->parent_->right_ = NULL;
-    } else if (target->left_ == NULL) {
+    if (target->left_ == NULL) {
       x = target->right_;
       transplantNodes(target, target->right_);
     } else if (target->right_ == NULL) {
@@ -290,6 +286,7 @@ private:
     return true;
   }
 
+  // node could be NULL
   void fixDeletion(node_pointer node) {
     node_pointer s;
     if (node != root_ && node->color_ == e_black) {
