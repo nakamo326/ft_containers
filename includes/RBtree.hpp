@@ -452,6 +452,18 @@ public:
     return checkConsecutiveRed(root_);
   }
 };
+template <typename T>
+struct RBtree_iterator {
+  typedef T  value_type;
+  typedef T& reference;
+  typedef T* pointer;
+
+  typedef std::bidirectional_iterator_tag iterator_category;
+  typedef std::ptrdiff_t                  difference_type;
+
+  typedef RBtree_iterator<T> _Self;
+  // typedef _RBnode<>*        _Link_type;
+};
 
 }  // namespace ft
 

@@ -3,8 +3,8 @@
 #include <stack>
 #include <typeinfo>
 
+#include "RBtree.hpp"
 #include "ft_container.hpp"
-#include "tree/RBtree.hpp"
 
 int main() {
   ft::RBtree<int, int, std::less<int> > tree;
