@@ -7,7 +7,13 @@
 
 TEST(RBnodeTest, constructor) {
   ft::_RBnode<int, std::string> node(0, "hello");
-  node.outputInfo();
+  EXPECT_EQ(node.key_, 0);
+  EXPECT_EQ(node.value_, "hello");
+  EXPECT_EQ(node.left_, (void *)NULL);
+  EXPECT_EQ(node.right_, (void *)NULL);
+  EXPECT_EQ(node.parent_, (void *)NULL);
+  EXPECT_EQ(node.isLeftChild_, false);
+  EXPECT_EQ(node.color_, false);
 }
 
 TEST(RBtreeTest, add) {
