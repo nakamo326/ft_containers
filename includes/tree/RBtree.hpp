@@ -268,7 +268,7 @@ private:
     if (target == NULL)
       return false;
 
-    _RBtree_color original_color = target->color_;
+    _RBtree_color deleted_color = target->color_;
     node_pointer  x;
     if (!target->left_ && !target->right_) {
       if (target->isLeftChild_)
@@ -283,7 +283,6 @@ private:
       transplantNodes(target, target->left_);
     } else {
       node_pointer min = searchMinimum(target->right_);
-      original_color   = min->color_;
       x                = min->right_;
 
       copyVal(min, target);
@@ -295,15 +294,25 @@ private:
         else
           min->parent_->right_ = NULL;
       }
-      target = min;
+      target        = min;
+      deleted_color = target->color_;
     }
     deallocateNode(target);
-    if (original_color == e_red)
-      fixDeletion(x);
+    // if (deleted_color == e_black)
+    //   fixDeletion(x);
     return true;
   }
 
-  void fixDeletion(node_pointer node) { (void)node; }
+  void fixDeletion(node_pointer node) {
+    node_pointer s;
+    if (node != root_ && node->color_ == e_black) {
+      if (node->isLeftChild_) {
+        s = node->parent_->right_;
+        if (s->color_ == e_black) {
+        }
+      }
+    }
+  }
 
   // == height ==
   size_type height(node_pointer node) {

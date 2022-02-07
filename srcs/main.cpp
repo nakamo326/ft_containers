@@ -15,13 +15,14 @@ int main() {
   tree.add(6, 0);
   tree.add(3, 0);
   tree.add(5, 0);
-  tree.add(4, 0);
+  // tree.add(4, 0);
 
   tree.outputAllTree();
   std::cout << std::endl;
-  tree.erase(3);
+  tree.erase(6);
   tree.outputAllTree();
   std::cout << std::endl;
+  std::cout << std::boolalpha << tree.isValidTree() << std::endl;
   // tree.add(3, 0);
   // tree.add(4, 0);
   // tree.add(5, 0);
