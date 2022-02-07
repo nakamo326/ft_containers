@@ -22,7 +22,6 @@ struct _RBnode {
   node_pointer  left_;
   node_pointer  right_;
   node_pointer  parent_;
-  bool          isLeftChild_;
   _RBtree_color color_;
 
   _RBnode(K key, V value)
@@ -31,7 +30,6 @@ struct _RBnode {
         left_(NULL),
         right_(NULL),
         parent_(NULL),
-        isLeftChild_(false),
         color_(e_red) {}
 
   void outputInfo() {
@@ -42,7 +40,6 @@ struct _RBnode {
     std::cout << "parent : " << std::hex << parent_ << std::dec << std::endl;
     std::cout << "left   : " << std::hex << left_ << std::dec << std::endl;
     std::cout << "right  : " << std::hex << right_ << std::dec << std::endl;
-    std::cout << "isLeft : " << std::boolalpha << isLeftChild_ << std::endl;
     std::cout << "color  : ";
     if (color_)
       std::cout << BLU << "black" << NC << std::endl;
@@ -79,9 +76,13 @@ private:
     node->color_ = e_red;
   }
 
+  bool isLeftChild(node_pointer node) { return node->parent_->left_ == node; }
+
   // == helpers ==
+
+  // precondition: node has grandparent
   bool isUncleNodeBlack(node_pointer node) {
-    if (node->parent_->isLeftChild_)
+    if (isLeftChild(node->parent_))
       return isBlack(node->parent_->parent_->right_);
     return isBlack(node->parent_->parent_->left_);
   }
@@ -96,17 +97,15 @@ private:
   void add(node_pointer parent, node_pointer new_node) {
     if (comp_(parent->key_, new_node->key_)) {
       if (parent->right_ == NULL) {
-        parent->right_         = new_node;
-        new_node->parent_      = parent;
-        new_node->isLeftChild_ = false;
+        parent->right_    = new_node;
+        new_node->parent_ = parent;
         return checkColor(new_node);
       }
       return add(parent->right_, new_node);
     } else {
       if (parent->left_ == NULL) {
-        parent->left_          = new_node;
-        new_node->parent_      = parent;
-        new_node->isLeftChild_ = true;
+        parent->left_     = new_node;
+        new_node->parent_ = parent;
         return checkColor(new_node);
       }
       return add(parent->left_, new_node);
@@ -135,13 +134,13 @@ private:
   // == rotate ==
   void rotate(node_pointer node) {
     node_pointer new_parent;
-    if (node->isLeftChild_) {
-      if (node->parent_->isLeftChild_)
+    if (isLeftChild(node)) {
+      if (isLeftChild(node->parent_))
         new_parent = rightRotate(node->parent_->parent_);
       else
         new_parent = rightLeftRotate(node->parent_->parent_);
     } else {
-      if (!node->parent_->isLeftChild_)
+      if (!isLeftChild(node->parent_))
         new_parent = leftRotate(node->parent_->parent_);
       else
         new_parent = leftRightRotate(node->parent_->parent_);
@@ -170,8 +169,7 @@ private:
     node_pointer tmp = node->right_;
     node->right_     = tmp->left_;
     if (node->right_ != NULL) {
-      node->right_->parent_      = node;
-      node->right_->isLeftChild_ = false;
+      node->right_->parent_ = node;
     }
     if (node == root_) {
       root_          = tmp;
@@ -179,17 +177,14 @@ private:
       header_->left_ = tmp;
     } else {
       tmp->parent_ = node->parent_;
-      if (node->isLeftChild_) {
-        tmp->isLeftChild_   = true;
+      if (isLeftChild(node)) {
         tmp->parent_->left_ = tmp;
       } else {
-        tmp->isLeftChild_    = false;
         tmp->parent_->right_ = tmp;
       }
     }
-    tmp->left_         = node;
-    node->isLeftChild_ = true;
-    node->parent_      = tmp;
+    tmp->left_    = node;
+    node->parent_ = tmp;
     return tmp;
   }
 
@@ -197,8 +192,7 @@ private:
     node_pointer tmp = node->left_;
     node->left_      = tmp->right_;
     if (node->left_ != NULL) {
-      node->left_->parent_      = node;
-      node->left_->isLeftChild_ = true;
+      node->left_->parent_ = node;
     }
     if (node == root_) {
       root_          = tmp;
@@ -206,17 +200,14 @@ private:
       header_->left_ = tmp;
     } else {
       tmp->parent_ = node->parent_;
-      if (node->isLeftChild_) {
-        tmp->isLeftChild_   = true;
+      if (isLeftChild(node)) {
         tmp->parent_->left_ = tmp;
       } else {
-        tmp->isLeftChild_    = false;
         tmp->parent_->right_ = tmp;
       }
     }
-    tmp->right_        = node;
-    node->isLeftChild_ = false;
-    node->parent_      = tmp;
+    tmp->right_   = node;
+    node->parent_ = tmp;
     return tmp;
   }
 
@@ -244,15 +235,12 @@ private:
   // set newNode to old position
   void transplantNodes(node_pointer old, node_pointer new_node) {
     if (old == root_) {
-      root_                  = new_node;
-      header_->left_         = new_node;
-      new_node->isLeftChild_ = true;
-    } else if (old->isLeftChild_) {
-      old->parent_->left_    = new_node;
-      new_node->isLeftChild_ = true;
+      root_          = new_node;
+      header_->left_ = new_node;
+    } else if (isLeftChild(old)) {
+      old->parent_->left_ = new_node;
     } else {
-      old->parent_->right_   = new_node;
-      new_node->isLeftChild_ = false;
+      old->parent_->right_ = new_node;
     }
     new_node->parent_ = old->parent_;
   }
@@ -270,7 +258,7 @@ private:
     _RBtree_color deleted_color = target->color_;
     node_pointer  x;
     if (!target->left_ && !target->right_) {
-      if (target->isLeftChild_)
+      if (isLeftChild(target))
         target->parent_->left_ = NULL;
       else
         target->parent_->right_ = NULL;
@@ -288,7 +276,7 @@ private:
       if (min->right_ != NULL) {
         transplantNodes(min, min->right_);
       } else {
-        if (min->isLeftChild_)
+        if (isLeftChild(min))
           min->parent_->left_ = NULL;
         else
           min->parent_->right_ = NULL;
@@ -305,7 +293,7 @@ private:
   void fixDeletion(node_pointer node) {
     node_pointer s;
     if (node != root_ && node->color_ == e_black) {
-      if (node->isLeftChild_) {
+      if (isLeftChild(node)) {
         s = node->parent_->right_;
         if (s->color_ == e_black) {
         }
@@ -387,7 +375,6 @@ public:
       root_->parent_ = header_;
       header_->left_ = root_;
       setBlack(root_);
-      root_->isLeftChild_ = true;
       size_++;
       return;
     }

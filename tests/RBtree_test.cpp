@@ -12,7 +12,6 @@ TEST(RBnodeTest, constructor) {
   EXPECT_EQ(node.left_, (void *)NULL);
   EXPECT_EQ(node.right_, (void *)NULL);
   EXPECT_EQ(node.parent_, (void *)NULL);
-  EXPECT_EQ(node.isLeftChild_, false);
   EXPECT_EQ(node.color_, false);
 }
 
