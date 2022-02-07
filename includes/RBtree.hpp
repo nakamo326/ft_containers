@@ -95,11 +95,7 @@ private:
     while (node != NULL) {
       if (node->key_ == key)
         break;
-      if (comp_(node->key_, key)) {
-        node = node->right_;
-      } else {
-        node = node->left_;
-      }
+      node = comp_(node->key_, key) ? node->right_ : node->left_;
     }
     return node;
   }
@@ -114,8 +110,7 @@ private:
   // set newNode to old position
   void transplantNodes(node_pointer old, node_pointer new_node) {
     if (old == root_) {
-      root_          = new_node;
-      header_->left_ = new_node;
+      root_ = header_->left_ = new_node;
     } else if (isLeftChild(old)) {
       old->parent_->left_ = new_node;
     } else {
