@@ -6,6 +6,14 @@
 #include <memory>
 #include <stdexcept>
 
+// typedef __tree_node<value_type>                     _NodeTypes;
+// typedef typename _NodeTypes::key_type               key_type;
+// template <class _Tp>
+// class tree_node;
+
+// template <class _Key, class _Tp>
+// class tree_node<pair<const _Key, _Tp> > {
+
 namespace ft {
 
 enum _RBtree_color { e_red = false, e_black = true };
