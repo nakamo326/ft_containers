@@ -22,5 +22,6 @@ int main() {
   tree.outputAllTree();
   // tree.outputAllTree();
   std::cout << tree.isValidTree() << std::endl;
+  std::pair<int, int> a;
   return 0;
 }
