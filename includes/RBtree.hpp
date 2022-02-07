@@ -209,9 +209,8 @@ private:
       node->right_->parent_ = node;
     }
     if (node == root_) {
-      root_          = tmp;
-      tmp->parent_   = header_;
-      header_->left_ = tmp;
+      tmp->parent_ = header_;
+      root_ = header_->left_ = tmp;
     } else {
       tmp->parent_ = node->parent_;
       if (isLeftChild(node)) {
@@ -232,9 +231,8 @@ private:
       node->left_->parent_ = node;
     }
     if (node == root_) {
-      root_          = tmp;
-      tmp->parent_   = header_;
-      header_->left_ = tmp;
+      tmp->parent_ = header_;
+      root_ = header_->left_ = tmp;
     } else {
       tmp->parent_ = node->parent_;
       if (isLeftChild(node)) {
