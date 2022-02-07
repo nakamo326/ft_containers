@@ -449,6 +449,8 @@ public:
   bool isValidTree() {
     if (root_ == NULL)
       return true;
+    if (root_->parent_ != header_)
+      return false;
     if (isRed(root_))
       return false;
     try {
