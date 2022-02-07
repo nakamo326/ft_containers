@@ -93,7 +93,6 @@ private:
   }
 
   // == add ==
-  // after adding node, we need to fix tree if there're imbalance
   void add(node_pointer parent, node_pointer new_node) {
     if (comp_(parent->key_, new_node->key_)) {
       if (parent->right_ == NULL) {
