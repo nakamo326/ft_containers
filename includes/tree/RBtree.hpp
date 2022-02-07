@@ -6,8 +6,6 @@
 #include <memory>
 #include <stdexcept>
 
-#include "Color.hpp"
-
 namespace ft {
 
 enum _RBtree_color { e_red = false, e_black = true };
@@ -42,9 +40,9 @@ struct _RBnode {
     std::cout << "right  : " << std::hex << right_ << std::dec << std::endl;
     std::cout << "color  : ";
     if (color_)
-      std::cout << BLU << "black" << NC << std::endl;
+      std::cout << "black" << std::endl;
     else
-      std::cout << RED << "red" << NC << std::endl;
+      std::cout << "red" << std::endl;
   }
 };
 
@@ -91,6 +89,45 @@ private:
     setRed(node->parent_->parent_);
     setBlack(node->parent_->parent_->left_);
     setBlack(node->parent_->parent_->right_);
+  }
+
+  node_pointer searchKey(K key, node_pointer node) {
+    while (node != NULL) {
+      if (node->key_ == key)
+        break;
+      if (comp_(node->key_, key)) {
+        node = node->right_;
+      } else {
+        node = node->left_;
+      }
+    }
+    return node;
+  }
+
+  node_pointer searchMinimum(node_pointer node) {
+    while (node->left_ != NULL) {
+      node = node->left_;
+    }
+    return node;
+  }
+
+  // set newNode to old position
+  void transplantNodes(node_pointer old, node_pointer new_node) {
+    if (old == root_) {
+      root_          = new_node;
+      header_->left_ = new_node;
+    } else if (isLeftChild(old)) {
+      old->parent_->left_ = new_node;
+    } else {
+      old->parent_->right_ = new_node;
+    }
+    if (new_node != NULL)
+      new_node->parent_ = old->parent_;
+  }
+
+  void copyVal(node_pointer from, node_pointer to) {
+    to->key_   = from->key_;
+    to->value_ = from->value_;
   }
 
   // == add ==
@@ -212,45 +249,6 @@ private:
   }
 
   // == delete ==
-  node_pointer searchKey(K key, node_pointer node) {
-    while (node != NULL) {
-      if (node->key_ == key)
-        break;
-      if (comp_(node->key_, key)) {
-        node = node->right_;
-      } else {
-        node = node->left_;
-      }
-    }
-    return node;
-  }
-
-  node_pointer searchMinimum(node_pointer node) {
-    while (node->left_ != NULL) {
-      node = node->left_;
-    }
-    return node;
-  }
-
-  // set newNode to old position
-  void transplantNodes(node_pointer old, node_pointer new_node) {
-    if (old == root_) {
-      root_          = new_node;
-      header_->left_ = new_node;
-    } else if (isLeftChild(old)) {
-      old->parent_->left_ = new_node;
-    } else {
-      old->parent_->right_ = new_node;
-    }
-    if (new_node != NULL)
-      new_node->parent_ = old->parent_;
-  }
-
-  void copyVal(node_pointer from, node_pointer to) {
-    to->key_   = from->key_;
-    to->value_ = from->value_;
-  }
-
   bool deleteNode(K key) {
     node_pointer target = searchKey(key, root_);
     if (target == NULL)
@@ -389,34 +387,36 @@ private:
            checkConsecutiveRed(node->right_);
   }
 
-  // FIXME: use allocator and func name
-  void deallocateNode(node_pointer node) { delete node; }
+  void deallocateNode(node_pointer node) {
+    alloc_.destroy(node);
+    alloc_.deallocate(node, 1);
+  }
 
-  // FIXME: use allocator
   void destroyTree(node_pointer node) {
     if (node == NULL)
       return;
     destroyTree(node->left_);
     destroyTree(node->right_);
-    delete node;
+    deallocateNode(node);
   }
 
 private:
-  node_pointer header_;
-  node_pointer root_;
-  size_t       size_;
-  Comp         comp_;
+  node_pointer   header_;
+  node_pointer   root_;
+  size_t         size_;
+  Comp           comp_;
+  node_allocator alloc_;
 
 public:
-  RBtree() : root_(NULL), size_(0), comp_(Comp()) {
+  RBtree() : root_(NULL), size_(0), comp_(Comp()), alloc_(node_allocator()) {
     header_ = new node_type(K(), V());
     setBlack(header_);
   }
   ~RBtree() { destroyTree(header_); }
 
   void add(K key, V value) {
-    // FIXME: use allocator
-    node_pointer new_node = new node_type(key, value);
+    node_pointer new_node = alloc_.allocate(1);
+    alloc_.construct(new_node, node_type(key, value));
     if (root_ == NULL) {
       root_          = new_node;
       root_->parent_ = header_;
