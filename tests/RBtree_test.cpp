@@ -35,3 +35,18 @@ TEST(RBtreeTest, add) {
     }
   }
 }
+
+TEST(RBtreeTest, erase) {
+  std::random_device                    rand;
+  ft::RBtree<int, int, std::less<int> > tree;
+  std::vector<int>                      keyList(400);
+  for (size_t i = 0; i < 400; i++) {
+    int tmp = rand() % 400;
+    tree.add(tmp, 0);
+    keyList[i] = tmp;
+  }
+  for (size_t i = 0; i < 400; i++) {
+    tree.erase(keyList[i]);
+    EXPECT_EQ(tree.isValidTree(), true);
+  }
+}

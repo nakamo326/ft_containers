@@ -257,7 +257,7 @@ private:
       return false;
 
     _RBtree_color deleted_color = target->color_;
-    node_pointer  x;
+    node_pointer  x, x_parent = target->parent_;
     if (target->left_ == NULL) {
       x = target->right_;
       transplantNodes(target, target->right_);
@@ -267,6 +267,7 @@ private:
     } else {
       node_pointer min = searchMinimum(target->right_);
       x                = min->right_;
+      x_parent         = min->parent_;
 
       copyVal(min, target);
       if (min->right_ != NULL) {
@@ -282,65 +283,64 @@ private:
     }
     deallocateNode(target);
     if (deleted_color == e_black)
-      fixDeletion(x);
+      fixDeletion(x, x_parent);
     return true;
   }
 
   // node could be NULL
-  void fixDeletion(node_pointer node) {
+  void fixDeletion(node_pointer node, node_pointer parent) {
     node_pointer s;
-    while (node != root_ && node->color_ == e_black) {
-      if (isLeftChild(node)) {
-        s = node->parent_->right_;
+    while (node != root_ && (node == NULL || node->color_ == e_black)) {
+      if (node == parent->left_) {
+        s = parent->right_;
         if (isRed(s)) {
           setBlack(s);
-          setRed(node->parent_);
-          leftRotate(node->parent_);
-          s = node->parent_->right_;
+          setRed(parent);
+          leftRotate(parent);
+          s = parent->right_;
         }
-
         if (isBlack(s->left_) && isBlack(s->right_)) {
           setRed(s);
-          node = node->parent_;
+          node   = parent;
+          parent = parent->parent_;
         } else {
           if (isBlack(s->right_)) {
             setBlack(s->left_);
             setRed(s);
             rightRotate(s);
-            s = node->parent_->right_;
+            s = parent->right_;
           }
 
-          s->color_ = node->parent_->color_;
-          setBlack(node->parent_);
+          s->color_ = parent->color_;
+          setBlack(parent);
           setBlack(s->right_);
-          leftRotate(node->parent_);
+          leftRotate(parent);
           node = root_;
         }
       } else {
-        s = node->parent_->left_;
+        s = parent->left_;
         if (isRed(s)) {
           setBlack(s);
-          setRed(node->parent_);
-          rightRotate(node->parent_);
-          s = node->parent_->left_;
+          setRed(parent);
+          rightRotate(parent);
+          s = parent->left_;
         }
-
         if (isBlack(s->right_) && isBlack(s->left_)) {
           setRed(s);
-          node = node->parent_;
-
+          node   = parent;
+          parent = parent->parent_;
         } else {
           if (isBlack(s->left_)) {
             setBlack(s->right_);
             setRed(s);
             leftRotate(s);
-            s = node->parent_->left_;
+            s = parent->left_;
           }
 
-          s->color_ = node->parent_->color_;
-          setBlack(node->parent_);
+          s->color_ = parent->color_;
+          setBlack(parent);
           setBlack(s->left_);
-          rightRotate(node->parent_);
+          rightRotate(parent);
           node = root_;
         }
       }
@@ -446,6 +446,8 @@ public:
   void checkBlackNodes() { blackNodes(root_); }
 
   bool isValidTree() {
+    if (root_ == NULL)
+      return true;
     if (isRed(root_))
       return false;
     try {
