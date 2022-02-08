@@ -229,6 +229,8 @@ vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
   }
 }
 
+// FIXME: iteratorがファイルだったらstd::distanceで破壊されちゃうかも
+// llvm enable_ifでiteratorのtagを見に行く。
 template <class T, class Alloc>
 template <class InputIt>
 vector<T, Alloc>::vector(
