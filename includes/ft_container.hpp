@@ -2,8 +2,12 @@
 #define FT_CONTAINERS_INCLUDES_FT_CONTAINER_HPP
 
 #include <iostream>
+#include <map>
+#include <stack>
 #include <vector>
 
+#include "RBtree.hpp"
+#include "pair.hpp"
 #include "stack.hpp"
 #include "vector.hpp"
 

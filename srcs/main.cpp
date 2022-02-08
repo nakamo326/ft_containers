@@ -7,21 +7,14 @@
 #include "ft_container.hpp"
 
 int main() {
-  ft::RBtree<int, int, std::less<int> > tree;
-  tree.add(0, 0);
-  tree.add(8, 0);
-  tree.add(6, 0);
-  tree.add(3, 0);
-  tree.add(5, 0);
-  // tree.add(4, 0);
-  // tree.add(7, 0);
+  ft::vector<int>       int_vector(10);
+  ft::vector<const int> const_int_vector(10);
+  ft::vector<int *>     int_pointer_vector(10);
 
-  tree.outputAllTree();
-  std::cout << std::endl;
-  tree.erase(6);
-  tree.outputAllTree();
-  // tree.outputAllTree();
-  std::cout << tree.isValidTree() << std::endl;
-  std::pair<int, int> a;
+  // check iterator and reverse_iterator
+  ft::vector<int>::reverse_iterator       rit  = int_vector.rbegin();
+  ft::vector<const int>::reverse_iterator rcit = const_int_vector.rbegin();
+  ft::vector<int *>::reverse_iterator     rpit = int_pointer_vector.rbegin();
+
   return 0;
 }
