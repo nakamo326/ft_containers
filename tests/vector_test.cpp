@@ -203,7 +203,7 @@ TEST_F(VectorTest, AssignFuncIter) {
 }
 
 TEST_F(VectorTest, Destructor) {
-  ft::vector<int> *f = new ft::vector<int>(1000);
+  ft::vector<int>* f = new ft::vector<int>(1000);
   for (size_t i = 0; i < 1000; i++) {
     (*f)[i] = i;
   }
@@ -321,6 +321,17 @@ TEST_F(VectorTest, InsertWithIter) {
   }
 }
 
+class t {
+public:
+  int* p;
+  t() { p = new int; }
+  ~t() { delete p; }
+  t& operator=(const t& other) {
+    *p = *(other.p);
+    return *this;
+  }
+};
+
 TEST_F(VectorTest, EraseOne) {
   auto sret = s.erase(s.begin() + 50);
   auto fret = f.erase(f.begin() + 50);
@@ -338,6 +349,11 @@ TEST_F(VectorTest, EraseOne) {
   EXPECT_EQ(s.capacity(), f.capacity());
   for (size_t i = 0; i < s.size(); i++) {
     EXPECT_EQ(s[i], f[i]);
+  }
+  // leak check
+  std::vector<t> v(10);
+  for (size_t i = 0; i < 10; i++) {
+    v.erase(v.begin());
   }
 }
 
@@ -358,6 +374,11 @@ TEST_F(VectorTest, EraseIter) {
   EXPECT_EQ(s.capacity(), f.capacity());
   for (size_t i = 0; i < s.size(); i++) {
     EXPECT_EQ(s[i], f[i]);
+  }
+  // leak check
+  std::vector<t> v(10);
+  for (size_t i = 0; i < 10; i++) {
+    v.erase(v.begin(), v.end());
   }
 }
 
