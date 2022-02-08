@@ -207,67 +207,6 @@ private:
     return true;
   }
 
-  // node could be NULL
-  void fixDeletion(node_pointer node, node_pointer parent) {
-    node_pointer s;
-    while (node != root_ && (node == NULL || node->color_ == e_black)) {
-      if (node == parent->left_) {
-        s = parent->right_;
-        if (isRed(s)) {
-          setBlack(s);
-          setRed(parent);
-          leftRotate(parent);
-          s = parent->right_;
-        }
-        if (isBlack(s->left_) && isBlack(s->right_)) {
-          setRed(s);
-          node   = parent;
-          parent = parent->parent_;
-        } else {
-          if (isBlack(s->right_)) {
-            setBlack(s->left_);
-            setRed(s);
-            rightRotate(s);
-            s = parent->right_;
-          }
-
-          s->color_ = parent->color_;
-          setBlack(parent);
-          setBlack(s->right_);
-          leftRotate(parent);
-          node = root_;
-        }
-      } else {
-        s = parent->left_;
-        if (isRed(s)) {
-          setBlack(s);
-          setRed(parent);
-          rightRotate(parent);
-          s = parent->left_;
-        }
-        if (isBlack(s->right_) && isBlack(s->left_)) {
-          setRed(s);
-          node   = parent;
-          parent = parent->parent_;
-        } else {
-          if (isBlack(s->left_)) {
-            setBlack(s->right_);
-            setRed(s);
-            leftRotate(s);
-            s = parent->left_;
-          }
-
-          s->color_ = parent->color_;
-          setBlack(parent);
-          setBlack(s->left_);
-          rightRotate(parent);
-          node = root_;
-        }
-      }
-    }
-    setBlack(node);
-  }
-
   // == height ==
   size_type height(node_pointer node) {
     if (node == NULL)
@@ -306,7 +245,6 @@ private:
 public:
   RBtree() : root_(NULL), size_(0), comp_(Comp()), alloc_(node_allocator()) {
     header_ = new node_type(K(), V());
-    setBlack(header_);
   }
   ~RBtree() { destroyTree(header_); }
 
@@ -338,8 +276,6 @@ public:
     return;
   }
 
-  void checkBlackNodes() { blackNodes(root_); }
-
   bool isValidTree() {
     if (root_ == NULL)
       return true;
@@ -348,25 +284,13 @@ public:
     if (isRed(root_))
       return false;
     try {
-      checkBlackNodes();
+      // check balance
     } catch (const std::exception& e) {
       std::cerr << e.what() << '\n';
       return false;
     }
     return checkConsecutiveRed(root_);
   }
-};
-template <typename T>
-struct RBtree_iterator {
-  typedef T  value_type;
-  typedef T& reference;
-  typedef T* pointer;
-
-  typedef std::bidirectional_iterator_tag iterator_category;
-  typedef std::ptrdiff_t                  difference_type;
-
-  typedef RBtree_iterator<T> _Self;
-  // typedef _RBnode<>*        _Link_type;
 };
 
 }  // namespace ft
