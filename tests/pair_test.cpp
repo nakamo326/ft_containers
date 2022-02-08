@@ -57,4 +57,27 @@ TEST(pair_test, comparison) {
   EXPECT_EQ(std_pair <= std_comp, ft_pair <= ft_comp);
   EXPECT_EQ(std_pair > std_comp, ft_pair > ft_comp);
   EXPECT_EQ(std_pair >= std_comp, ft_pair >= ft_comp);
+
+  std_comp.first = "helmo";
+  ft_comp.first  = "helmo";
+
+  EXPECT_EQ(std_pair == std_comp, ft_pair == ft_comp);
+  EXPECT_EQ(std_pair != std_comp, ft_pair != ft_comp);
+  EXPECT_EQ(std_pair < std_comp, ft_pair < ft_comp);
+  EXPECT_EQ(std_pair <= std_comp, ft_pair <= ft_comp);
+  EXPECT_EQ(std_pair > std_comp, ft_pair > ft_comp);
+  EXPECT_EQ(std_pair >= std_comp, ft_pair >= ft_comp);
+
+  std_comp.first  = "hello";
+  ft_comp.first   = "hello";
+
+  std_comp.second = "worle";
+  ft_comp.second  = "worle";
+
+  EXPECT_EQ(std_pair == std_comp, ft_pair == ft_comp);
+  EXPECT_EQ(std_pair != std_comp, ft_pair != ft_comp);
+  EXPECT_EQ(std_pair < std_comp, ft_pair < ft_comp);
+  EXPECT_EQ(std_pair <= std_comp, ft_pair <= ft_comp);
+  EXPECT_EQ(std_pair > std_comp, ft_pair > ft_comp);
+  EXPECT_EQ(std_pair >= std_comp, ft_pair >= ft_comp);
 }
