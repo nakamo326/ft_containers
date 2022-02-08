@@ -3,29 +3,32 @@
 
 #include <iterator>
 
+#include "type_traits.hpp"
+
 namespace ft {
 
 template <class T>
 struct vector_iterator {
 public:
-  typedef std::random_access_iterator_tag iterator_category;
-  typedef T                               value_type;
-  typedef T*                              pointer;
-  typedef T&                              reference;
-  typedef std::ptrdiff_t                  difference_type;
+  typedef T                                              iterator_type;
+  typedef typename iterator_traits<T>::iterator_category iterator_category;
+  typedef typename iterator_traits<T>::value_type        value_type;
+  typedef typename iterator_traits<T>::pointer           pointer;
+  typedef typename iterator_traits<T>::reference         reference;
+  typedef typename iterator_traits<T>::difference_type   difference_type;
 
 private:
-  pointer _ptr;
+  iterator_type _ptr;
 
 public:
   vector_iterator() : _ptr(NULL) {}
-  vector_iterator(T* p) : _ptr(p) {}
+  vector_iterator(iterator_type p) : _ptr(p) {}
   vector_iterator(vector_iterator const& other) : _ptr(other._ptr) {}
   template <typename _Iter>
   vector_iterator(const vector_iterator<_Iter>& __x) : _ptr(__x.base()) {}
 
-  reference        operator*() const { return *_ptr; }
-  pointer          operator->() const { return _ptr; }
+  reference operator*() const { return *_ptr; }
+  pointer   operator->() const { return _ptr; }
 
   vector_iterator& operator++() {
     ++_ptr;
@@ -65,7 +68,7 @@ public:
 
   reference operator[](difference_type n) const { return _ptr[n]; }
 
-  T*        base() const { return _ptr; }
+  pointer base() const { return _ptr; }
 };
 
 template <class T>

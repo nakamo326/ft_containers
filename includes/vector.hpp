@@ -23,8 +23,8 @@ public:
   typedef typename Alloc::difference_type      difference_type;
   typedef typename Alloc::pointer              pointer;
   typedef typename Alloc::const_pointer        const_pointer;
-  typedef vector_iterator<T>                   iterator;
-  typedef vector_iterator<T const>             const_iterator;
+  typedef vector_iterator<pointer>             iterator;
+  typedef vector_iterator<const_pointer>       const_iterator;
   typedef ft::reverse_iterator<iterator>       reverse_iterator;
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
@@ -85,10 +85,12 @@ public:
   const_reference back() const { return *(end_ - 1); };
 
   // == iterator ==
-  iterator         begin() { return vector_iterator<T>(begin_); };
-  const_iterator   begin() const { return vector_iterator<T const>(begin_); };
-  iterator         end() { return vector_iterator<T>(end_); };
-  const_iterator   end() const { return vector_iterator<T const>(end_); };
+  iterator       begin() { return vector_iterator<pointer>(begin_); };
+  const_iterator begin() const {
+    return vector_iterator<const_pointer>(begin_);
+  };
+  iterator         end() { return vector_iterator<pointer>(end_); };
+  const_iterator   end() const { return vector_iterator<const_pointer>(end_); };
   reverse_iterator rbegin() { return ft::reverse_iterator<iterator>(end()); };
   const_reverse_iterator rbegin() const {
     return ft::reverse_iterator<const_iterator>(end());

@@ -10,7 +10,7 @@ protected:
   std::vector<int> s;
   ft::vector<int>  f;
 
-  virtual void     SetUp() {
+  virtual void SetUp() {
     for (size_t i = 0; i < 1000; i++) {
       f.push_back(i);
       s.push_back(i);
@@ -422,6 +422,7 @@ TEST_F(VectorTest, Swap) {
   for (size_t i = 0; i < s.size(); i++) {
     EXPECT_EQ(s[i], f[i]);
   }
+  // FIXME: check with iterator
 }
 
 TEST_F(VectorTest, Comparison) {
