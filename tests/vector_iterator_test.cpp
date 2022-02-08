@@ -109,3 +109,28 @@ TEST(VectorIteratorTest, ReverseIterator) {
     crit++;
   }
 }
+
+TEST(VectorIteratorTest, const_iterator) {
+  std::vector<int> s(10);
+  ft::vector<int>  f(10);
+  for (size_t i = 0; i < 10; i++) {
+    s[i] = i;
+    f[i] = i;
+  }
+  ft::vector<int>::iterator        it        = f.begin();
+  ft::vector<int>::const_iterator  const_it  = f.begin();
+  std::vector<int>::iterator       sit       = s.begin();
+  std::vector<int>::const_iterator const_sit = s.begin();
+
+  // cannot assign to const_it;
+  // *const_it = 42;
+
+  for (size_t i = 0; i < 10; i++) {
+    EXPECT_EQ(*it, *sit);
+    EXPECT_EQ(*const_it, *const_sit);
+    it++;
+    sit++;
+    const_it++;
+    const_sit++;
+  }
+}
