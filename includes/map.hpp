@@ -51,7 +51,93 @@ public:
       return comp(__x.first, __y.first);
     }
   };
+
+public:
+  // == constructor / destructor ==
+  map();
+  explicit map(const Compare& comp, const Allocator& alloc = Allocator());
+  template <class InputIt>
+  map(InputIt first, InputIt last, const Compare& comp = Compare(),
+      const Allocator& alloc = Allocator());
+  map(const map& other);
+
+  ~map();
+
+  // == assignation ==
+  map& operator=(const map& other);
+
+  allocator_type get_allocator() const { return Alloc(); };
+
+  // == element access ==
+  T& operator[](const Key& key);
+
+  // == iterators ==
+  iterator               begin();
+  const_iterator         begin() const;
+  iterator               end();
+  const_iterator         end() const;
+  reverse_iterator       rbegin();
+  const_reverse_iterator rbegin() const;
+  reverse_iterator       rend();
+  const_reverse_iterator rend() const;
+
+  // == capacity ==
+  bool      empty() const;
+  size_type size() const;
+  size_type max_size() const;
+
+  // == modifiers ==
+  pair<iterator, bool> insert(const value_type& val);
+  iterator             insert(iterator position, const value_type& val);
+  template <class InputIterator>
+  void insert(InputIterator first, InputIterator last);
+
+  iterator  erase(const_iterator position);
+  size_type erase(const key_type& k);
+  iterator  erase(const_iterator first, const_iterator last);
+
+  void swap(map& x);
+  void clear();
+
+  // == lookup ==
+  size_type                                count(const Key& key) const;
+  iterator                                 find(const Key& key);
+  const_iterator                           find(const Key& key) const;
+  ft::pair<iterator, iterator>             equal_range(const Key& key);
+  ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const;
+  iterator                                 lower_bound(const Key& key);
+  const_iterator                           lower_bound(const Key& key) const;
+  iterator                                 upper_bound(const Key& key);
+  const_iterator                           upper_bound(const Key& key) const;
+
+  // == observers ==
+  key_compare            key_comp() const;
+  ft::map::value_compare value_comp() const;
 };
+
+// == non member functions ==
+template <class Key, class T, class Compare, class Alloc>
+bool operator==(const ft::map<Key, T, Compare, Alloc>& lhs,
+                const ft::map<Key, T, Compare, Alloc>& rhs);
+template <class Key, class T, class Compare, class Alloc>
+bool operator!=(const ft::map<Key, T, Compare, Alloc>& lhs,
+                const ft::map<Key, T, Compare, Alloc>& rhs);
+template <class Key, class T, class Compare, class Alloc>
+bool operator<(const ft::map<Key, T, Compare, Alloc>& lhs,
+               const ft::map<Key, T, Compare, Alloc>& rhs);
+template <class Key, class T, class Compare, class Alloc>
+bool operator<=(const ft::map<Key, T, Compare, Alloc>& lhs,
+                const ft::map<Key, T, Compare, Alloc>& rhs);
+template <class Key, class T, class Compare, class Alloc>
+bool operator>(const ft::map<Key, T, Compare, Alloc>& lhs,
+               const ft::map<Key, T, Compare, Alloc>& rhs);
+template <class Key, class T, class Compare, class Alloc>
+bool operator>=(const ft::map<Key, T, Compare, Alloc>& lhs,
+                const ft::map<Key, T, Compare, Alloc>& rhs);
+
+template <class Key, class T, class Compare, class Alloc>
+void swap(ft::map<Key, T, Compare, Alloc>& lhs,
+          ft::map<Key, T, Compare, Alloc>& rhs);
 
 }  // namespace ft
 
