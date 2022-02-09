@@ -22,6 +22,7 @@ struct _node {
   _node(K key, V value)
       : key_(key), value_(value), left_(NULL), right_(NULL), parent_(NULL) {}
 
+  // for debug
   void outputInfo() {
     std::cout << "------------------------------" << std::endl;
     std::cout << "&this  : " << std::hex << this << std::dec << std::endl;
@@ -33,7 +34,7 @@ struct _node {
 };
 
 template <typename K, typename V, typename Comp>
-class AVLtree {
+class _tree {
 public:
   typedef _node<K, V>                  node_type;
   typedef node_type*                   node_pointer;
@@ -41,9 +42,9 @@ public:
   typedef size_t                       size_type;
 
 private:
+  // == helpers ==
   bool isLeftChild(node_pointer node) { return node->parent_->left_ == node; }
 
-  // == helpers ==
   node_pointer searchKey(K key, node_pointer node) {
     while (node != NULL) {
       if (node->key_ == key)
@@ -100,7 +101,7 @@ private:
   // need check something
 
   // == rotate ==
-  void rotate(node_pointer node) {
+  node_pointer rotate(node_pointer node) {
     node_pointer new_parent;
     if (isLeftChild(node)) {
       if (isLeftChild(node->parent_))
@@ -113,7 +114,7 @@ private:
       else
         new_parent = leftRightRotate(node->parent_->parent_);
     }
-    return;
+    return new_parent;
   }
 
   node_pointer leftRightRotate(node_pointer node) {

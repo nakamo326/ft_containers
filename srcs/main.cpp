@@ -19,5 +19,6 @@ int main() {
   int *                                          p;
   ft::vector<int *>::reverse_iterator::reference ref = p;
   std::cout << typeid(ref).name() << std::endl;
+  std::vector<int> v;
   return 0;
 }
