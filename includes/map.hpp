@@ -33,6 +33,10 @@ public:
   typedef ft::reverse_iterator<iterator>       reverse_iterator;
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
+  // FIXME: change mapped_type to value_type(pair)
+private:
+  RBtree<Key, mapped_type, Compare> tree_;
+
 public:
   class value_compare {
     friend class map<_Key, _Tp, _Compare, _Alloc>;
@@ -82,8 +86,8 @@ public:
   const_reverse_iterator rend() const;
 
   // == capacity ==
-  bool      empty() const;
-  size_type size() const;
+  bool      empty() const { return tree_.size() == 0; }
+  size_type size() const { return tree_.size(); }
   size_type max_size() const;
 
   // == modifiers ==
@@ -111,8 +115,10 @@ public:
   const_iterator                           upper_bound(const Key& key) const;
 
   // == observers ==
-  key_compare            key_comp() const;
-  ft::map::value_compare value_comp() const;
+  key_compare            key_comp() const { return key_compare(); };
+  ft::map::value_compare value_comp() const {
+    return value_compare(key_compare());
+  };
 };
 
 // == non member functions ==
