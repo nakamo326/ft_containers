@@ -14,6 +14,8 @@
 // template <class _Key, class _Tp>
 // class tree_node<pair<const _Key, _Tp> > {
 
+// FIXME: change key to const
+
 namespace ft {
 
 enum _RBtree_color { e_red = false, e_black = true };
