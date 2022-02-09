@@ -88,7 +88,7 @@ public:
   // == capacity ==
   bool      empty() const { return tree_.size() == 0; }
   size_type size() const { return tree_.size(); }
-  size_type max_size() const;
+  size_type max_size() const { return tree_.max_size(); }
 
   // == modifiers ==
   pair<iterator, bool> insert(const value_type& val);

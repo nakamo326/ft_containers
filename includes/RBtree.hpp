@@ -417,7 +417,9 @@ public:
   }
   ~RBtree() { destroyTree(header_); }
 
-  size_type size() { return size_; };
+  size_type size() { return size_; }
+
+  size_type max_size() { return alloc_.max_size(); }
 
   void add(K key, V value) {
     node_pointer new_node = alloc_.allocate(1);
