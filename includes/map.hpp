@@ -34,9 +34,13 @@ public:
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 public:
-  class value_compare
-      : public ft::binary_function<value_type, value_type, bool> {
+  class value_compare {
     friend class map<_Key, _Tp, _Compare, _Alloc>;
+
+  public:
+    typedef value_type first_argument_type;
+    typedef value_type second_argument_type;
+    typedef bool       result_type;
 
   protected:
     Compare comp;
