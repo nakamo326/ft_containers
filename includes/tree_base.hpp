@@ -177,8 +177,7 @@ private:
     if (target == NULL)
       return false;
 
-    _RBtree_color deleted_color = target->color_;
-    node_pointer  x, x_parent = target->parent_;
+    node_pointer x, x_parent = target->parent_;
     if (target->left_ == NULL) {
       x = target->right_;
       transplantNodes(target, target->right_);
@@ -199,12 +198,9 @@ private:
         else
           min->parent_->right_ = NULL;
       }
-      target        = min;
-      deleted_color = target->color_;
+      target = min;
     }
     deallocateNode(target);
-    if (deleted_color == e_black)
-      fixDeletion(x, x_parent);
     return true;
   }
 
@@ -244,10 +240,10 @@ private:
   node_allocator alloc_;
 
 public:
-  RBtree() : root_(NULL), size_(0), comp_(Comp()), alloc_(node_allocator()) {
+  _tree() : root_(NULL), size_(0), comp_(Comp()), alloc_(node_allocator()) {
     header_ = new node_type(K(), V());
   }
-  ~RBtree() { destroyTree(header_); }
+  ~_tree() { destroyTree(header_); }
 
   void add(K key, V value) {
     node_pointer new_node = alloc_.allocate(1);
@@ -282,15 +278,7 @@ public:
       return true;
     if (root_->parent_ != header_)
       return false;
-    if (isRed(root_))
-      return false;
-    try {
-      // check balance
-    } catch (const std::exception& e) {
-      std::cerr << e.what() << '\n';
-      return false;
-    }
-    return checkConsecutiveRed(root_);
+    return true;
   }
 };
 
