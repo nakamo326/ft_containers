@@ -32,6 +32,21 @@ public:
   typedef tree_type::const_iterator            const_iterator;
   typedef ft::reverse_iterator<iterator>       reverse_iterator;
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+
+public:
+  class value_compare
+      : public ft::binary_function<value_type, value_type, bool> {
+    friend class map<_Key, _Tp, _Compare, _Alloc>;
+
+  protected:
+    Compare comp;
+    value_compare(Compare _c) : comp(_c) {}
+
+  public:
+    bool operator()(const value_type& __x, const value_type& __y) const {
+      return comp(__x.first, __y.first);
+    }
+  };
 };
 
 }  // namespace ft
