@@ -1,24 +1,19 @@
-#include <algorithm>
-#include <map>
-#include <stack>
-#include <typeinfo>
-
-#include "RBtree.hpp"
 #include "ft_container.hpp"
+#include "test_frame.hpp"
+#include "tests/vector_test.hpp"
 
 int main() {
-  ft::vector<int>   int_vector(10);
-  ft::vector<int *> int_pointer_vector(10);
-
-  // check iterator and reverse_iterator
-  ft::vector<int>::reverse_iterator   rit  = int_vector.rbegin();
-  ft::vector<int *>::reverse_iterator rpit = int_pointer_vector.rbegin();
-  (void)rit;
-  (void)rpit;
-
-  int *                                          p;
-  ft::vector<int *>::reverse_iterator::reference ref = p;
-  std::cout << typeid(ref).name() << std::endl;
-  std::vector<int> v;
+  {
+    Suite s("vector Suite");
+    s.add_test(Test("Vector_constructor", Vector_constructor));
+    s.add_test(
+        Test("vector_constructorWithAlloc", Vector_constructorWithAlloc));
+    s.add_test(Test("Vector_ConstructorWithSize", Vector_ConstructorWithSize));
+    s.add_test(
+        Test("Vector_ConstructorWithValue", Vector_ConstructorWithValue));
+    s.add_test(Test("Vector_RangeConstructor", Vector_RangeConstructor));
+    s.add_test(Test("Vector_CopyConstructor", Vector_CopyConstructor));
+    s.add_test(Test("Vector_AssignationOverload", Vector_AssignationOverload));
+  }
   return 0;
 }
