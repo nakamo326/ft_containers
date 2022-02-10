@@ -216,6 +216,7 @@ void vector<T, Alloc>::destruct_at_end(pointer new_end) {
 }
 
 // == constructor ==
+// FIXME: need to fix
 template <class T, class Alloc>
 vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
     : alloc_(alloc) {
@@ -230,7 +231,7 @@ vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
 }
 
 // FIXME: iteratorがファイルだったらstd::distanceで破壊されちゃうかも
-// llvm enable_ifでiteratorのtagを見に行く。
+// llvm iteratorのtagを見に行く。
 template <class T, class Alloc>
 template <class InputIt>
 vector<T, Alloc>::vector(
@@ -349,18 +350,7 @@ template <class T, class Alloc>
 typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator pos,
                                                              const T& value) {
   difference_type offset = pos - begin();
-  if (end_ == cap_) {
-    reserve(check_len(1));
-    pos = begin() + offset;
-  }
-  if (pos == end()) {
-    push_back(value);
-  } else {
-    alloc_.construct(end_, T());
-    std::copy_backward(pos, end(), end() + 1);
-    *pos = value;
-    ++end_;
-  }
+  insert(pos, 1, value);
   return begin() + offset;
 }
 
@@ -385,6 +375,8 @@ void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value) {
   end_ += count;
 }
 
+// FIXME: iteratorがファイルだったらstd::distanceで破壊されちゃうかも
+// llvm iteratorのtagを見に行く。
 template <class T, class Alloc>
 template <class InputIt>
 void vector<T, Alloc>::insert(

@@ -5,16 +5,18 @@
 #include <typeinfo>
 #include <vector>
 
-class VectorTest : public ::testing::Test {
-protected:
-  std::vector<int> s;
-  ft::vector<int>  f;
-
-  virtual void SetUp() {
-    for (size_t i = 0; i < 1000; i++) {
-      f.push_back(i);
-      s.push_back(i);
-    }
+class TestClass {
+public:
+  int* p;
+  TestClass() { p = new int; }
+  TestClass(int num) {
+    p  = new int;
+    *p = num;
+  }
+  ~TestClass() { delete p; }
+  TestClass& operator=(const TestClass& other) {
+    *p = *(other.p);
+    return *this;
   }
 };
 
@@ -106,7 +108,13 @@ TEST(VectorConstructorTest, CopyConstructor) {
   }
 }
 
-TEST_F(VectorTest, AssignationOverload) {
+TEST(VectorTest, AssignationOverload) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   // big to small
   {
     ft::vector<int>  cf(100);
@@ -135,7 +143,13 @@ TEST_F(VectorTest, AssignationOverload) {
   }
 }
 
-TEST_F(VectorTest, AssignFunc) {
+TEST(VectorTest, AssignFunc) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   // big to small
   {
     s.assign(10000, 50);
@@ -163,11 +177,19 @@ TEST_F(VectorTest, AssignFunc) {
   }
 }
 
-TEST_F(VectorTest, GetAllocator) {
+TEST(VectorTest, GetAllocator) {
+  std::vector<int> s;
+  ft::vector<int>  f;
   EXPECT_EQ(typeid(s.get_allocator()).name(), typeid(f.get_allocator()).name());
 }
 
-TEST_F(VectorTest, AssignFuncIter) {
+TEST(VectorTest, AssignFuncIter) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   // big to small
   {
     std::vector<int> src(10000);
@@ -202,7 +224,7 @@ TEST_F(VectorTest, AssignFuncIter) {
   }
 }
 
-TEST_F(VectorTest, Destructor) {
+TEST(VectorTest, Destructor) {
   ft::vector<int>* f = new ft::vector<int>(1000);
   for (size_t i = 0; i < 1000; i++) {
     (*f)[i] = i;
@@ -210,7 +232,13 @@ TEST_F(VectorTest, Destructor) {
   delete f;
 }
 
-TEST_F(VectorTest, At) {
+TEST(VectorTest, At) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   s[5] = 10;
   f[5] = 10;
   EXPECT_EQ(s.at(0), f.at(0));
@@ -225,7 +253,13 @@ TEST_F(VectorTest, At) {
   EXPECT_THROW(f.at(f.size()), std::out_of_range);
 }
 
-TEST_F(VectorTest, Front) {
+TEST(VectorTest, Front) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   EXPECT_EQ(s.front(), f.front());
   s.front() = 42;
   f.front() = 42;
@@ -234,7 +268,13 @@ TEST_F(VectorTest, Front) {
   EXPECT_EQ(f.front(), 42);
 }
 
-TEST_F(VectorTest, Back) {
+TEST(VectorTest, Back) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   EXPECT_EQ(s.back(), f.back());
   s.back() = 42;
   f.back() = 42;
@@ -243,7 +283,13 @@ TEST_F(VectorTest, Back) {
   EXPECT_EQ(f.back(), 42);
 }
 
-TEST_F(VectorTest, Reserve) {
+TEST(VectorTest, Reserve) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   s.reserve(1000);
   f.reserve(1000);
   EXPECT_EQ(s.size(), f.size());
@@ -252,7 +298,13 @@ TEST_F(VectorTest, Reserve) {
   EXPECT_THROW(f.reserve(f.max_size() + 1), std::length_error);
 }
 
-TEST_F(VectorTest, BeginAndEnd) {
+TEST(VectorTest, BeginAndEnd) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   auto sit = s.begin();
   auto fit = f.begin();
 
@@ -268,7 +320,9 @@ TEST_F(VectorTest, BeginAndEnd) {
   EXPECT_EQ(fit, fend);
 }
 
-TEST_F(VectorTest, Pushback) {
+TEST(VectorTest, Pushback) {
+  std::vector<int> s;
+  ft::vector<int>  f;
   for (size_t i = 0; i < 100000; i++) {
     s.push_back(i);
     f.push_back(i);
@@ -278,9 +332,22 @@ TEST_F(VectorTest, Pushback) {
   }
 }
 
-TEST_F(VectorTest, Clear) {}
+TEST(VectorTest, Clear) {
+  std::vector<TestClass> s(10);
+  // ft::vector<TestClass>  f(10);
+  s.clear();
+  // f.clear();
+  // EXPECT_EQ(s.size(), f.size());
+  // EXPECT_EQ(s.capacity(), f.capacity());
+}
 
-TEST_F(VectorTest, InsertWithValue) {
+TEST(VectorTest, InsertWithValue) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   std::vector<int> ts;
   ft::vector<int>  tf;
   for (size_t i = 0; i < 1000; i++) {
@@ -293,7 +360,13 @@ TEST_F(VectorTest, InsertWithValue) {
   }
 }
 
-TEST_F(VectorTest, InsertWithCount) {
+TEST(VectorTest, InsertWithCount) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   s.insert(s.begin(), 1000, 42);
   f.insert(f.begin(), 1000, 42);
   EXPECT_EQ(s.size(), f.size());
@@ -307,7 +380,13 @@ TEST_F(VectorTest, InsertWithCount) {
   }
 }
 
-TEST_F(VectorTest, InsertWithIter) {
+TEST(VectorTest, InsertWithIter) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   std::vector<int> input(10000);
   for (size_t i = 0; i < 10000; i++) {
     input[i] = i;
@@ -321,18 +400,13 @@ TEST_F(VectorTest, InsertWithIter) {
   }
 }
 
-class t {
-public:
-  int* p;
-  t() { p = new int; }
-  ~t() { delete p; }
-  t& operator=(const t& other) {
-    *p = *(other.p);
-    return *this;
+TEST(VectorTest, EraseOne) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
   }
-};
-
-TEST_F(VectorTest, EraseOne) {
   auto sret = s.erase(s.begin() + 50);
   auto fret = f.erase(f.begin() + 50);
   EXPECT_EQ(*sret, *fret);
@@ -350,14 +424,20 @@ TEST_F(VectorTest, EraseOne) {
   for (size_t i = 0; i < s.size(); i++) {
     EXPECT_EQ(s[i], f[i]);
   }
-  // leak check
-  std::vector<t> v(10);
-  for (size_t i = 0; i < 10; i++) {
-    v.erase(v.begin());
-  }
+  // // leak check
+  // ft::vector<TestClass> v(10);
+  // for (size_t i = 0; i < 10; i++) {
+  //   v.erase(v.begin());
+  // }
 }
 
-TEST_F(VectorTest, EraseIter) {
+TEST(VectorTest, EraseIter) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   auto sret = s.erase(s.begin() + 50, s.begin() + 60);
   auto fret = f.erase(f.begin() + 50, f.begin() + 60);
   EXPECT_EQ(*sret, *fret);
@@ -375,14 +455,20 @@ TEST_F(VectorTest, EraseIter) {
   for (size_t i = 0; i < s.size(); i++) {
     EXPECT_EQ(s[i], f[i]);
   }
-  // leak check
-  std::vector<t> v(10);
-  for (size_t i = 0; i < 10; i++) {
-    v.erase(v.begin(), v.end());
-  }
+  // // leak check
+  // ft::vector<TestClass> v(10);
+  // for (size_t i = 0; i < 10; i++) {
+  //   v.erase(v.begin());
+  // }
 }
 
-TEST_F(VectorTest, PopBack) {
+TEST(VectorTest, PopBack) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   for (size_t i = 0; i < 100; i++) {
     s.pop_back();
     f.pop_back();
@@ -394,7 +480,13 @@ TEST_F(VectorTest, PopBack) {
   }
 }
 
-TEST_F(VectorTest, Resize) {
+TEST(VectorTest, Resize) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   s.resize(100, 42);
   f.resize(100, 42);
   EXPECT_EQ(s.size(), f.size());
@@ -418,7 +510,13 @@ TEST_F(VectorTest, Resize) {
   }
 }
 
-TEST_F(VectorTest, Swap) {
+TEST(VectorTest, Swap) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   for (size_t i = 0; i < 100; i++) {
     s[i] = i + 1;
     f[i] = i + 1;
@@ -446,7 +544,13 @@ TEST_F(VectorTest, Swap) {
   // FIXME: check with iterator
 }
 
-TEST_F(VectorTest, Comparison) {
+TEST(VectorTest, Comparison) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  for (size_t i = 0; i < 1000; i++) {
+    f.push_back(i);
+    s.push_back(i);
+  }
   ft::vector<int>  cf = f;
   std::vector<int> cs = s;
   EXPECT_EQ(cf, f);
