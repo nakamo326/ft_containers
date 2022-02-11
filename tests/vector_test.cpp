@@ -8,13 +8,27 @@
 class TestClass {
 public:
   int* p;
-  TestClass() { p = new int; }
+  TestClass() {
+    std::cout << __func__ << std::endl;
+    p = new int;
+  }
   TestClass(int num) {
+    std::cout << __func__ << std::endl;
     p  = new int;
     *p = num;
   }
-  ~TestClass() { delete p; }
+  TestClass(const TestClass& other) {
+    std::cout << __func__ << std::endl;
+    p  = new int;
+    *p = *(other.p);
+  }
+  ~TestClass() {
+    std::cout << __func__ << std::endl;
+
+    delete p;
+  }
   TestClass& operator=(const TestClass& other) {
+    std::cout << __func__ << std::endl;
     *p = *(other.p);
     return *this;
   }
@@ -334,11 +348,11 @@ TEST(VectorTest, Pushback) {
 
 TEST(VectorTest, Clear) {
   std::vector<TestClass> s(10);
-  // ft::vector<TestClass>  f(10);
+  ft::vector<TestClass>  f(10);
   s.clear();
-  // f.clear();
-  // EXPECT_EQ(s.size(), f.size());
-  // EXPECT_EQ(s.capacity(), f.capacity());
+  f.clear();
+  EXPECT_EQ(s.size(), f.size());
+  EXPECT_EQ(s.capacity(), f.capacity());
 }
 
 TEST(VectorTest, InsertWithValue) {
@@ -424,11 +438,11 @@ TEST(VectorTest, EraseOne) {
   for (size_t i = 0; i < s.size(); i++) {
     EXPECT_EQ(s[i], f[i]);
   }
-  // // leak check
-  // ft::vector<TestClass> v(10);
-  // for (size_t i = 0; i < 10; i++) {
-  //   v.erase(v.begin());
-  // }
+  // leak check
+  ft::vector<TestClass> v(10);
+  for (size_t i = 0; i < 10; i++) {
+    v.erase(v.begin());
+  }
 }
 
 TEST(VectorTest, EraseIter) {
@@ -455,11 +469,10 @@ TEST(VectorTest, EraseIter) {
   for (size_t i = 0; i < s.size(); i++) {
     EXPECT_EQ(s[i], f[i]);
   }
-  // // leak check
-  // ft::vector<TestClass> v(10);
-  // for (size_t i = 0; i < 10; i++) {
-  //   v.erase(v.begin());
-  // }
+  // leak check
+  ft::vector<TestClass> v(10);
+  v.erase(v.begin(), v.begin() + 5);
+  v.erase(v.begin(), v.begin() + 5);
 }
 
 TEST(VectorTest, PopBack) {

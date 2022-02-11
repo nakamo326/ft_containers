@@ -2,7 +2,7 @@ NAME := exe
 
 SHELL := /bin/bash
 CXX := clang++
-CXXFLAGS := -Wall -Wextra -Werror -MMD -MP -std=c++98 -pedantic-errors -Wshadow
+CXXFLAGS := -Wall -Wextra -Werror -MMD -MP -Wshadow -std=c++98 -pedantic-errors
 INCLUDES := -I./includes
 
 

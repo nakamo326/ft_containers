@@ -209,7 +209,7 @@ typename vector<T, Alloc>::size_type vector<T, Alloc>::check_len(
 
 template <class T, class Alloc>
 void vector<T, Alloc>::destruct_at_end(pointer new_end) {
-  for (pointer p = new_end; p <= end_; p++) {
+  for (pointer p = new_end; p < end_; p++) {
     alloc_.destroy(p);
   }
   end_ = new_end;
@@ -408,6 +408,7 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator pos) {
   return pos;
 }
 
+// FIXME: remove std::distance
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator first,
                                                             iterator last) {

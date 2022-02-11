@@ -6,17 +6,17 @@ class TestClass {
 public:
   int* p;
   TestClass() {
-    std::cout << "constructor" << std::endl;
+    std::cout << __func__ << std::endl;
     p = new int;
   }
-  // TestClass(int num) {
-  //   std::cout << "int constructor" << std::endl;
-  //   p  = new int;
-  //   *p = num;
-  // }
   ~TestClass() {
-    std::cout << "destructor" << std::endl;
+    std::cout << __func__ << std::endl;
     delete p;
+  }
+  TestClass(const TestClass& other) {
+    std::cout << __func__ << std::endl;
+    p  = new int;
+    *p = *(other.p);
   }
   TestClass& operator=(const TestClass& other) {
     *p = *(other.p);
@@ -26,6 +26,5 @@ public:
 
 int main() {
   std::vector<TestClass> v(10);
-
   return 0;
 }
