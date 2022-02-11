@@ -1,6 +1,7 @@
 #ifndef FT_CONTAINERS_INCLUDES_VECTOR_HPP
 #define FT_CONTAINERS_INCLUDES_VECTOR_HPP
 
+#include <iostream>
 #include <limits>
 #include <memory>
 #include <stdexcept>
@@ -43,7 +44,6 @@ private:
   void      vallocate(size_type n);
   void      vdeallocate();
   size_type recommend(size_type new_size) const;
-  size_type check_len(size_type count) const;
   void      destruct_at_end(pointer new_end);
 
 public:
@@ -198,16 +198,6 @@ typename vector<T, Alloc>::size_type vector<T, Alloc>::recommend(
 }
 
 template <class T, class Alloc>
-typename vector<T, Alloc>::size_type vector<T, Alloc>::check_len(
-    size_type count) const {
-  if (max_size() - size() < count)
-    throw std::length_error("ft::vector::insert");
-
-  const size_type len = size() + std::max<size_type>(size(), count);
-  return (len < size() || len > max_size()) ? max_size() : len;
-}
-
-template <class T, class Alloc>
 void vector<T, Alloc>::destruct_at_end(pointer new_end) {
   for (pointer p = new_end; p < end_; p++) {
     alloc_.destroy(p);
@@ -216,7 +206,6 @@ void vector<T, Alloc>::destruct_at_end(pointer new_end) {
 }
 
 // == constructor ==
-// FIXME: need to fix
 template <class T, class Alloc>
 vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
     : alloc_(alloc) {
@@ -230,19 +219,21 @@ vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
   }
 }
 
-// FIXME: iteratorがファイルだったらstd::distanceで破壊されちゃうかも
-// llvm iteratorのtagを見に行く。
 template <class T, class Alloc>
 template <class InputIt>
 vector<T, Alloc>::vector(
     InputIt                                                         first,
     typename enable_if<!is_integral<InputIt>::value, InputIt>::type last,
     const Alloc&                                                    alloc)
-    : alloc_(alloc) {
-  difference_type len = std::distance(first, last);
-  vallocate(len);
-  std::uninitialized_copy(first, last, begin_);
-  cap_ = end_ = begin_ + len;
+    : begin_(NULL), end_(NULL), cap_(NULL), alloc_(alloc) {
+  // it works better if InputIt is forward iterator
+  // difference_type len = std::distance(first, last);
+  // vallocate(len);
+  // std::uninitialized_copy(first, last, begin_);
+  // cap_ = end_ = begin_ + len;
+  for (; first != last; first++) {
+    push_back(*first);
+  }
 }
 
 template <class T, class Alloc>
@@ -285,6 +276,7 @@ void vector<T, Alloc>::assign(size_type n, const value_type& u) {
   }
 }
 
+// FIXME: not use std::distance
 template <class T, class Alloc>
 template <class InputIt>
 void vector<T, Alloc>::assign(
@@ -360,7 +352,7 @@ void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value) {
     return;
   difference_type offset = pos - begin();
   if (size() + count > capacity()) {
-    reserve(check_len(count));
+    reserve(recommend(size() + count));
     pos = begin() + offset;
   }
   if (pos == end()) {
@@ -386,7 +378,7 @@ void vector<T, Alloc>::insert(
   difference_type offset = pos - begin();
   size_type       count  = std::distance(first, last);
   if (size() + count > capacity()) {
-    reserve(check_len(count));
+    reserve(recommend(size() + count));
     pos = begin() + offset;
   }
   if (pos == end()) {
