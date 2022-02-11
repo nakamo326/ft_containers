@@ -408,7 +408,6 @@ typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator pos) {
   return pos;
 }
 
-// FIXME: remove std::distance
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator first,
                                                             iterator last) {

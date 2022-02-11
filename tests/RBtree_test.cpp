@@ -59,7 +59,7 @@ TEST(RBtreeTest, Random) {
 
   int add_times = 0;
   for (size_t i = 0; i < test_times; i++) {
-    if (rand() % 2) {
+    if (rand() % 2 || add_times == 0) {
       int tmp = rand() % test_times;
       tree.add(tmp, 0);
       keyList[add_times] = tmp;
@@ -67,6 +67,7 @@ TEST(RBtreeTest, Random) {
     } else {
       tree.erase(keyList[rand() % add_times]);
       EXPECT_EQ(tree.isValidTree(), true);
+      add_times--;
     }
   }
 }

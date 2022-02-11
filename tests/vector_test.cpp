@@ -491,6 +491,10 @@ TEST(VectorTest, PopBack) {
       EXPECT_EQ(s[i], f[i]);
     }
   }
+  ft::vector<TestClass> v(10);
+  for (size_t i = 0; i < 10; i++) {
+    v.pop_back();
+  }
 }
 
 TEST(VectorTest, Resize) {
