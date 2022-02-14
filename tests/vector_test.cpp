@@ -151,6 +151,12 @@ TEST(VectorTest, AssignationOverload) {
   }
 }
 
+TEST(VectorTest, GetAllocator) {
+  std::vector<int> s;
+  ft::vector<int>  f;
+  EXPECT_EQ(typeid(s.get_allocator()).name(), typeid(f.get_allocator()).name());
+}
+
 TEST(VectorTest, AssignFunc) {
   std::vector<int> s;
   ft::vector<int>  f;
@@ -177,12 +183,6 @@ TEST(VectorTest, AssignFunc) {
       EXPECT_EQ(s[i], f[i]);
     }
   }
-}
-
-TEST(VectorTest, GetAllocator) {
-  std::vector<int> s;
-  ft::vector<int>  f;
-  EXPECT_EQ(typeid(s.get_allocator()).name(), typeid(f.get_allocator()).name());
 }
 
 TEST(VectorTest, AssignFuncIter) {
