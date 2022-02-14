@@ -216,7 +216,6 @@ void vector<T, Alloc>::destruct_at_end(pointer new_end) {
 }
 
 // == constructor ==
-// FIXME: need to fix
 template <class T, class Alloc>
 vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
     : alloc_(alloc) {
