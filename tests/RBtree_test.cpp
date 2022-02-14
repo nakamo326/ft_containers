@@ -19,7 +19,7 @@ TEST(RBtreeTest, add) {
   std::random_device rand;
   {
     ft::RBtree<int, int, std::less<int> > tree;
-    int                                   times = 1000;
+    int                                   times = 10000;
     for (size_t i = 0; i < times; i++) {
       tree.add(i, 0);
       EXPECT_EQ(tree.isValidTree(), true);
@@ -27,7 +27,7 @@ TEST(RBtreeTest, add) {
   }
   {
     ft::RBtree<int, int, std::less<int> > tree;
-    int                                   times = 1000;
+    int                                   times = 10000;
     for (size_t i = 0; i < times; i++) {
       int tmp = rand() % times;
       tree.add(tmp, 0);
@@ -55,14 +55,14 @@ TEST(RBtreeTest, Random) {
   int                                   test_times = 40000;
   std::random_device                    rand;
   ft::RBtree<int, int, std::less<int> > tree;
-  std::vector<int>                      keyList(test_times);
+  std::vector<int>                      keyList;
 
   int add_times = 0;
   for (size_t i = 0; i < test_times; i++) {
     if (rand() % 2 || add_times == 0) {
       int tmp = rand() % test_times;
       tree.add(tmp, 0);
-      keyList[add_times] = tmp;
+      keyList.push_back(tmp);
       add_times++;
     } else {
       tree.erase(keyList[rand() % add_times]);

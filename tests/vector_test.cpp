@@ -9,26 +9,26 @@ class TestClass {
 public:
   int* p;
   TestClass() {
-    std::cout << __func__ << std::endl;
+    // std::cout << __func__ << std::endl;
     p = new int;
   }
   TestClass(int num) {
-    std::cout << __func__ << std::endl;
+    // std::cout << __func__ << std::endl;
     p  = new int;
     *p = num;
   }
   TestClass(const TestClass& other) {
-    std::cout << __func__ << std::endl;
+    // std::cout << __func__ << std::endl;
     p  = new int;
     *p = *(other.p);
   }
   ~TestClass() {
-    std::cout << __func__ << std::endl;
+    // std::cout << __func__ << std::endl;
 
     delete p;
   }
   TestClass& operator=(const TestClass& other) {
-    std::cout << __func__ << std::endl;
+    // std::cout << __func__ << std::endl;
     *p = *(other.p);
     return *this;
   }
@@ -534,10 +534,6 @@ TEST(VectorTest, Swap) {
     f.push_back(i);
     s.push_back(i);
   }
-  for (size_t i = 0; i < 100; i++) {
-    s[i] = i + 1;
-    f[i] = i + 1;
-  }
   std::vector<int> ts(50);
   ft::vector<int>  tf(50);
   for (size_t i = 0; i < 50; i++) {
@@ -559,6 +555,23 @@ TEST(VectorTest, Swap) {
     EXPECT_EQ(s[i], f[i]);
   }
   // FIXME: check with iterator
+  ft::vector<int>::iterator f_it  = f.begin();
+  ft::vector<int>::iterator tf_it = tf.begin();
+  ft::swap(f, tf);
+  std::swap(s, ts);
+  std::vector<int>::iterator s_it  = s.begin();
+  std::vector<int>::iterator ts_it = ts.begin();
+
+  for (; f_it != tf.end(); f_it++) {
+    EXPECT_EQ(*ts_it, *f_it);
+    ts_it++;
+  }
+  EXPECT_EQ(ts_it, ts.end());
+  for (; tf_it != f.end(); tf_it++) {
+    EXPECT_EQ(*s_it, *tf_it);
+    s_it++;
+  }
+  EXPECT_EQ(s_it, s.end());
 }
 
 TEST(VectorTest, Comparison) {
