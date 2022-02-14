@@ -5,6 +5,7 @@
 #include <limits>
 #include <memory>
 #include <stdexcept>
+#include <typeinfo>
 
 #include "reverse_iterator.hpp"
 #include "type_traits.hpp"
@@ -45,6 +46,11 @@ private:
   void      vdeallocate();
   size_type recommend(size_type new_size) const;
   void      destruct_at_end(pointer new_end);
+  template <typename InputIt>
+  void assign_helper(InputIt first, InputIt last, std::input_iterator_tag);
+  template <typename ForwardIt>
+  void assign_helper(ForwardIt first, ForwardIt last,
+                     std::forward_iterator_tag);
 
 public:
   // == constructor ==
@@ -67,10 +73,9 @@ public:
 
   // == assign ==
   void assign(size_type n, const value_type& u);
-  template <class InputIt>
-  void assign(
-      InputIt                                                         first,
-      typename enable_if<!is_integral<InputIt>::value, InputIt>::type last);
+  template <class Iter>
+  void assign(Iter                                                      first,
+              typename enable_if<!is_integral<Iter>::value, Iter>::type last);
 
   allocator_type get_allocator() const { return alloc_; }
 
@@ -205,6 +210,34 @@ void vector<T, Alloc>::destruct_at_end(pointer new_end) {
   end_ = new_end;
 }
 
+template <class T, class Alloc>
+template <typename InputIt>
+void vector<T, Alloc>::assign_helper(InputIt first, InputIt last,
+                                     std::input_iterator_tag) {
+  destruct_at_end(begin_);
+  for (; first != last; first++) {
+    std::cout << *first << std::endl;
+  }
+}
+
+template <class T, class Alloc>
+template <typename ForwardIt>
+void vector<T, Alloc>::assign_helper(ForwardIt first, ForwardIt last,
+                                     std::forward_iterator_tag) {
+  size_type len = std::distance(first, last);
+  if (len > capacity()) {
+    pointer new_data = alloc_.allocate(len);
+    std::uninitialized_copy(first, last, new_data);
+    vdeallocate();
+    begin_ = new_data;
+    end_ = cap_ = begin_ + len;
+  } else {
+    destruct_at_end(begin_);
+    std::uninitialized_copy(first, last, begin_);
+    end_ = begin_ + len;
+  }
+}
+
 // == constructor ==
 
 // 例外時deallocate失敗しそう
@@ -228,11 +261,6 @@ vector<T, Alloc>::vector(
     typename enable_if<!is_integral<InputIt>::value, InputIt>::type last,
     const Alloc&                                                    alloc)
     : begin_(NULL), end_(NULL), cap_(NULL), alloc_(alloc) {
-  // it works better if InputIt is forward iterator
-  // difference_type len = std::distance(first, last);
-  // vallocate(len);
-  // std::uninitialized_copy(first, last, begin_);
-  // cap_ = end_ = begin_ + len;
   assign(first, last);
 }
 
@@ -280,36 +308,16 @@ void vector<T, Alloc>::assign(size_type n, const value_type& u) {
 ** 呼び出し前にコンテナに保持されていた要素はすべて破棄され、新しく構築された要素に置き換えられます（要素のassignationは行われません）。
 ** これにより、新しいベクトルサイズが現在のベクトル容量を超えた場合にのみ、割り当てられたストレージスペースが自動的に再割り当てされます。
 ** InputIteratorが少なくともフォワードイテレーターカテゴリに属していない場合（つまり、単なる入力イテレーターである場合）、
-** 新しい容量を事前に決定することはできず、操作は新しいサイズでさらに対数的に複雑になります。 （成長中の再割り当て）。
+** 新しい容量を事前に決定することはできず、操作は新しいサイズでさらに対数的に複雑になります。
 */
-
 template <class T, class Alloc>
-template <class InputIt>
+template <class Iter>
 void vector<T, Alloc>::assign(
-    InputIt                                                         first,
-    typename enable_if<!is_integral<InputIt>::value, InputIt>::type last) {
-  destruct_at_end(begin_);
-  // if iterator is not forward iterator.
-  for (; first != last; first++) {
-    push_back(*first);
-  }
+    Iter                                                      first,
+    typename enable_if<!is_integral<Iter>::value, Iter>::type last) {
+  assign_helper(
+      first, last, typename iterator_traits<Iter>::iterator_category());
 }
-
-// template <class T, class Alloc>
-// template <class InputIt>
-// void vector<T, Alloc>::assign_input_iterator() {
-//   difference_type len = std::distance(first, last);
-//   if (len > capacity()) {
-//     pointer new_data = alloc_.allocate(len);
-//     std::uninitialized_copy(first, last, new_data);
-//     vdeallocate();
-//     begin_ = new_data;
-//     end_ = cap_ = begin_ + len;
-//   } else {
-//     std::uninitialized_copy(first, last, begin_);
-//     end_ = begin_ + len;
-//   }
-// }
 
 // == element access ==
 template <class T, class Alloc>
