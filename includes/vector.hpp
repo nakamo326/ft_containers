@@ -51,6 +51,12 @@ private:
   template <typename ForwardIt>
   void assign_helper(ForwardIt first, ForwardIt last,
                      std::forward_iterator_tag);
+  template <class InputIt>
+  void insert_helper(iterator pos, InputIt first, InputIt last,
+                     std::input_iterator_tag);
+  template <class ForwardIt>
+  void insert_helper(iterator pos, ForwardIt first, ForwardIt last,
+                     std::forward_iterator_tag);
 
 public:
   // == constructor ==
@@ -120,11 +126,10 @@ public:
 
   iterator insert(iterator pos, const T& value);
   void     insert(iterator pos, size_type count, const T& value);
-  template <class InputIt>
-  void insert(
-      iterator                                                        pos,
-      typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
-      InputIt                                                         last);
+  template <class Iter>
+  void insert(iterator                                                  pos,
+              typename enable_if<!is_integral<Iter>::value, Iter>::type first,
+              Iter                                                      last);
 
   iterator erase(iterator pos);
   iterator erase(iterator first, iterator last);
@@ -238,9 +243,42 @@ void vector<T, Alloc>::assign_helper(ForwardIt first, ForwardIt last,
   }
 }
 
-// == constructor ==
+template <class T, class Alloc>
+template <class InputIt>
+void vector<T, Alloc>::insert_helper(iterator pos, InputIt first, InputIt last,
+                                     std::input_iterator_tag) {
+  std::cout << "input insert" << std::endl;
+  for (; first != last; first++) {
+    pos = insert(pos, *first);
+    pos++;
+  }
+}
 
-// 例外時deallocate失敗しそう
+template <class T, class Alloc>
+template <class ForwardIt>
+void vector<T, Alloc>::insert_helper(iterator pos, ForwardIt first,
+                                     ForwardIt last,
+                                     std::forward_iterator_tag) {
+  std::cout << "forward insert" << std::endl;
+  difference_type offset = pos - begin();
+  size_type       count  = std::distance(first, last);
+  if (size() + count > capacity()) {
+    reserve(recommend(size() + count));
+    pos = begin() + offset;
+  }
+  if (pos == end()) {
+    std::uninitialized_copy(first, last, end());
+  } else {
+    for (pointer p = end_; p < end_ + count; p++) {
+      alloc_.construct(p, T());
+    }
+    std::copy_backward(pos, end(), end() + count);
+    std::copy(first, last, pos);
+  }
+  end_ += count;
+}
+
+// == constructor ==
 template <class T, class Alloc>
 vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
     : alloc_(alloc) {
@@ -392,29 +430,14 @@ void vector<T, Alloc>::insert(iterator pos, size_type count, const T& value) {
 }
 
 // FIXME: iteratorがファイルだったらstd::distanceで破壊されちゃうかも
-// llvm iteratorのtagを見に行く。
 template <class T, class Alloc>
-template <class InputIt>
+template <class Iter>
 void vector<T, Alloc>::insert(
-    iterator                                                        pos,
-    typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
-    InputIt                                                         last) {
-  difference_type offset = pos - begin();
-  size_type       count  = std::distance(first, last);
-  if (size() + count > capacity()) {
-    reserve(recommend(size() + count));
-    pos = begin() + offset;
-  }
-  if (pos == end()) {
-    std::uninitialized_copy(first, last, end());
-  } else {
-    for (pointer p = end_; p < end_ + count; p++) {
-      alloc_.construct(p, T());
-    }
-    std::copy_backward(pos, end(), end() + count);
-    std::copy(first, last, pos);
-  }
-  end_ += count;
+    iterator                                                  pos,
+    typename enable_if<!is_integral<Iter>::value, Iter>::type first,
+    Iter                                                      last) {
+  insert_helper(
+      pos, first, last, typename iterator_traits<Iter>::iterator_category());
 }
 
 template <class T, class Alloc>
