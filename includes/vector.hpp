@@ -216,6 +216,7 @@ void vector<T, Alloc>::destruct_at_end(pointer new_end) {
 }
 
 // == constructor ==
+// 例外時deallocate失敗しそう
 template <class T, class Alloc>
 vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
     : alloc_(alloc) {
@@ -284,23 +285,40 @@ void vector<T, Alloc>::assign(size_type n, const value_type& u) {
   }
 }
 
+/*
+** 呼び出し前にコンテナに保持されていた要素はすべて破棄され、新しく構築された要素に置き換えられます（要素のassignationは行われません）。
+** これにより、新しいベクトルサイズが現在のベクトル容量を超えた場合にのみ、割り当てられたストレージスペースが自動的に再割り当てされます。
+** InputIteratorが少なくともフォワードイテレーターカテゴリに属していない場合（つまり、単なる入力イテレーターである場合）、
+** 新しい容量を事前に決定することはできず、操作は新しいサイズでさらに対数的に複雑になります。 （成長中の再割り当て）。
+*/
+
 template <class T, class Alloc>
 template <class InputIt>
 void vector<T, Alloc>::assign(
     InputIt                                                         first,
     typename enable_if<!is_integral<InputIt>::value, InputIt>::type last) {
-  difference_type len = std::distance(first, last);
-  if (len > capacity()) {
-    pointer new_data = alloc_.allocate(len);
-    std::uninitialized_copy(first, last, new_data);
-    vdeallocate();
-    begin_ = new_data;
-    end_ = cap_ = begin_ + len;
-  } else {
-    std::copy(first, last, begin());
-    end_ = begin_ + len;
+  destruct_at_end(begin_);
+  // if iterator is not forward iterator.
+  for (; first != last; first++) {
+    push_back(*first);
   }
 }
+
+// template <class T, class Alloc>
+// template <class InputIt>
+// void vector<T, Alloc>::assign_input_iterator() {
+//   difference_type len = std::distance(first, last);
+//   if (len > capacity()) {
+//     pointer new_data = alloc_.allocate(len);
+//     std::uninitialized_copy(first, last, new_data);
+//     vdeallocate();
+//     begin_ = new_data;
+//     end_ = cap_ = begin_ + len;
+//   } else {
+//     std::uninitialized_copy(first, last, begin_);
+//     end_ = begin_ + len;
+//   }
+// }
 
 // == element access ==
 template <class T, class Alloc>
