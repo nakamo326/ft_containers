@@ -133,10 +133,7 @@ TEST(VectorTest, AssignationOverload) {
     std::vector<int> cs(100);
     cf = f;
     cs = s;
-    EXPECT_EQ(cf.size(), cs.size());
-    EXPECT_EQ(cf.max_size(), cs.max_size());
-    EXPECT_EQ(cf.capacity(), cs.capacity());
-    EXPECT_EQ(cf.get_allocator(), cs.get_allocator());
+    EXPECT_EQ(s.size(), f.size());
     for (size_t i = 0; i < 1000; i++) {
       EXPECT_EQ(cf[i], cs[i]);
     }
@@ -147,8 +144,7 @@ TEST(VectorTest, AssignationOverload) {
     std::vector<int> cs(10000);
     cf = f;
     cs = s;
-    EXPECT_EQ(cf.size(), cs.size());
-    EXPECT_EQ(cf.capacity(), cs.capacity());
+    EXPECT_EQ(s.size(), f.size());
     for (size_t i = 0; i < 1000; i++) {
       EXPECT_EQ(cf[i], cs[i]);
     }
@@ -167,9 +163,6 @@ TEST(VectorTest, AssignFunc) {
     s.assign(10000, 50);
     f.assign(10000, 50);
     EXPECT_EQ(s.size(), f.size());
-    EXPECT_EQ(s.max_size(), f.max_size());
-    EXPECT_EQ(s.capacity(), f.capacity());
-    EXPECT_EQ(s.get_allocator(), f.get_allocator());
     for (size_t i = 0; i < 10000; i++) {
       EXPECT_EQ(s[i], f[i]);
     }
@@ -180,9 +173,6 @@ TEST(VectorTest, AssignFunc) {
     s.assign(100, 50);
     f.assign(100, 50);
     EXPECT_EQ(s.size(), f.size());
-    EXPECT_EQ(s.max_size(), f.max_size());
-    EXPECT_EQ(s.capacity(), f.capacity());
-    EXPECT_EQ(s.get_allocator(), f.get_allocator());
     for (size_t i = 0; i < 1000; i++) {
       EXPECT_EQ(s[i], f[i]);
     }
@@ -211,9 +201,6 @@ TEST(VectorTest, AssignFuncIter) {
     s.assign(src.begin(), src.end());
     f.assign(src.begin(), src.end());
     EXPECT_EQ(s.size(), f.size());
-    EXPECT_EQ(s.max_size(), f.max_size());
-    EXPECT_EQ(s.capacity(), f.capacity());
-    EXPECT_EQ(s.get_allocator(), f.get_allocator());
     for (size_t i = 0; i < 10000; i++) {
       EXPECT_EQ(s[i], f[i]);
     }
@@ -227,9 +214,6 @@ TEST(VectorTest, AssignFuncIter) {
     s.assign(src.begin(), src.end());
     f.assign(src.begin(), src.end());
     EXPECT_EQ(s.size(), f.size());
-    EXPECT_EQ(s.max_size(), f.max_size());
-    EXPECT_EQ(s.capacity(), f.capacity());
-    EXPECT_EQ(s.get_allocator(), f.get_allocator());
     for (size_t i = 0; i < 1000; i++) {
       EXPECT_EQ(s[i], f[i]);
     }
@@ -528,10 +512,6 @@ TEST(VectorTest, Swap) {
     f.push_back(i);
     s.push_back(i);
   }
-  for (size_t i = 0; i < 100; i++) {
-    s[i] = i + 1;
-    f[i] = i + 1;
-  }
   std::vector<int> ts(50);
   ft::vector<int>  tf(50);
   for (size_t i = 0; i < 50; i++) {
@@ -553,6 +533,23 @@ TEST(VectorTest, Swap) {
     EXPECT_EQ(s[i], f[i]);
   }
   // FIXME: check with iterator
+  ft::vector<int>::iterator f_it  = f.begin();
+  ft::vector<int>::iterator tf_it = tf.begin();
+  ft::swap(f, tf);
+  std::swap(s, ts);
+  std::vector<int>::iterator s_it  = s.begin();
+  std::vector<int>::iterator ts_it = ts.begin();
+
+  for (; f_it != tf.end(); f_it++) {
+    EXPECT_EQ(*ts_it, *f_it);
+    ts_it++;
+  }
+  EXPECT_EQ(ts_it, ts.end());
+  for (; tf_it != f.end(); tf_it++) {
+    EXPECT_EQ(*s_it, *tf_it);
+    s_it++;
+  }
+  EXPECT_EQ(s_it, s.end());
 }
 
 TEST(VectorTest, Comparison) {
