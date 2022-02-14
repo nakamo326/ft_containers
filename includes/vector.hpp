@@ -190,7 +190,7 @@ typename vector<T, Alloc>::size_type vector<T, Alloc>::recommend(
     size_type new_size) const {
   const size_type _max_size = max_size();
   if (new_size > _max_size)
-    throw std::length_error("vector");
+    throw std::length_error("ft::vector length_error");
   const size_type _capacity = capacity();
   if (_capacity >= _max_size / 2)
     return _max_size;
@@ -206,6 +206,7 @@ void vector<T, Alloc>::destruct_at_end(pointer new_end) {
 }
 
 // == constructor ==
+
 // 例外時deallocate失敗しそう
 template <class T, class Alloc>
 vector<T, Alloc>::vector(size_type n, const T& value, const Alloc& alloc)
@@ -232,9 +233,7 @@ vector<T, Alloc>::vector(
   // vallocate(len);
   // std::uninitialized_copy(first, last, begin_);
   // cap_ = end_ = begin_ + len;
-  for (; first != last; first++) {
-    push_back(*first);
-  }
+  assign(first, last);
 }
 
 template <class T, class Alloc>

@@ -3,8 +3,10 @@
 #include <list>
 #include <vector>
 
+#include "vector.hpp"
+
 int main() {
   std::vector<int> v;
-  std::list<int>   l;
+  v.reserve(v.max_size());
   return 0;
 }
