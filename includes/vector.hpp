@@ -221,7 +221,7 @@ void vector<T, Alloc>::assign_helper(InputIt first, InputIt last,
                                      std::input_iterator_tag) {
   destruct_at_end(begin_);
   for (; first != last; first++) {
-    std::cout << *first << std::endl;
+    push_back(*first);
   }
 }
 
