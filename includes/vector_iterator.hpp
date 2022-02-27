@@ -26,6 +26,10 @@ public:
   vector_iterator(vector_iterator const& other) : _ptr(other._ptr) {}
   template <typename _Iter>
   vector_iterator(const vector_iterator<_Iter>& __x) : _ptr(__x.base()) {}
+  vector_iterator& operator=(const vector_iterator& __x) {
+    _ptr == __x._ptr;
+    return *this;
+  }
 
   reference operator*() const { return *_ptr; }
   pointer   operator->() const { return _ptr; }
