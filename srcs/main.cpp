@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iterator>
 #include <list>
+#include <map>
 #include <sstream>
 #include <vector>
 
@@ -16,16 +17,7 @@ void outputVector(ft::vector<T> vec) {
 }
 
 int main() {
-  std::stringstream ss;
-  ss << 1 << std::endl << 2 << std::endl << 3;
-
-  std::istream_iterator<int> beg(ss);
-  std::istream_iterator<int> last;
-
-  ft::vector<int> v(10, 42);
-  outputVector(v);
-  v.insert(v.begin() + 2, beg, last);
-  outputVector(v);
+  std::map<int, int> m;
 
   return 0;
 }
@@ -42,7 +34,7 @@ int main() {
 //   for (ft::vector<int>::iterator it = v.begin(); it != v.end(); it++) {
 //     std::cout << *it << std::endl;
 //   }
-
+//   std::cout << "===========" << std::endl;
 //   std::vector<int> tmp(5);
 //   for (size_t i = 0; i < 5; i++) {
 //     tmp[i] = i;
@@ -52,5 +44,6 @@ int main() {
 //   for (ft::vector<int>::iterator it = v.begin(); it != v.end(); it++) {
 //     std::cout << *it << std::endl;
 //   }
+
 //   return 0;
 // }

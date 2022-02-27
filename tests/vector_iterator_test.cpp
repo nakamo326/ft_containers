@@ -118,9 +118,9 @@ TEST(VectorIteratorTest, const_iterator) {
     f[i] = i;
   }
   ft::vector<int>::iterator        it        = f.begin();
-  ft::vector<int>::const_iterator  const_it  = f.begin();
+  ft::vector<int>::const_iterator  const_it  = it;
   std::vector<int>::iterator       sit       = s.begin();
-  std::vector<int>::const_iterator const_sit = s.begin();
+  std::vector<int>::const_iterator const_sit = sit;
 
   // cannot assign to const_it;
   // *const_it = 42;

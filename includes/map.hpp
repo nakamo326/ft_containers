@@ -8,13 +8,13 @@
 
 namespace ft {
 
-template <class Key, class T, class Compare = std::less<Key>,
-          class Alloc = std::allocator<std::pair<const Key, T> > >
+template <class Key, class Tp, class Compare = std::less<Key>,
+          typename Alloc = std::allocator<std::pair<const Key, Tp> > >
 class map {
 public:
   typedef Key                             key_type;
-  typedef T                               mapped_type;
-  typedef std::pair<const Key, T>         value_type;
+  typedef Tp                              mapped_type;
+  typedef std::pair<const Key, Tp>        value_type;
   typedef std::size_t                     size_type;
   typedef std::ptrdiff_t                  difference_type;
   typedef Compare                         key_compare;

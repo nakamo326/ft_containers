@@ -247,7 +247,6 @@ template <class T, class Alloc>
 template <class InputIt>
 void vector<T, Alloc>::insert_helper(iterator pos, InputIt first, InputIt last,
                                      std::input_iterator_tag) {
-  std::cout << "input insert" << std::endl;
   for (; first != last; first++) {
     pos = insert(pos, *first);
     pos++;
@@ -259,7 +258,6 @@ template <class ForwardIt>
 void vector<T, Alloc>::insert_helper(iterator pos, ForwardIt first,
                                      ForwardIt last,
                                      std::forward_iterator_tag) {
-  std::cout << "forward insert" << std::endl;
   difference_type offset = pos - begin();
   size_type       count  = std::distance(first, last);
   if (size() + count > capacity()) {
