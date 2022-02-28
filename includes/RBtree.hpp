@@ -523,8 +523,16 @@ struct RBtree_iterator {
   typedef std::bidirectional_iterator_tag iterator_category;
   typedef std::ptrdiff_t                  difference_type;
 
-  typedef RBtree_iterator<T> _Self;
-  // typedef _RBnode<>*        _Link_type;
+  typedef RBtree_iterator<value_type> _Self;
+  typedef _RBnode<value_type>         node_type;
+  typedef node_type*                  node_pointer;
+
+  RBtree_iterator() : node_() {}
+  RBtree_iterator(node_pointer __x) : node_(__x) {}
+  reference operator*() const { return node_->value_; }
+  pointer   operator->() const { return node_->value_; }
+
+  node_pointer node_;
 };
 
 }  // namespace ft
