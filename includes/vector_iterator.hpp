@@ -27,7 +27,7 @@ public:
   template <typename _Iter>
   vector_iterator(const vector_iterator<_Iter>& __x) : _ptr(__x.base()) {}
   vector_iterator& operator=(const vector_iterator& __x) {
-    _ptr == __x._ptr;
+    _ptr = __x._ptr;
     return *this;
   }
 
