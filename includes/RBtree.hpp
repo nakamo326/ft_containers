@@ -6,13 +6,54 @@
 #include <memory>
 #include <stdexcept>
 
-// typedef __tree_node<value_type>                     _NodeTypes;
-// typedef typename _NodeTypes::key_type               key_type;
-// template <class _Tp>
-// class tree_node;
-
 // template <class _Key, class _Tp>
-// class tree_node<pair<const _Key, _Tp> > {
+// class __tree_node< ft::pair<const _Key, _Tp> > {
+//   //
+//   ===========================================================================
+//   // tree_node_type
+//   //
+//   ===========================================================================
+//  public:
+//   typedef _Key                           key_type;
+//   typedef _Tp                            mapped_type;
+//   typedef pair<const _Key, _Tp>          __node_value_type;
+//   typedef __tree_node<__node_value_type> __node_type;
+//   typedef __node_type*                   __node_pointer;
+//   //
+//   ===========================================================================
+//   // tree_node
+//   //
+//   ===========================================================================
+//  public:
+//   typedef __tree_node* pointer;
+
+//  public:
+//   __node_value_type __value_;
+//   pointer           __parent_;
+//   pointer           __right_;
+//   pointer           __left_;
+//   bool              __is_black_;
+//   //
+//   ===========================================================================
+//   // construct/copy/destroy:
+//   //
+//   ===========================================================================
+//   explicit __tree_node(const __node_value_type& __x, pointer __p = NULL)
+//       : __value_(__x),
+//         __parent_(__p),
+//         __right_(NULL),
+//         __left_(NULL),
+//         __is_black_(false) {}
+//   ~__tree_node() {}
+//   //
+//   ===========================================================================
+//   // tree_node_type
+//   //
+//   ===========================================================================
+//  private:
+//   __tree_node();
+//   static const bool __is_map = true;
+// };
 
 // FIXME: change key to const
 
@@ -20,21 +61,20 @@ namespace ft {
 
 enum _RBtree_color { e_red = false, e_black = true };
 
-template <typename K, typename V>
+template <typename Value>
 struct _RBnode {
-  typedef _RBnode<K, V> node_type;
-  typedef node_type*    node_pointer;
+  typedef Value               value_type;
+  typedef _RBnode<value_type> node_type;
+  typedef node_type*          node_pointer;
 
-  K             key_;
-  V             value_;
+  value_type    value_;
   node_pointer  left_;
   node_pointer  right_;
   node_pointer  parent_;
   _RBtree_color color_;
 
-  _RBnode(K key, V value)
-      : key_(key),
-        value_(value),
+  _RBnode(value_type value)
+      : value_(value),
         left_(NULL),
         right_(NULL),
         parent_(NULL),
@@ -43,8 +83,7 @@ struct _RBnode {
   void outputInfo() {
     std::cout << "------------------------------" << std::endl;
     std::cout << "&this  : " << std::hex << this << std::dec << std::endl;
-    std::cout << "key    : " << key_ << std::endl;
-    // std::cout << "value  : " << value_ << std::endl;
+    std::cout << "value  : " << value_ << std::endl;
     std::cout << "parent : " << std::hex << parent_ << std::dec << std::endl;
     std::cout << "left   : " << std::hex << left_ << std::dec << std::endl;
     std::cout << "right  : " << std::hex << right_ << std::dec << std::endl;
@@ -56,13 +95,17 @@ struct _RBnode {
   }
 };
 
-template <typename K, typename V, typename Comp>
+// case) map
+// key == value.first value == ft::pair<key, ...> KeyOfValue == _Select1st
+template <typename Key, typename Value, typename KeyOfValue, typename Comp>
 class RBtree {
 public:
-  typedef _RBnode<K, V>                  node_type;
-  typedef node_type*                     node_pointer;
-  typedef std::allocator<_RBnode<K, V> > node_allocator;
-  typedef size_t                         size_type;
+  typedef Key                                  key_type;
+  typedef Value                                value_type;
+  typedef _RBnode<value_type>                  node_type;
+  typedef node_type*                           node_pointer;
+  typedef std::allocator<_RBnode<value_type> > node_allocator;
+  typedef size_t                               size_type;
 
 private:
   // == accessor ==
@@ -86,6 +129,8 @@ private:
 
   bool isLeftChild(node_pointer node) { return node->parent_->left_ == node; }
 
+  key_type getKeyOfValue(Value& value) { return KeyOfValue()(value); }
+
   // == helpers ==
 
   // precondition: node has grandparent
@@ -101,11 +146,12 @@ private:
     setBlack(node->parent_->parent_->right_);
   }
 
-  node_pointer searchKey(K key, node_pointer node) {
+  node_pointer searchKey(key_type& key, node_pointer node) {
     while (node != NULL) {
-      if (node->key_ == key)
+      if (getKeyOfValue(node->value_) == key)
         break;
-      node = comp_(node->key_, key) ? node->right_ : node->left_;
+      node =
+          comp_(getKeyOfValue(node->value_), key) ? node->right_ : node->left_;
     }
     return node;
   }
@@ -131,26 +177,25 @@ private:
   }
 
   void copyVal(node_pointer from, node_pointer to) {
-    to->key_   = from->key_;
     to->value_ = from->value_;
   }
 
-  // == add ==
-  void add(node_pointer parent, node_pointer new_node) {
-    if (comp_(parent->key_, new_node->key_)) {
+  // == insert ==
+  void insert(node_pointer parent, node_pointer new_node) {
+    if (comp_(getKeyOfValue(parent->value_), getKeyOfValue(new_node->value_))) {
       if (parent->right_ == NULL) {
         parent->right_    = new_node;
         new_node->parent_ = parent;
         return checkColor(new_node);
       }
-      return add(parent->right_, new_node);
+      return insert(parent->right_, new_node);
     } else {
       if (parent->left_ == NULL) {
         parent->left_     = new_node;
         new_node->parent_ = parent;
         return checkColor(new_node);
       }
-      return add(parent->left_, new_node);
+      return insert(parent->left_, new_node);
     }
   }
 
@@ -252,7 +297,7 @@ private:
   }
 
   // == delete ==
-  bool deleteNode(K key) {
+  bool deleteNode(key_type& key) {
     node_pointer target = searchKey(key, root_);
     if (target == NULL)
       return false;
@@ -412,31 +457,32 @@ private:
 
 public:
   RBtree() : root_(NULL), size_(0), comp_(Comp()), alloc_(node_allocator()) {
-    header_ = new node_type(K(), V());
+    header_ = new node_type(value_type());
     setBlack(header_);
   }
+
   ~RBtree() { destroyTree(header_); }
 
   size_type size() { return size_; }
 
   size_type max_size() { return alloc_.max_size(); }
 
-  void add(K key, V value) {
+  void insert(const value_type& value) {
     node_pointer new_node = alloc_.allocate(1);
-    alloc_.construct(new_node, node_type(key, value));
+    alloc_.construct(new_node, node_type(value));
     if (root_ == NULL) {
       root_          = new_node;
       root_->parent_ = header_;
       header_->left_ = root_;
       setBlack(root_);
       size_++;
-      return;
+    } else {
+      insert(root_, new_node);
     }
-    add(root_, new_node);
     size_++;
   }
 
-  bool erase(K key) { return deleteNode(key); }
+  bool erase(key_type& key) { return deleteNode(key); }
 
   // == for debug ==
   void outputAllTree() { outputTree(root_); }

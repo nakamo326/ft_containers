@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "RBtree.hpp"
+#include "function.hpp"
 #include "reverse_iterator.hpp"
 
 namespace ft {
@@ -25,7 +26,8 @@ public:
   typedef typename Alloc::const_pointer   const_pointer;
 
 private:
-  typedef RBtree<Key, T, Compare> tree_type;
+  typedef RBtree<key_type, value_type, _Select1st<value_type>, Compare>
+      tree_type;
 
 public:
   typedef tree_type::iterator                  iterator;
@@ -33,9 +35,8 @@ public:
   typedef ft::reverse_iterator<iterator>       reverse_iterator;
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
-  // FIXME: change mapped_type to value_type(pair)
 private:
-  RBtree<Key, mapped_type, Compare> tree_;
+  tree_type tree_;
 
 public:
   class value_compare {
