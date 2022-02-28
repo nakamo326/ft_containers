@@ -6,6 +6,8 @@
 #include <sstream>
 #include <vector>
 
+#include "function.hpp"
+#include "pair.hpp"
 #include "vector.hpp"
 
 template <typename T>
@@ -17,8 +19,13 @@ void outputVector(ft::vector<T> vec) {
 }
 
 int main() {
-  std::map<int, int> m;
+  const ft::pair<const int, int> p  = ft::make_pair(42, 9);
+  const int                      ci = 57;
 
+  std::cout << ft::_Identity<const int>()(ci) << std::endl;
+
+  int tmp = ft::_Select1st<ft::pair<const int, int> >()(p);
+  std::cout << tmp << std::endl;
   return 0;
 }
 
