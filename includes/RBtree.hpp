@@ -6,55 +6,6 @@
 #include <memory>
 #include <stdexcept>
 
-// template <class _Key, class _Tp>
-// class __tree_node< ft::pair<const _Key, _Tp> > {
-//   //
-//   ===========================================================================
-//   // tree_node_type
-//   //
-//   ===========================================================================
-//  public:
-//   typedef _Key                           key_type;
-//   typedef _Tp                            mapped_type;
-//   typedef pair<const _Key, _Tp>          __node_value_type;
-//   typedef __tree_node<__node_value_type> __node_type;
-//   typedef __node_type*                   __node_pointer;
-//   //
-//   ===========================================================================
-//   // tree_node
-//   //
-//   ===========================================================================
-//  public:
-//   typedef __tree_node* pointer;
-
-//  public:
-//   __node_value_type __value_;
-//   pointer           __parent_;
-//   pointer           __right_;
-//   pointer           __left_;
-//   bool              __is_black_;
-//   //
-//   ===========================================================================
-//   // construct/copy/destroy:
-//   //
-//   ===========================================================================
-//   explicit __tree_node(const __node_value_type& __x, pointer __p = NULL)
-//       : __value_(__x),
-//         __parent_(__p),
-//         __right_(NULL),
-//         __left_(NULL),
-//         __is_black_(false) {}
-//   ~__tree_node() {}
-//   //
-//   ===========================================================================
-//   // tree_node_type
-//   //
-//   ===========================================================================
-//  private:
-//   __tree_node();
-//   static const bool __is_map = true;
-// };
-
 namespace ft {
 
 enum _RBtree_color { e_red = false, e_black = true };
@@ -455,7 +406,7 @@ private:
 
 public:
   RBtree() : root_(NULL), size_(0), comp_(Comp()), alloc_(node_allocator()) {
-    header_ = new node_type(value_type());
+    header_ = alloc_.allocate(1);
     setBlack(header_);
   }
 
@@ -541,8 +492,23 @@ struct RBtree_iterator {
         __x = tmp;
         tmp = tmp->parent_;
       }
-      if (__x->right_ != tmp)
+      __x = tmp;
+    }
+    return __x;
+  }
+
+  node_pointer _RBtreeDecrement(node_pointer __x) {
+    if (__x->left_ != NULL) {
+      node_pointer tmp = __x->left_;
+      while (tmp->right_ != NULL) tmp = tmp->right_;
+      __x = tmp;
+    } else {
+      node_pointer tmp = __x->parent_;
+      while (__x == tmp->left_) {
         __x = tmp;
+        tmp = tmp->parent_;
+      }
+      __x = tmp;
     }
     return __x;
   }
