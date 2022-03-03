@@ -19,13 +19,15 @@ void outputVector(ft::vector<T> vec) {
 }
 
 int main() {
-  const ft::pair<const int, int> p  = ft::make_pair(42, 9);
-  const int                      ci = 57;
+  std::map<int, int> m;
+  m[0] = 0;
+  m[5] = 5;
+  m[2] = 2;
+  m[3] = 3;
+  for (std::map<int, int>::iterator it(m.begin()); it != m.end(); it++) {
+    std::cout << (*it).first << std::endl;
+  }
 
-  std::cout << ft::_Identity<const int>()(ci) << std::endl;
-
-  int tmp = ft::_Select1st<ft::pair<const int, int> >()(p);
-  std::cout << tmp << std::endl;
   return 0;
 }
 

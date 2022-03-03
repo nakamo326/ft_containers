@@ -55,8 +55,6 @@
 //   static const bool __is_map = true;
 // };
 
-// FIXME: change key to const
-
 namespace ft {
 
 enum _RBtree_color { e_red = false, e_black = true };
@@ -514,6 +512,7 @@ public:
     return checkConsecutiveRed(root_);
   }
 };
+
 template <typename T>
 struct RBtree_iterator {
   typedef T  value_type;
@@ -529,8 +528,54 @@ struct RBtree_iterator {
 
   RBtree_iterator() : node_() {}
   RBtree_iterator(node_pointer __x) : node_(__x) {}
-  reference operator*() const { return node_->value_; }
+  reference operator*() const { return *node_->value_; }
   pointer   operator->() const { return node_->value_; }
+
+  node_pointer _RBtreeIncrement(node_pointer __x) {
+    if (__x->right_ != NULL) {
+      __x = __x->right_;
+      while (__x->left_ != NULL) __x = __x->left_;
+    } else {
+      node_pointer tmp = __x->parent_;
+      while (__x == tmp->right_) {
+        __x = tmp;
+        tmp = tmp->parent_;
+      }
+      if (__x->right_ != tmp)
+        __x = tmp;
+    }
+    return __x;
+  }
+
+  _Self& operator++() {
+    node_ = _RBtreeIncrement(node_);
+    return *this;
+  }
+
+  _Self operator++(int) {
+    _Self tmp = *this;
+    node_     = _RBtreeIncrement(node_);
+    return tmp;
+  }
+
+  _Self& operator--() {
+    node_ = _RBtreeDecrement(node_);
+    return *this;
+  }
+
+  _Self operator--(int) {
+    _Self tmp = *this;
+    node_     = _RBtreeDecrement(node_);
+    return tmp;
+  }
+
+  friend bool operator==(const _Self& lhs, const _Self& rhs) {
+    return lhs._M_node == rhs._M_node;
+  }
+
+  friend bool operator!=(const _Self& lhs, const _Self& rhs) {
+    return lhs._M_node != rhs._M_node;
+  }
 
   node_pointer node_;
 };
