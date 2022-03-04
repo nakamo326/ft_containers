@@ -29,6 +29,7 @@ TEST(RBtreeTest, add) {
     for (size_t i = 0; i < times; i++) {
       tree.insert(ft::make_pair(i, 0));
       EXPECT_EQ(tree.isValidTree(), true);
+      EXPECT_EQ(tree.size(), i + 1);
     }
   }
   {
@@ -42,6 +43,7 @@ TEST(RBtreeTest, add) {
       int tmp = rand() % times;
       tree.insert(ft::make_pair(tmp, 0));
       EXPECT_EQ(tree.isValidTree(), true);
+      EXPECT_EQ(tree.size(), i + 1);
     }
   }
 }
@@ -58,10 +60,12 @@ TEST(RBtreeTest, erase) {
     int tmp = rand() % 4000;
     tree.insert(ft::make_pair(tmp, 0));
     keyList[i] = tmp;
+    EXPECT_EQ(tree.size(), i + 1);
   }
   for (size_t i = 0; i < 4000; i++) {
     tree.erase(keyList[i]);
     EXPECT_EQ(tree.isValidTree(), true);
+    EXPECT_EQ(tree.size(), 4000 - (i + 1));
   }
 }
 

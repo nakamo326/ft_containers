@@ -459,6 +459,7 @@ private:
     deallocateNode(target);
     if (deleted_color == e_black)
       fixDeletion(x, x_parent);
+    size_--;
     return true;
   }
 
@@ -593,7 +594,8 @@ public:
         size_(0),
         comp_(Comp()),
         alloc_(node_allocator()) {
-    header_ = alloc_.allocate(1);
+    header_         = alloc_.allocate(1);
+    header_->right_ = NULL;
     setBlack(header_);
   }
 
