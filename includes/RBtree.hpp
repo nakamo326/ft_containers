@@ -46,6 +46,175 @@ struct _RBnode {
   }
 };
 
+template <typename T>
+struct RBtree_iterator {
+  typedef T  value_type;
+  typedef T& reference;
+  typedef T* pointer;
+
+  typedef std::bidirectional_iterator_tag iterator_category;
+  typedef std::ptrdiff_t                  difference_type;
+
+  typedef RBtree_iterator<value_type> _Self;
+  typedef _RBnode<value_type>         node_type;
+  typedef node_type*                  node_pointer;
+
+  RBtree_iterator() : node_() {}
+  RBtree_iterator(node_pointer __x) : node_(__x) {}
+
+  reference operator*() const { return *node_->value_; }
+  pointer   operator->() const { return node_->value_; }
+
+  node_pointer _RBtreeIncrement(node_pointer __x) {
+    if (__x->right_ != NULL) {
+      __x = __x->right_;
+      while (__x->left_ != NULL) __x = __x->left_;
+    } else {
+      node_pointer tmp = __x->parent_;
+      while (__x == tmp->right_) {
+        __x = tmp;
+        tmp = tmp->parent_;
+      }
+      __x = tmp;
+    }
+    return __x;
+  }
+
+  node_pointer _RBtreeDecrement(node_pointer __x) {
+    if (__x->left_ != NULL) {
+      node_pointer tmp = __x->left_;
+      while (tmp->right_ != NULL) tmp = tmp->right_;
+      __x = tmp;
+    } else {
+      node_pointer tmp = __x->parent_;
+      while (__x == tmp->left_) {
+        __x = tmp;
+        tmp = tmp->parent_;
+      }
+      __x = tmp;
+    }
+    return __x;
+  }
+
+  _Self& operator++() {
+    node_ = _RBtreeIncrement(node_);
+    return *this;
+  }
+
+  _Self operator++(int) {
+    _Self tmp = *this;
+    node_     = _RBtreeIncrement(node_);
+    return tmp;
+  }
+
+  _Self& operator--() {
+    node_ = _RBtreeDecrement(node_);
+    return *this;
+  }
+
+  _Self operator--(int) {
+    _Self tmp = *this;
+    node_     = _RBtreeDecrement(node_);
+    return tmp;
+  }
+
+  friend bool operator==(const _Self& lhs, const _Self& rhs) {
+    return lhs._M_node == rhs._M_node;
+  }
+
+  friend bool operator!=(const _Self& lhs, const _Self& rhs) {
+    return lhs._M_node != rhs._M_node;
+  }
+
+  node_pointer node_;
+};
+
+template <typename T>
+struct RBtree_const_iterator {
+  typedef T        value_type;
+  typedef const T& reference;
+  typedef const T* pointer;
+
+  typedef RBtree_iterator<T> iterator;
+
+  typedef std::bidirectional_iterator_tag iterator_category;
+  typedef std::ptrdiff_t                  difference_type;
+
+  typedef RBtree_const_iterator<value_type> _Self;
+  typedef _RBnode<value_type>               node_type;
+  typedef const node_type*                  node_pointer;
+
+  RBtree_const_iterator() : node_() {}
+  RBtree_const_iterator(node_pointer __x) : node_(__x) {}
+  RBtree_const_iterator(const iterator& __x) : node_(__x) {}
+
+  reference operator*() const { return *node_->value_; }
+  pointer   operator->() const { return node_->value_; }
+
+  node_pointer _RBtreeIncrement(node_pointer __x) {
+    if (__x->right_ != NULL) {
+      __x = __x->right_;
+      while (__x->left_ != NULL) __x = __x->left_;
+    } else {
+      node_pointer tmp = __x->parent_;
+      while (__x == tmp->right_) {
+        __x = tmp;
+        tmp = tmp->parent_;
+      }
+      __x = tmp;
+    }
+    return __x;
+  }
+
+  node_pointer _RBtreeDecrement(node_pointer __x) {
+    if (__x->left_ != NULL) {
+      node_pointer tmp = __x->left_;
+      while (tmp->right_ != NULL) tmp = tmp->right_;
+      __x = tmp;
+    } else {
+      node_pointer tmp = __x->parent_;
+      while (__x == tmp->left_) {
+        __x = tmp;
+        tmp = tmp->parent_;
+      }
+      __x = tmp;
+    }
+    return __x;
+  }
+
+  _Self& operator++() {
+    node_ = _RBtreeIncrement(node_);
+    return *this;
+  }
+
+  _Self operator++(int) {
+    _Self tmp = *this;
+    node_     = _RBtreeIncrement(node_);
+    return tmp;
+  }
+
+  _Self& operator--() {
+    node_ = _RBtreeDecrement(node_);
+    return *this;
+  }
+
+  _Self operator--(int) {
+    _Self tmp = *this;
+    node_     = _RBtreeDecrement(node_);
+    return tmp;
+  }
+
+  friend bool operator==(const _Self& lhs, const _Self& rhs) {
+    return lhs.node_ == rhs.node_;
+  }
+
+  friend bool operator!=(const _Self& lhs, const _Self& rhs) {
+    return lhs.node_ != rhs.node_;
+  }
+
+  node_pointer node_;
+};
+
 // case) map
 // key == value.first value == ft::pair<key, ...> KeyOfValue == _Select1st
 template <typename Key, typename Value, typename KeyOfValue, typename Comp>
@@ -148,6 +317,9 @@ private:
       if (parent->left_ == NULL) {
         parent->left_     = new_node;
         new_node->parent_ = parent;
+        // if (comp_(getKeyOfValue(new_node->value_),
+        //           getKeyOfValue(begin_->value_)))
+        //   begin_ = new_node;
         return checkColor(new_node);
       }
       return insert(parent->left_, new_node);
@@ -252,11 +424,13 @@ private:
   }
 
   // == delete ==
+  // TODO: check target is begin_, and set new begin_
   bool deleteNode(key_type& key) {
     node_pointer target = searchKey(key, root_);
     if (target == NULL)
       return false;
-
+    // if (target == begin_)
+    //   begin_ = begin_->parent_;
     _RBtree_color deleted_color = target->color_;
     node_pointer  x, x_parent = target->parent_;
     if (target->left_ == NULL) {
@@ -404,14 +578,21 @@ private:
   }
 
 private:
-  node_pointer   header_;
-  node_pointer   root_;
+  node_pointer header_;
+  node_pointer root_;
+  // node_pointer   begin_;
   size_t         size_;
   Comp           comp_;
   node_allocator alloc_;
 
 public:
-  RBtree() : root_(NULL), size_(0), comp_(Comp()), alloc_(node_allocator()) {
+  RBtree()
+      : header_(NULL),
+        root_(NULL),
+        // begin_(NULL),
+        size_(0),
+        comp_(Comp()),
+        alloc_(node_allocator()) {
     header_ = alloc_.allocate(1);
     setBlack(header_);
   }
@@ -428,9 +609,9 @@ public:
     if (root_ == NULL) {
       root_          = new_node;
       root_->parent_ = header_;
+      // begin_         = root_;
       header_->left_ = root_;
       setBlack(root_);
-      size_++;
     } else {
       insert(root_, new_node);
     }
@@ -468,175 +649,6 @@ public:
     }
     return checkConsecutiveRed(root_);
   }
-};
-
-template <typename T>
-struct RBtree_iterator {
-  typedef T  value_type;
-  typedef T& reference;
-  typedef T* pointer;
-
-  typedef std::bidirectional_iterator_tag iterator_category;
-  typedef std::ptrdiff_t                  difference_type;
-
-  typedef RBtree_iterator<value_type> _Self;
-  typedef _RBnode<value_type>         node_type;
-  typedef node_type*                  node_pointer;
-
-  RBtree_iterator() : node_() {}
-  RBtree_iterator(node_pointer __x) : node_(__x) {}
-
-  reference operator*() const { return *node_->value_; }
-  pointer   operator->() const { return node_->value_; }
-
-  node_pointer _RBtreeIncrement(node_pointer __x) {
-    if (__x->right_ != NULL) {
-      __x = __x->right_;
-      while (__x->left_ != NULL) __x = __x->left_;
-    } else {
-      node_pointer tmp = __x->parent_;
-      while (__x == tmp->right_) {
-        __x = tmp;
-        tmp = tmp->parent_;
-      }
-      __x = tmp;
-    }
-    return __x;
-  }
-
-  node_pointer _RBtreeDecrement(node_pointer __x) {
-    if (__x->left_ != NULL) {
-      node_pointer tmp = __x->left_;
-      while (tmp->right_ != NULL) tmp = tmp->right_;
-      __x = tmp;
-    } else {
-      node_pointer tmp = __x->parent_;
-      while (__x == tmp->left_) {
-        __x = tmp;
-        tmp = tmp->parent_;
-      }
-      __x = tmp;
-    }
-    return __x;
-  }
-
-  _Self& operator++() {
-    node_ = _RBtreeIncrement(node_);
-    return *this;
-  }
-
-  _Self operator++(int) {
-    _Self tmp = *this;
-    node_     = _RBtreeIncrement(node_);
-    return tmp;
-  }
-
-  _Self& operator--() {
-    node_ = _RBtreeDecrement(node_);
-    return *this;
-  }
-
-  _Self operator--(int) {
-    _Self tmp = *this;
-    node_     = _RBtreeDecrement(node_);
-    return tmp;
-  }
-
-  bool operator==(const _Self& lhs, const _Self& rhs) {
-    return lhs._M_node == rhs._M_node;
-  }
-
-  bool operator!=(const _Self& lhs, const _Self& rhs) {
-    return lhs._M_node != rhs._M_node;
-  }
-
-  node_pointer node_;
-};
-
-template <typename T>
-struct RBtree_const_iterator {
-  typedef T        value_type;
-  typedef const T& reference;
-  typedef const T* pointer;
-
-  typedef RBtree_iterator<T> iterator;
-
-  typedef std::bidirectional_iterator_tag iterator_category;
-  typedef std::ptrdiff_t                  difference_type;
-
-  typedef RBtree_const_iterator<value_type> _Self;
-  typedef _RBnode<value_type>               node_type;
-  typedef const node_type*                  node_pointer;
-
-  RBtree_const_iterator() : node_() {}
-  RBtree_const_iterator(node_pointer __x) : node_(__x) {}
-  RBtree_const_iterator(const iterator& __x) : node_(__x) {}
-
-  reference operator*() const { return *node_->value_; }
-  pointer   operator->() const { return node_->value_; }
-
-  node_pointer _RBtreeIncrement(node_pointer __x) {
-    if (__x->right_ != NULL) {
-      __x = __x->right_;
-      while (__x->left_ != NULL) __x = __x->left_;
-    } else {
-      node_pointer tmp = __x->parent_;
-      while (__x == tmp->right_) {
-        __x = tmp;
-        tmp = tmp->parent_;
-      }
-      __x = tmp;
-    }
-    return __x;
-  }
-
-  node_pointer _RBtreeDecrement(node_pointer __x) {
-    if (__x->left_ != NULL) {
-      node_pointer tmp = __x->left_;
-      while (tmp->right_ != NULL) tmp = tmp->right_;
-      __x = tmp;
-    } else {
-      node_pointer tmp = __x->parent_;
-      while (__x == tmp->left_) {
-        __x = tmp;
-        tmp = tmp->parent_;
-      }
-      __x = tmp;
-    }
-    return __x;
-  }
-
-  _Self& operator++() {
-    node_ = _RBtreeIncrement(node_);
-    return *this;
-  }
-
-  _Self operator++(int) {
-    _Self tmp = *this;
-    node_     = _RBtreeIncrement(node_);
-    return tmp;
-  }
-
-  _Self& operator--() {
-    node_ = _RBtreeDecrement(node_);
-    return *this;
-  }
-
-  _Self operator--(int) {
-    _Self tmp = *this;
-    node_     = _RBtreeDecrement(node_);
-    return tmp;
-  }
-
-  bool operator==(const _Self& lhs, const _Self& rhs) {
-    return lhs.node_ == rhs.node_;
-  }
-
-  bool operator!=(const _Self& lhs, const _Self& rhs) {
-    return lhs.node_ != rhs.node_;
-  }
-
-  node_pointer node_;
 };
 
 }  // namespace ft
