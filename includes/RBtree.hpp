@@ -317,9 +317,9 @@ private:
       if (parent->left_ == NULL) {
         parent->left_     = new_node;
         new_node->parent_ = parent;
-        // if (comp_(getKeyOfValue(new_node->value_),
-        //           getKeyOfValue(begin_->value_)))
-        //   begin_ = new_node;
+        if (comp_(getKeyOfValue(new_node->value_),
+                  getKeyOfValue(begin_->value_)))
+          begin_ = new_node;
         return checkColor(new_node);
       }
       return insert(parent->left_, new_node);
@@ -429,8 +429,8 @@ private:
     node_pointer target = searchKey(key, root_);
     if (target == NULL)
       return false;
-    // if (target == begin_)
-    //   begin_ = begin_->parent_;
+    if (target == begin_)
+      begin_ = begin_->parent_;
     _RBtree_color deleted_color = target->color_;
     node_pointer  x, x_parent = target->parent_;
     if (target->left_ == NULL) {
@@ -579,9 +579,9 @@ private:
   }
 
 private:
-  node_pointer header_;
-  node_pointer root_;
-  // node_pointer   begin_;
+  node_pointer   header_;
+  node_pointer   root_;
+  node_pointer   begin_;
   size_t         size_;
   Comp           comp_;
   node_allocator alloc_;
@@ -590,7 +590,7 @@ public:
   RBtree()
       : header_(NULL),
         root_(NULL),
-        // begin_(NULL),
+        begin_(NULL),
         size_(0),
         comp_(Comp()),
         alloc_(node_allocator()) {
@@ -611,7 +611,7 @@ public:
     if (root_ == NULL) {
       root_          = new_node;
       root_->parent_ = header_;
-      // begin_         = root_;
+      begin_         = root_;
       header_->left_ = root_;
       setBlack(root_);
     } else {
