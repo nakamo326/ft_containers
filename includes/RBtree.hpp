@@ -270,7 +270,7 @@ private:
     setBlack(node->parent_->parent_->right_);
   }
 
-  node_pointer searchKey(key_type& key, node_pointer node) {
+  node_pointer searchKey(const key_type& key, node_pointer node) {
     while (node != NULL) {
       if (getKeyOfValue(node->value_) == key)
         break;
@@ -424,13 +424,15 @@ private:
   }
 
   // == delete ==
-  // TODO: check target is begin_, and set new begin_
-  bool deleteNode(key_type& key) {
+  bool deleteNode(const key_type& key) {
     node_pointer target = searchKey(key, root_);
     if (target == NULL)
       return false;
-    if (target == begin_)
+    if (target == begin_) {
       begin_ = begin_->parent_;
+      if (begin_ == header_)
+        begin_ = NULL;
+    }
     _RBtree_color deleted_color = target->color_;
     node_pointer  x, x_parent = target->parent_;
     if (target->left_ == NULL) {
@@ -620,10 +622,12 @@ public:
     size_++;
   }
 
-  bool erase(key_type& key) { return deleteNode(key); }
+  bool erase(const key_type& key) { return deleteNode(key); }
 
   // == for debug ==
   void outputAllTree() { outputTree(root_); }
+
+  node_pointer getBeginNode() { return begin_; }
 
   void outputTree(node_pointer node) {
     if (node == NULL)
