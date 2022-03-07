@@ -120,21 +120,20 @@ TEST(RBtreeTest, BeginNodeTest) {
   EXPECT_EQ(tree.getBeginNode()->value_.first, 6);
 }
 
-// TEST(RBtreeTest, Iterator) {
-//   typedef ft::RBtree<int,
-//                      ft::pair<int, int>,
-//                      ft::_Select1st<ft::pair<int, int>>,
-//                      std::less<int>>
-//                  test_tree_type;
-//   test_tree_type tree;
+TEST(RBtreeTest, Iterator) {
+  tree_type tree;
 
-//   tree.insert(ft::make_pair(7, 7));
-//   tree.insert(ft::make_pair(1, 1));
-//   tree.insert(ft::make_pair(3, 3));
-//   tree.insert(ft::make_pair(2, 2));
-//   tree.insert(ft::make_pair(4, 4));
-//   tree.insert(ft::make_pair(6, 6));
-//   tree.insert(ft::make_pair(5, 5));
+  tree.insert(ft::make_pair(7, 7));
+  tree.insert(ft::make_pair(1, 1));
+  tree.insert(ft::make_pair(3, 3));
+  tree.insert(ft::make_pair(2, 2));
+  tree.insert(ft::make_pair(4, 4));
+  tree.insert(ft::make_pair(6, 6));
+  tree.insert(ft::make_pair(5, 5));
 
-//   test_tree_type::iterator it;
-// }
+  tree_type::iterator it;
+  for (int i = 1; it != tree.end(); it++) {
+    EXPECT_EQ(it->first, i);
+    i++;
+  }
+}
