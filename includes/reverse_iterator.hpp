@@ -26,14 +26,14 @@ public:
 
   iterator_type base() const { return _current; }
 
-  reference     operator*() const {
+  reference operator*() const {
     Iter tmp = _current;
     return *--tmp;
   }
   pointer operator->() const {
     Iter tmp = _current;
     --tmp;
-    return tmp;
+    return _to_pointer(tmp);
   }
 
   reverse_iterator& operator++() {
@@ -73,6 +73,17 @@ public:
   }
 
   reference operator[](difference_type n) const { return *(*this + n); }
+
+private:
+  template <typename T>
+  static T* _to_pointer(T* __p) {
+    return __p;
+  }
+
+  template <typename T>
+  static pointer _to_pointer(T __t) {
+    return __t.operator->();
+  }
 };
 
 // =========================================
