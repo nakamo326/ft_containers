@@ -35,6 +35,7 @@ int main() {
   std::cout << m[0] << std::endl;
   std::cout << (*it).second << std::endl;
   std::cout << it->second << std::endl;
+  std::reverse_iterator<std::vector<int>> it;
   return 0;
 }
 

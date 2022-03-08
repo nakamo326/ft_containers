@@ -30,8 +30,8 @@ private:
       tree_type;
 
 public:
-  typedef tree_type::iterator                  iterator;
-  typedef tree_type::const_iterator            const_iterator;
+  typedef typename tree_type::iterator         iterator;
+  typedef typename tree_type::const_iterator   const_iterator;
   typedef ft::reverse_iterator<iterator>       reverse_iterator;
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
@@ -77,10 +77,10 @@ public:
   T& operator[](const Key& key);
 
   // == iterators ==
-  iterator               begin();
-  const_iterator         begin() const;
-  iterator               end();
-  const_iterator         end() const;
+  iterator               begin() { return tree_.begin(); }
+  const_iterator         begin() const { return tree_.begin(); }
+  iterator               end() { return tree_.end(); }
+  const_iterator         end() const { return tree_.end(); }
   reverse_iterator       rbegin();
   const_reverse_iterator rbegin() const;
   reverse_iterator       rend();

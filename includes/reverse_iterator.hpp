@@ -77,11 +77,13 @@ public:
 private:
   template <typename T>
   static T* _to_pointer(T* __p) {
+    // std::cout << "_to_pointer(T* __p)" << std::endl;
     return __p;
   }
 
   template <typename T>
   static pointer _to_pointer(T __t) {
+    // std::cout << "_to_pointer(T __t)" << std::endl;
     return __t.operator->();
   }
 };

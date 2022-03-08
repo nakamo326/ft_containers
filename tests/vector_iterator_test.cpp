@@ -134,3 +134,33 @@ TEST(VectorIteratorTest, const_iterator) {
     const_sit++;
   }
 }
+
+class TestClass {
+public:
+  int* p;
+  TestClass() { p = new int; }
+  TestClass(int num) {
+    p  = new int;
+    *p = num;
+  }
+  TestClass(const TestClass& other) {
+    p  = new int;
+    *p = *(other.p);
+  }
+  ~TestClass() { delete p; }
+  TestClass& operator=(const TestClass& other) {
+    *p = *(other.p);
+    return *this;
+  }
+};
+
+TEST(VectorIteratorTest, ReverseIteratorArrowOperator) {
+  TestClass                               t[10];
+  ft::vector<TestClass>::reverse_iterator it(t + 10);
+  ft::vector<TestClass>::reverse_iterator end(t);
+
+  for (int i = 0; it != end; it++) {
+    *it->p = i;
+    i++;
+  }
+}
