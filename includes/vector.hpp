@@ -96,19 +96,17 @@ public:
   const_reference back() const { return *(end_ - 1); };
 
   // == iterator ==
-  iterator       begin() { return vector_iterator<pointer>(begin_); };
-  const_iterator begin() const {
-    return vector_iterator<const_pointer>(begin_);
-  };
-  iterator         end() { return vector_iterator<pointer>(end_); };
-  const_iterator   end() const { return vector_iterator<const_pointer>(end_); };
-  reverse_iterator rbegin() { return ft::reverse_iterator<iterator>(end()); };
+  iterator               begin() { return iterator(begin_); };
+  const_iterator         begin() const { return const_iterator(begin_); };
+  iterator               end() { return iterator(end_); };
+  const_iterator         end() const { return const_iterator(end_); };
+  reverse_iterator       rbegin() { return reverse_iterator(end()); };
   const_reverse_iterator rbegin() const {
-    return ft::reverse_iterator<const_iterator>(end());
+    return const_reverse_iterator(end());
   };
-  reverse_iterator rend() { return ft::reverse_iterator<iterator>(begin()); };
+  reverse_iterator       rend() { return reverse_iterator(begin()); };
   const_reverse_iterator rend() const {
-    return ft::reverse_iterator<const_iterator>(begin());
+    return const_reverse_iterator(begin());
   };
 
   // == capacity ==

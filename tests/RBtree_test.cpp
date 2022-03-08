@@ -144,6 +144,36 @@ TEST(RBtreeTest, Iterator) {
   }
 }
 
+TEST(RBtreeTest, ConstIterator) {
+  tree_type tree;
+
+  tree.insert(ft::make_pair(7, 7));
+  tree.insert(ft::make_pair(1, 1));
+  tree.insert(ft::make_pair(3, 3));
+  tree.insert(ft::make_pair(2, 2));
+  tree.insert(ft::make_pair(4, 4));
+  tree.insert(ft::make_pair(6, 6));
+  tree.insert(ft::make_pair(5, 5));
+
+  tree_type::const_iterator it = tree.begin();
+  EXPECT_EQ((*it).second, 1);
+  EXPECT_EQ(it->second, 1);
+  ++it;
+  EXPECT_EQ((*it).second, 2);
+  EXPECT_EQ(it->second, 2);
+  it++;
+  EXPECT_EQ((*it).second, 3);
+  EXPECT_EQ(it->second, 3);
+  --it;
+  EXPECT_EQ((*it).second, 2);
+  EXPECT_EQ(it->second, 2);
+  it--;
+  for (int i = 1; it != tree.end(); it++) {
+    EXPECT_EQ(it->first, i);
+    i++;
+  }
+}
+
 TEST(RBtreeTest, ReverseIterator) {
   tree_type tree;
 

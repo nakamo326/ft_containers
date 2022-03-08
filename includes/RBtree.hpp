@@ -49,19 +49,23 @@ struct _RBnode {
 
 template <typename T>
 struct RBtree_iterator {
-  typedef T                                            iterator_type;
   typedef std::bidirectional_iterator_tag              iterator_category;
   typedef typename iterator_traits<T>::value_type      value_type;
   typedef typename iterator_traits<T>::pointer         pointer;
   typedef typename iterator_traits<T>::reference       reference;
   typedef typename iterator_traits<T>::difference_type difference_type;
+  typedef RBtree_iterator<T>                           _Self;
+  typedef _RBnode<value_type>*                         node_pointer;
 
-  typedef RBtree_iterator<T>  _Self;
-  typedef _RBnode<value_type> node_type;
-  typedef node_type*          node_pointer;
-
-  RBtree_iterator() : node_() {}
+  RBtree_iterator() : node_(NULL) {}
   RBtree_iterator(node_pointer __x) : node_(__x) {}
+  RBtree_iterator(RBtree_iterator const& other) : node_(other.node_) {}
+  template <typename _Iter>
+  RBtree_iterator(const RBtree_iterator<_Iter>& __x) : node_(__x.node_) {}
+  RBtree_iterator& operator=(const RBtree_iterator& __x) {
+    node_ = __x.node_;
+    return *this;
+  }
 
   reference operator*() const { return node_->value_; }
   pointer   operator->() const { return &node_->value_; }
@@ -119,16 +123,20 @@ struct RBtree_iterator {
     return tmp;
   }
 
-  friend bool operator==(const _Self& lhs, const _Self& rhs) {
-    return lhs.node_ == rhs.node_;
-  }
-
-  friend bool operator!=(const _Self& lhs, const _Self& rhs) {
-    return lhs.node_ != rhs.node_;
-  }
+  node_pointer base() const { return node_; }
 
   node_pointer node_;
 };
+
+template <class T, class U>
+bool operator==(const RBtree_iterator<T>& lhs, const RBtree_iterator<U>& rhs) {
+  return lhs.base() == rhs.base();
+}
+
+template <class T, class U>
+bool operator!=(const RBtree_iterator<T>& lhs, const RBtree_iterator<U>& rhs) {
+  return !(lhs == rhs);
+}
 
 // case) map
 // key == value.first value == ft::pair<key, ...> KeyOfValue == _Select1st
@@ -540,9 +548,18 @@ public:
   bool erase(const key_type& key) { return deleteNode(key); }
 
   iterator       begin() { return iterator(begin_); }
-  iterator       end() { return iterator(header_); }
   const_iterator begin() const { return const_iterator(begin_); }
+  iterator       end() { return iterator(header_); }
   const_iterator end() const { return const_iterator(header_); }
+
+  reverse_iterator       rbegin() { return reverse_iterator(end()); };
+  const_reverse_iterator rbegin() const {
+    return const_reverse_iterator(end());
+  };
+  reverse_iterator       rend() { return reverse_iterator(begin()); };
+  const_reverse_iterator rend() const {
+    return const_reverse_iterator(begin());
+  };
 
   // == for debug ==
   void outputAllTree() { outputTree(root_); }
