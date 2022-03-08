@@ -21,57 +21,45 @@ TEST(RBnodeTest, constructor) {
   EXPECT_EQ(node.color_, false);
 }
 
-TEST(RBtreeTest, add) {
-  std::random_device rand;
-  {
-    ft::RBtree<int,
-               ft::pair<int, int>,
-               ft::_Select1st<ft::pair<int, int>>,
-               std::less<int>>
-        tree;
-    int times = 10000;
-    for (size_t i = 0; i < times; i++) {
-      tree.insert(ft::make_pair(i, 0));
-      EXPECT_EQ(tree.isValidTree(), true);
-      EXPECT_EQ(tree.size(), i + 1);
-    }
-  }
-  {
-    ft::RBtree<int,
-               ft::pair<int, int>,
-               ft::_Select1st<ft::pair<int, int>>,
-               std::less<int>>
-        tree;
-    int times = 10000;
-    for (size_t i = 0; i < times; i++) {
-      int tmp = rand() % times;
-      tree.insert(ft::make_pair(tmp, 0));
-      EXPECT_EQ(tree.isValidTree(), true);
-      EXPECT_EQ(tree.size(), i + 1);
-    }
-  }
-}
+// TEST(RBtreeTest, add) {
+//   std::random_device rand;
+//   {
+//     tree_type tree;
+//     int       times = 10000;
+//     for (size_t i = 0; i < times; i++) {
+//       tree.insert(ft::make_pair(i, 0));
+//       EXPECT_EQ(tree.isValidTree(), true);
+//       EXPECT_EQ(tree.size(), i + 1);
+//     }
+//   }
+//   {
+//     tree_type tree;
+//     int       times = 10000;
+//     for (size_t i = 0; i < times; i++) {
+//       int tmp = rand() % times;
+//       tree.insert(ft::make_pair(tmp, 0));
+//       EXPECT_EQ(tree.isValidTree(), true);
+//       EXPECT_EQ(tree.size(), i + 1);
+//     }
+//   }
+// }
 
-TEST(RBtreeTest, erase) {
-  std::random_device rand;
-  ft::RBtree<int,
-             ft::pair<int, int>,
-             ft::_Select1st<ft::pair<int, int>>,
-             std::less<int>>
-                   tree;
-  std::vector<int> keyList(4000);
-  for (size_t i = 0; i < 4000; i++) {
-    int tmp = rand() % 4000;
-    tree.insert(ft::make_pair(tmp, 0));
-    keyList[i] = tmp;
-    EXPECT_EQ(tree.size(), i + 1);
-  }
-  for (size_t i = 0; i < 4000; i++) {
-    tree.erase(keyList[i]);
-    EXPECT_EQ(tree.isValidTree(), true);
-    EXPECT_EQ(tree.size(), 4000 - (i + 1));
-  }
-}
+// TEST(RBtreeTest, erase) {
+//   std::random_device rand;
+//   tree_type          tree;
+//   std::vector<int>   keyList(4000);
+//   for (size_t i = 0; i < 4000; i++) {
+//     int tmp = rand() % 4000;
+//     tree.insert(ft::make_pair(tmp, 0));
+//     keyList[i] = tmp;
+//     EXPECT_EQ(tree.size(), i + 1);
+//   }
+//   for (size_t i = 0; i < 4000; i++) {
+//     tree.erase(keyList[i]);
+//     EXPECT_EQ(tree.isValidTree(), true);
+//     EXPECT_EQ(tree.size(), 4000 - (i + 1));
+//   }
+// }
 
 // TEST(RBtreeTest, Random) {
 //   int                test_times = 40000;
@@ -131,7 +119,25 @@ TEST(RBtreeTest, Iterator) {
   tree.insert(ft::make_pair(6, 6));
   tree.insert(ft::make_pair(5, 5));
 
-  tree_type::iterator it;
+  tree_type::iterator it = tree.begin();
+  EXPECT_EQ((*it).second, 1);
+  EXPECT_EQ(it->second, 1);
+  (*it).second = 42;
+  EXPECT_EQ((*it).second, 42);
+  EXPECT_EQ(it->second, 42);
+  it->second = 57;
+  EXPECT_EQ((*it).second, 57);
+  EXPECT_EQ(it->second, 57);
+  ++it;
+  EXPECT_EQ((*it).second, 2);
+  EXPECT_EQ(it->second, 2);
+  it++;
+  EXPECT_EQ((*it).second, 3);
+  EXPECT_EQ(it->second, 3);
+  --it;
+  EXPECT_EQ((*it).second, 2);
+  EXPECT_EQ(it->second, 2);
+  it--;
   for (int i = 1; it != tree.end(); it++) {
     EXPECT_EQ(it->first, i);
     i++;

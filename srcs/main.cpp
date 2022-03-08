@@ -20,14 +20,21 @@ void outputVector(ft::vector<T> vec) {
 
 int main() {
   std::map<int, int> m;
-  // m[0] = 0;
-  // m[5] = 5;
-  // m[2] = 2;
-  // m[3] = 3;
-  // for (std::map<int, int>::iterator it(m.begin()); it != m.end(); it++) {
-  //   std::cout << (*it).first << std::endl;
-  // }
-  std::cout << std::boolalpha << (m.begin() == m.end()) << std::endl;
+  m[0] = 0;
+  m[5] = 5;
+  m[2] = 2;
+  m[3] = 3;
+  std::map<int, int>::iterator it(m.begin());
+  std::cout << (*it).second << std::endl;
+  std::cout << it->second << std::endl;
+  (*it).second = 42;
+  std::cout << m[0] << std::endl;
+  std::cout << (*it).second << std::endl;
+  std::cout << it->second << std::endl;
+  it->second = 57;
+  std::cout << m[0] << std::endl;
+  std::cout << (*it).second << std::endl;
+  std::cout << it->second << std::endl;
   return 0;
 }
 

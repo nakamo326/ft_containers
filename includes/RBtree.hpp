@@ -34,7 +34,8 @@ struct _RBnode {
   void outputInfo() {
     std::cout << "------------------------------" << std::endl;
     std::cout << "&this  : " << std::hex << this << std::dec << std::endl;
-    std::cout << "value  : " << value_ << std::endl;
+    std::cout << "key    : " << value_.first << std::endl;
+    std::cout << "value  : " << value_.second << std::endl;
     std::cout << "parent : " << std::hex << parent_ << std::dec << std::endl;
     std::cout << "left   : " << std::hex << left_ << std::dec << std::endl;
     std::cout << "right  : " << std::hex << right_ << std::dec << std::endl;
@@ -62,8 +63,8 @@ struct RBtree_iterator {
   RBtree_iterator() : node_() {}
   RBtree_iterator(node_pointer __x) : node_(__x) {}
 
-  reference operator*() const { return *node_->value_; }
-  pointer   operator->() const { return node_->value_; }
+  reference operator*() const { return node_->value_; }
+  pointer   operator->() const { return &node_->value_; }
 
   node_pointer _RBtreeIncrement(node_pointer __x) {
     if (__x->right_ != NULL) {
@@ -119,11 +120,11 @@ struct RBtree_iterator {
   }
 
   friend bool operator==(const _Self& lhs, const _Self& rhs) {
-    return lhs._M_node == rhs._M_node;
+    return lhs.node_ == rhs.node_;
   }
 
   friend bool operator!=(const _Self& lhs, const _Self& rhs) {
-    return lhs._M_node != rhs._M_node;
+    return lhs.node_ != rhs.node_;
   }
 
   node_pointer node_;
@@ -623,6 +624,11 @@ public:
   }
 
   bool erase(const key_type& key) { return deleteNode(key); }
+
+  iterator       begin() { return iterator(begin_); }
+  iterator       end() { return iterator(header_); }
+  const_iterator begin() const { return const_iterator(begin_); }
+  const_iterator end() const { return const_iterator(header_); }
 
   // == for debug ==
   void outputAllTree() { outputTree(root_); }
