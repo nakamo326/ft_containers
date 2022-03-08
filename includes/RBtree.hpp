@@ -49,108 +49,22 @@ struct _RBnode {
 
 template <typename T>
 struct RBtree_iterator {
-  typedef T  value_type;
-  typedef T& reference;
-  typedef T* pointer;
+  typedef T                                            iterator_type;
+  typedef std::bidirectional_iterator_tag              iterator_category;
+  typedef typename iterator_traits<T>::value_type      value_type;
+  typedef typename iterator_traits<T>::pointer         pointer;
+  typedef typename iterator_traits<T>::reference       reference;
+  typedef typename iterator_traits<T>::difference_type difference_type;
 
-  typedef std::bidirectional_iterator_tag iterator_category;
-  typedef std::ptrdiff_t                  difference_type;
-
-  typedef RBtree_iterator<value_type> _Self;
-  typedef _RBnode<value_type>         node_type;
-  typedef node_type*                  node_pointer;
+  typedef RBtree_iterator<T>  _Self;
+  typedef _RBnode<value_type> node_type;
+  typedef node_type*          node_pointer;
 
   RBtree_iterator() : node_() {}
   RBtree_iterator(node_pointer __x) : node_(__x) {}
 
   reference operator*() const { return node_->value_; }
   pointer   operator->() const { return &node_->value_; }
-
-  node_pointer _RBtreeIncrement(node_pointer __x) {
-    if (__x->right_ != NULL) {
-      __x = __x->right_;
-      while (__x->left_ != NULL) __x = __x->left_;
-    } else {
-      node_pointer tmp = __x->parent_;
-      while (__x == tmp->right_) {
-        __x = tmp;
-        tmp = tmp->parent_;
-      }
-      __x = tmp;
-    }
-    return __x;
-  }
-
-  node_pointer _RBtreeDecrement(node_pointer __x) {
-    if (__x->left_ != NULL) {
-      node_pointer tmp = __x->left_;
-      while (tmp->right_ != NULL) tmp = tmp->right_;
-      __x = tmp;
-    } else {
-      node_pointer tmp = __x->parent_;
-      while (__x == tmp->left_) {
-        __x = tmp;
-        tmp = tmp->parent_;
-      }
-      __x = tmp;
-    }
-    return __x;
-  }
-
-  _Self& operator++() {
-    node_ = _RBtreeIncrement(node_);
-    return *this;
-  }
-
-  _Self operator++(int) {
-    _Self tmp = *this;
-    node_     = _RBtreeIncrement(node_);
-    return tmp;
-  }
-
-  _Self& operator--() {
-    node_ = _RBtreeDecrement(node_);
-    return *this;
-  }
-
-  _Self operator--(int) {
-    _Self tmp = *this;
-    node_     = _RBtreeDecrement(node_);
-    return tmp;
-  }
-
-  friend bool operator==(const _Self& lhs, const _Self& rhs) {
-    return lhs.node_ == rhs.node_;
-  }
-
-  friend bool operator!=(const _Self& lhs, const _Self& rhs) {
-    return lhs.node_ != rhs.node_;
-  }
-
-  node_pointer node_;
-};
-
-template <typename T>
-struct RBtree_const_iterator {
-  typedef T        value_type;
-  typedef const T& reference;
-  typedef const T* pointer;
-
-  typedef RBtree_iterator<T> iterator;
-
-  typedef std::bidirectional_iterator_tag iterator_category;
-  typedef std::ptrdiff_t                  difference_type;
-
-  typedef RBtree_const_iterator<value_type> _Self;
-  typedef _RBnode<value_type>               node_type;
-  typedef const node_type*                  node_pointer;
-
-  RBtree_const_iterator() : node_() {}
-  RBtree_const_iterator(node_pointer __x) : node_(__x) {}
-  RBtree_const_iterator(const iterator& __x) : node_(__x) {}
-
-  reference operator*() const { return *node_->value_; }
-  pointer   operator->() const { return node_->value_; }
 
   node_pointer _RBtreeIncrement(node_pointer __x) {
     if (__x->right_ != NULL) {
@@ -227,8 +141,8 @@ public:
   typedef node_type*                           node_pointer;
   typedef std::allocator<_RBnode<value_type> > node_allocator;
   typedef size_t                               size_type;
-  typedef RBtree_iterator<value_type>          iterator;
-  typedef RBtree_const_iterator<value_type>    const_iterator;
+  typedef RBtree_iterator<value_type*>         iterator;
+  typedef RBtree_iterator<const value_type*>   const_iterator;
   typedef ft::reverse_iterator<iterator>       reverse_iterator;
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 

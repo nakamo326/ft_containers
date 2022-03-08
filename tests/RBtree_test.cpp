@@ -143,3 +143,17 @@ TEST(RBtreeTest, Iterator) {
     i++;
   }
 }
+
+TEST(RBtreeTest, ReverseIterator) {
+  tree_type tree;
+
+  tree.insert(ft::make_pair(7, 7));
+  tree.insert(ft::make_pair(1, 1));
+  tree.insert(ft::make_pair(3, 3));
+  tree.insert(ft::make_pair(2, 2));
+  tree.insert(ft::make_pair(4, 4));
+  tree.insert(ft::make_pair(6, 6));
+  tree.insert(ft::make_pair(5, 5));
+
+  tree_type::reverse_iterator rit(tree.begin());
+}
