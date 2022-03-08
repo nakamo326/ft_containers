@@ -18,24 +18,24 @@ public:
   typedef typename iterator_traits<T>::difference_type   difference_type;
 
 private:
-  iterator_type _ptr;
+  iterator_type ptr_;
 
 public:
-  vector_iterator() : _ptr(NULL) {}
-  vector_iterator(iterator_type p) : _ptr(p) {}
-  vector_iterator(vector_iterator const& other) : _ptr(other._ptr) {}
+  vector_iterator() : ptr_(NULL) {}
+  vector_iterator(iterator_type p) : ptr_(p) {}
+  vector_iterator(vector_iterator const& other) : ptr_(other.ptr_) {}
   template <typename _Iter>
-  vector_iterator(const vector_iterator<_Iter>& __x) : _ptr(__x.base()) {}
+  vector_iterator(const vector_iterator<_Iter>& __x) : ptr_(__x.base()) {}
   vector_iterator& operator=(const vector_iterator& __x) {
-    _ptr = __x._ptr;
+    ptr_ = __x.ptr_;
     return *this;
   }
 
-  reference operator*() const { return *_ptr; }
-  pointer   operator->() const { return _ptr; }
+  reference operator*() const { return *ptr_; }
+  pointer   operator->() const { return ptr_; }
 
   vector_iterator& operator++() {
-    ++_ptr;
+    ++ptr_;
     return *this;
   }
   vector_iterator operator++(int) {
@@ -44,7 +44,7 @@ public:
     return tmp;
   }
   vector_iterator& operator--() {
-    --_ptr;
+    --ptr_;
     return *this;
   }
   vector_iterator operator--(int) {
@@ -60,7 +60,7 @@ public:
   }
 
   vector_iterator& operator+=(difference_type n) {
-    _ptr += n;
+    ptr_ += n;
     return *this;
   }
 
@@ -70,9 +70,9 @@ public:
     return *this;
   }
 
-  reference operator[](difference_type n) const { return _ptr[n]; }
+  reference operator[](difference_type n) const { return ptr_[n]; }
 
-  pointer base() const { return _ptr; }
+  pointer base() const { return ptr_; }
 };
 
 template <class T>
