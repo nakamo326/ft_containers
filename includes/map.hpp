@@ -68,7 +68,9 @@ public:
 
   template <class InputIt>
   map(InputIt first, InputIt last, const Compare& comp = Compare(),
-      const Allocator& alloc = Allocator());
+      const Allocator& alloc = Allocator())
+      : tree_(first, last, comp, Pair_alloc_type(alloc)) {}
+
   map(const map& other);
 
   ~map();

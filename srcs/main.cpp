@@ -18,24 +18,33 @@ void outputVector(ft::vector<T> vec) {
   std::cout << vec.back() << std::endl;
 }
 
+template <typename Map>
+void print_map(Map& m) {
+  std::cout << '{';
+  typename Map::iterator it(m.begin());
+  for (; it != m.end(); it++)
+    std::cout << it->first << ':' << it->second << ' ';
+  std::cout << "}\n";
+}
+
 int main() {
   std::map<int, int> m;
-  m[0] = 0;
+  m[0] = 42;
   m[5] = 5;
   m[2] = 2;
   m[3] = 3;
-  std::map<int, int>::iterator it(m.begin());
-  std::cout << (*it).second << std::endl;
-  std::cout << it->second << std::endl;
-  (*it).second = 42;
-  std::cout << m[0] << std::endl;
-  std::cout << (*it).second << std::endl;
-  std::cout << it->second << std::endl;
-  it->second = 57;
-  std::cout << m[0] << std::endl;
-  std::cout << (*it).second << std::endl;
-  std::cout << it->second << std::endl;
-  std::reverse_iterator<std::vector<int>> it;
+
+  std::vector<std::pair<int, int> > v;
+  for (size_t i = 0; i < 5; i++) {
+    v.push_back(std::make_pair(i, i));
+  }
+
+  std::map<int, int> iter(v.begin(), v.end());
+  std::cout << "\niter = ";
+  print_map(iter);
+  std::cout << "\nmap = ";
+  print_map(m);
+
   return 0;
 }
 

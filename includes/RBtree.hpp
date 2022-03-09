@@ -140,19 +140,22 @@ bool operator!=(const RBtree_iterator<T>& lhs, const RBtree_iterator<U>& rhs) {
 
 // case) map
 // key == value.first value == ft::pair<key, ...> KeyOfValue == _Select1st
-template <typename Key, typename Value, typename KeyOfValue, typename Comp>
+template <typename Key, typename Value, typename KeyOfValue, typename Comp,
+          typename Pair_alloc_type = std::allocator<Value> >
 class RBtree {
 public:
   typedef Key                                  key_type;
   typedef Value                                value_type;
   typedef _RBnode<value_type>                  node_type;
   typedef node_type*                           node_pointer;
-  typedef std::allocator<_RBnode<value_type> > node_allocator;
   typedef size_t                               size_type;
   typedef RBtree_iterator<value_type*>         iterator;
   typedef RBtree_iterator<const value_type*>   const_iterator;
   typedef ft::reverse_iterator<iterator>       reverse_iterator;
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+
+  typedef typename Pair_alloc_type::template rebind<_RBnode<Value> >::other
+      node_allocator;
 
 private:
   // == accessor ==
@@ -524,12 +527,26 @@ public:
     setBlack(header_);
   }
 
+  // 木のコピーコンストラクタ、空の木を作って、イテレーターから順番にinsert
+  template <typename InputIt>
+  RBtree(InputIt first, InputIt last, const Comp& comp,
+         const node_allocator& alloc)
+      : header_(NULL),
+        root_(NULL),
+        begin_(NULL),
+        size_(0),
+        comp_(comp),
+        alloc_(alloc) {
+    insert(first, last);
+  }
+
   ~RBtree() { destroyTree(header_); }
 
   size_type size() { return size_; }
 
   size_type max_size() { return alloc_.max_size(); }
 
+  // FIXME: return valuetype
   void insert(const value_type& value) {
     node_pointer new_node = alloc_.allocate(1);
     alloc_.construct(new_node, node_type(value));
@@ -543,6 +560,13 @@ public:
       insert(root_, new_node);
     }
     size_++;
+  }
+
+  template <typename InputIt>
+  iterator insert(InputIt first, InputIt last) {
+    for (; first != last; first++) {
+      insert(*first);
+    }
   }
 
   bool erase(const key_type& key) { return deleteNode(key); }
