@@ -26,7 +26,10 @@ public:
   typedef typename Alloc::const_pointer   const_pointer;
 
 private:
-  typedef RBtree<key_type, value_type, _Select1st<value_type>, Compare>
+  typedef typename allocator_type::rebind<value_type>::other Pair_alloc_type;
+
+  typedef RBtree<key_type, value_type, _Select1st<value_type>, Compare,
+                 Pair_alloc_type>
       tree_type;
 
 public:
@@ -59,8 +62,10 @@ public:
 
 public:
   // == constructor / destructor ==
-  map();
-  explicit map(const Compare& comp, const Allocator& alloc = Allocator());
+  explicit map(const Compare&   comp  = Compare(),
+               const Allocator& alloc = Alloc())
+      : tree_(comp, Pair_alloc_type(alloc)) {}
+
   template <class InputIt>
   map(InputIt first, InputIt last, const Compare& comp = Compare(),
       const Allocator& alloc = Allocator());
@@ -81,10 +86,14 @@ public:
   const_iterator         begin() const { return tree_.begin(); }
   iterator               end() { return tree_.end(); }
   const_iterator         end() const { return tree_.end(); }
-  reverse_iterator       rbegin();
-  const_reverse_iterator rbegin() const;
-  reverse_iterator       rend();
-  const_reverse_iterator rend() const;
+  reverse_iterator       rbegin() { return reverse_iterator(end()); }
+  const_reverse_iterator rbegin() const {
+    return const_reverse_iterator(end());
+  }
+  reverse_iterator       rend() { return reverse_iterator(begin()); }
+  const_reverse_iterator rend() const {
+    return const_reverse_iterator(begin());
+  }
 
   // == capacity ==
   bool      empty() const { return tree_.size() == 0; }
