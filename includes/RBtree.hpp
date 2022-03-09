@@ -562,6 +562,7 @@ public:
     size_++;
   }
 
+  // Iterator is in value_type
   template <typename InputIt>
   iterator insert(InputIt first, InputIt last) {
     for (; first != last; first++) {
