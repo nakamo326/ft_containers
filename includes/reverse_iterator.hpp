@@ -30,11 +30,7 @@ public:
     Iter tmp = _current;
     return *--tmp;
   }
-  pointer operator->() const {
-    Iter tmp = _current;
-    --tmp;
-    return _to_pointer(tmp);
-  }
+  pointer operator->() const { return (&(operator*())); }
 
   reverse_iterator& operator++() {
     --_current;
@@ -73,19 +69,6 @@ public:
   }
 
   reference operator[](difference_type n) const { return *(*this + n); }
-
-private:
-  template <typename T>
-  static T* _to_pointer(T* __p) {
-    // std::cout << "_to_pointer(T* __p)" << std::endl;
-    return __p;
-  }
-
-  template <typename T>
-  static pointer _to_pointer(T __t) {
-    // std::cout << "_to_pointer(T __t)" << std::endl;
-    return __t.operator->();
-  }
 };
 
 // =========================================
