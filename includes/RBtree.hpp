@@ -6,6 +6,7 @@
 #include <memory>
 #include <stdexcept>
 
+#include "pair.hpp"
 #include "reverse_iterator.hpp"
 
 namespace ft {
@@ -179,7 +180,9 @@ private:
 
   bool isLeftChild(node_pointer node) { return node->parent_->left_ == node; }
 
-  key_type getKeyOfValue(Value& value) { return KeyOfValue()(value); }
+  key_type getKeyOfValue(const Value& value) const {
+    return KeyOfValue()(value);
+  }
 
   // == helpers ==
 
@@ -514,7 +517,9 @@ private:
   Comp           comp_;
   node_allocator alloc_;
 
+  // === public member function ===
 public:
+  // == constructor / destructor ==
   RBtree()
       : header_(NULL),
         root_(NULL),
@@ -542,12 +547,38 @@ public:
 
   ~RBtree() { destroyTree(header_); }
 
-  size_type size() { return size_; }
+  // == element access ==
+  // T& operator[](const Key& key);
 
+  // == iterators ==
+  iterator               begin() { return iterator(begin_); }
+  const_iterator         begin() const { return const_iterator(begin_); }
+  iterator               end() { return iterator(header_); }
+  const_iterator         end() const { return const_iterator(header_); }
+  reverse_iterator       rbegin() { return reverse_iterator(end()); };
+  const_reverse_iterator rbegin() const {
+    return const_reverse_iterator(end());
+  };
+  reverse_iterator       rend() { return reverse_iterator(begin()); };
+  const_reverse_iterator rend() const {
+    return const_reverse_iterator(begin());
+  };
+
+  // == capacity ==
+  size_type size() { return size_; }
   size_type max_size() { return alloc_.max_size(); }
 
-  // FIXME: return valuetype
-  void insert(const value_type& value) {
+  // == modifiers ==
+
+  // ft::pair<iterator, bool> unique_insert(const value_type& value) {
+  // iterator res = find(getKeyOfValue(value));
+  // if (res != end())
+  //   return ft::make_pair(res, false);
+  // }
+
+  // FIXME: return ft::pair<iterator, bool>
+  // bool is wheather insert is succeed.
+  ft::pair<iterator, bool> insert(const value_type& value) {
     node_pointer new_node = alloc_.allocate(1);
     alloc_.construct(new_node, node_type(value));
     if (root_ == NULL) {
@@ -558,6 +589,7 @@ public:
       setBlack(root_);
     } else {
       insert(root_, new_node);
+      return ft::make_pair(iterator(new_node), true);
     }
     size_++;
   }
@@ -572,19 +604,24 @@ public:
 
   bool erase(const key_type& key) { return deleteNode(key); }
 
-  iterator       begin() { return iterator(begin_); }
-  const_iterator begin() const { return const_iterator(begin_); }
-  iterator       end() { return iterator(header_); }
-  const_iterator end() const { return const_iterator(header_); }
+  // from map
+  // iterator  erase(const_iterator position);
+  // size_type erase(const key_type& k);
+  // iterator  erase(const_iterator first, const_iterator last);
 
-  reverse_iterator       rbegin() { return reverse_iterator(end()); };
-  const_reverse_iterator rbegin() const {
-    return const_reverse_iterator(end());
-  };
-  reverse_iterator       rend() { return reverse_iterator(begin()); };
-  const_reverse_iterator rend() const {
-    return const_reverse_iterator(begin());
-  };
+  void swap(map& x);
+  void clear();
+
+  // == lookup ==
+  // size_type                                count(const Key& key) const;
+  // iterator                                 find(const Key& key);
+  // const_iterator                           find(const Key& key) const;
+  // ft::pair<iterator, iterator>             equal_range(const Key& key);
+  // ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const;
+  // iterator                                 lower_bound(const Key& key);
+  // const_iterator                           lower_bound(const Key& key) const;
+  // iterator                                 upper_bound(const Key& key);
+  // const_iterator                           upper_bound(const Key& key) const;
 
   // == for debug ==
   void outputAllTree() { outputTree(root_); }
