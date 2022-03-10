@@ -548,9 +548,8 @@ public:
     insert(first, last);
   }
 
-  RBtree(const _Self& other) : RBtree(Comp(), node_allocator()) {
-    insert(other.begin(), other.end());
-  }
+  RBtree(const _Self& other)
+      : RBtree(other.begin(), other.end(), Comp(), node_allocator()) {}
 
   ~RBtree() { destroyTree(header_); }
 
