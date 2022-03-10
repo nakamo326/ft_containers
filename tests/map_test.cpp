@@ -25,8 +25,8 @@ TEST(MapTest, rangeConstructor) {
   ft::map<int, int>::iterator it = m.begin();
   EXPECT_EQ(m.size(), 10);
   for (int i = 0; i < 10; i++) {
-    // EXPECT_EQ(*it, from.at(i * 2));
-    // it++;
+    EXPECT_EQ(*it, from.at(i * 2));
+    it++;
   }
 }
 

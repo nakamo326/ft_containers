@@ -201,8 +201,10 @@ private:
     while (node != NULL) {
       if (getKeyOfValue(node->value_) == key)
         break;
-      node =
-          comp_(getKeyOfValue(node->value_), key) ? node->right_ : node->left_;
+      if (comp_(getKeyOfValue(node->value_), key))
+        node = node->right_;
+      else
+        node = node->left_;
     }
     return node;
   }
@@ -507,6 +509,14 @@ private:
     deallocateNode(node);
   }
 
+  void initHeader() {
+    header_          = alloc_.allocate(1);
+    header_->parent_ = NULL;
+    header_->left_   = NULL;
+    header_->right_  = NULL;
+    setBlack(header_);
+  }
+
 private:
   node_pointer   header_;
   node_pointer   root_;
@@ -526,11 +536,7 @@ public:
         size_(0),
         comp_(comp),
         alloc_(alloc) {
-    header_          = alloc_.allocate(1);
-    header_->parent_ = NULL;
-    header_->left_   = NULL;
-    header_->right_  = NULL;
-    setBlack(header_);
+    initHeader();
   }
 
   template <typename InputIt>
@@ -542,6 +548,7 @@ public:
         size_(0),
         comp_(comp),
         alloc_(alloc) {
+    initHeader();
     insert(first, last);
   }
 
@@ -567,10 +574,10 @@ public:
   // unique_insert()はキーが重複するか確認、重複なしのkeyのみ挿入する
   ft::pair<iterator, bool> unique_insert(const value_type& value) {
     iterator res = find(getKeyOfValue(value));
-    if (res == end())
+    if (res != end()) {
       return ft::make_pair(res, false);
-    else
-      return insert(value);
+    }
+    return insert(value);
   }
 
   // FIXME: return ft::pair<iterator, bool>
@@ -617,10 +624,14 @@ public:
   // TODO: check searchKey return NULL when size == 0
   iterator find(const Key& key) {
     node_pointer res = searchKey(key, root_);
+    if (res == NULL)
+      return (end());
     return iterator(res);
   }
   const_iterator find(const Key& key) const {
     node_pointer res = searchKey(key, root_);
+    if (res == NULL)
+      return (end());
     return const_iterator(res);
   }
   // ft::pair<iterator, iterator>             equal_range(const Key& key);
