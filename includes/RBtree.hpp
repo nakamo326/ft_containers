@@ -153,6 +153,8 @@ public:
   typedef RBtree_iterator<value_type*>       iterator;
   typedef RBtree_iterator<const value_type*> const_iterator;
 
+  typedef RBtree<Key, Value, KeyOfValue, Comp, Pair_alloc_type> _Self;
+
   typedef typename Pair_alloc_type::template rebind<_RBnode<Value> >::other
       node_allocator;
 
@@ -542,17 +544,14 @@ public:
   template <typename InputIt>
   RBtree(InputIt first, InputIt last, const Comp& comp,
          const node_allocator& alloc)
-      : header_(NULL),
-        root_(NULL),
-        begin_(NULL),
-        size_(0),
-        comp_(comp),
-        alloc_(alloc) {
-    initHeader();
+      : RBtree(comp, alloc) {
     insert(first, last);
   }
 
   // 木のコピーコンストラクタ、空の木を作って、イテレーターから順番にinsert
+  RBtree(const _Self& other) : RBtree(Comp(), node_allocator()) {
+    insert(other.begin(), other.last());
+  }
 
   ~RBtree() { destroyTree(header_); }
 
