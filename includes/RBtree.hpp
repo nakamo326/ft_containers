@@ -533,7 +533,6 @@ public:
     setBlack(header_);
   }
 
-  // 木のコピーコンストラクタ、空の木を作って、イテレーターから順番にinsert
   template <typename InputIt>
   RBtree(InputIt first, InputIt last, const Comp& comp,
          const node_allocator& alloc)
@@ -543,8 +542,10 @@ public:
         size_(0),
         comp_(comp),
         alloc_(alloc) {
-    insert(first, last);
+    unique_insert(first, last);
   }
+
+  // 木のコピーコンストラクタ、空の木を作って、イテレーターから順番にinsert
 
   ~RBtree() { destroyTree(header_); }
 
