@@ -145,15 +145,13 @@ template <typename Key, typename Value, typename KeyOfValue, typename Comp,
           typename Pair_alloc_type = std::allocator<Value> >
 class RBtree {
 public:
-  typedef Key                                  key_type;
-  typedef Value                                value_type;
-  typedef _RBnode<value_type>                  node_type;
-  typedef node_type*                           node_pointer;
-  typedef size_t                               size_type;
-  typedef RBtree_iterator<value_type*>         iterator;
-  typedef RBtree_iterator<const value_type*>   const_iterator;
-  typedef ft::reverse_iterator<iterator>       reverse_iterator;
-  typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+  typedef Key                                key_type;
+  typedef Value                              value_type;
+  typedef _RBnode<value_type>                node_type;
+  typedef node_type*                         node_pointer;
+  typedef size_t                             size_type;
+  typedef RBtree_iterator<value_type*>       iterator;
+  typedef RBtree_iterator<const value_type*> const_iterator;
 
   typedef typename Pair_alloc_type::template rebind<_RBnode<Value> >::other
       node_allocator;
@@ -520,15 +518,18 @@ private:
   // === public member function ===
 public:
   // == constructor / destructor ==
-  RBtree()
+  RBtree(const Comp&            comp  = Comp(),
+         const Pair_alloc_type& alloc = Pair_alloc_type())
       : header_(NULL),
         root_(NULL),
         begin_(NULL),
         size_(0),
-        comp_(Comp()),
-        alloc_(node_allocator()) {
-    header_         = alloc_.allocate(1);
-    header_->right_ = NULL;
+        comp_(comp),
+        alloc_(alloc) {
+    header_          = alloc_.allocate(1);
+    header_->parent_ = NULL;
+    header_->left_   = NULL;
+    header_->right_  = NULL;
     setBlack(header_);
   }
 
@@ -551,21 +552,13 @@ public:
   // T& operator[](const Key& key);
 
   // == iterators ==
-  iterator               begin() { return iterator(begin_); }
-  const_iterator         begin() const { return const_iterator(begin_); }
-  iterator               end() { return iterator(header_); }
-  const_iterator         end() const { return const_iterator(header_); }
-  reverse_iterator       rbegin() { return reverse_iterator(end()); };
-  const_reverse_iterator rbegin() const {
-    return const_reverse_iterator(end());
-  };
-  reverse_iterator       rend() { return reverse_iterator(begin()); };
-  const_reverse_iterator rend() const {
-    return const_reverse_iterator(begin());
-  };
+  iterator       begin() { return iterator(begin_); }
+  const_iterator begin() const { return const_iterator(begin_); }
+  iterator       end() { return iterator(header_); }
+  const_iterator end() const { return const_iterator(header_); }
 
   // == capacity ==
-  size_type size() { return size_; }
+  size_type size() const { return size_; }
   size_type max_size() { return alloc_.max_size(); }
 
   // == modifiers ==
@@ -602,9 +595,8 @@ public:
   // 入れられる値だけ入る
   // InputIt has value_type
   template <typename InputIt>
-  iterator insert(InputIt first, InputIt last) {
+  void insert(InputIt first, InputIt last) {
     for (; first != last; first++) {
-      // insert(*first);
       unique_insert(*first);
     }
   }
