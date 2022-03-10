@@ -30,6 +30,23 @@ TEST(MapTest, rangeConstructor) {
   }
 }
 
+TEST(MapTest, copyConstructor) {
+  ft::map<int, int> from;
+  for (int i = 0; i < 10; i++) {
+    from.insert(ft::make_pair(i, i));
+  }
+  ft::map<int, int> m(from);
+
+  ft::map<int, int>::iterator it   = m.begin();
+  ft::map<int, int>::iterator f_it = from.begin();
+  EXPECT_EQ(m.size(), 10);
+  for (int i = 0; i < 10; i++) {
+    EXPECT_EQ(*it, *f_it);
+    it++;
+    f_it++;
+  }
+}
+
 TEST(MapTest, simpleInsert) {
   std::random_device rand;
   {

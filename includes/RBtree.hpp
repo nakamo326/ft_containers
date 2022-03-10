@@ -548,9 +548,8 @@ public:
     insert(first, last);
   }
 
-  // 木のコピーコンストラクタ、空の木を作って、イテレーターから順番にinsert
   RBtree(const _Self& other) : RBtree(Comp(), node_allocator()) {
-    insert(other.begin(), other.last());
+    insert(other.begin(), other.end());
   }
 
   ~RBtree() { destroyTree(header_); }
