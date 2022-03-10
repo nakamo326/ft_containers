@@ -246,8 +246,8 @@ private:
       if (parent->left_ == NULL) {
         parent->left_     = new_node;
         new_node->parent_ = parent;
-        if (comp_(getKeyOfValue(new_node->value_),
-                  getKeyOfValue(begin_->value_)))
+        if (begin_ != NULL && comp_(getKeyOfValue(new_node->value_),
+                                    getKeyOfValue(begin_->value_)))
           begin_ = new_node;
         return checkColor(new_node);
       }
@@ -589,9 +589,9 @@ public:
       setBlack(root_);
     } else {
       insert(root_, new_node);
-      return ft::make_pair(iterator(new_node), true);
     }
     size_++;
+    return ft::make_pair(iterator(new_node), true);
   }
 
   // Iterator is in value_type
@@ -609,8 +609,8 @@ public:
   // size_type erase(const key_type& k);
   // iterator  erase(const_iterator first, const_iterator last);
 
-  void swap(map& x);
-  void clear();
+  // void swap(map& x);
+  // void clear();
 
   // == lookup ==
   // size_type                                count(const Key& key) const;
