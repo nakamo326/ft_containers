@@ -542,7 +542,7 @@ public:
         size_(0),
         comp_(comp),
         alloc_(alloc) {
-    unique_insert(first, last);
+    insert(first, last);
   }
 
   // 木のコピーコンストラクタ、空の木を作って、イテレーターから順番にinsert

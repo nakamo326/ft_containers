@@ -71,7 +71,7 @@ public:
       const Alloc& alloc = Alloc())
       : tree_(first, last, comp, Pair_alloc_type(alloc)) {}
 
-  map(const map& other);
+  map(const map& other) : tree_(other.tree_) {}
 
   ~map() {}
 
