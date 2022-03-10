@@ -34,14 +34,12 @@ int main() {
   m[2] = 2;
   m[3] = 3;
 
-  std::vector<std::pair<int, int> > v;
-  for (size_t i = 0; i < 5; i++) {
-    v.push_back(std::make_pair(i, i));
-  }
+  std::map<int, int> from;
+  from[0] = 57;
+  from[1] = 99;
 
-  std::map<int, int> iter(v.begin(), v.end());
-  std::cout << "\niter = ";
-  print_map(iter);
+  m.insert(from.begin(), from.end());
+
   std::cout << "\nmap = ";
   print_map(m);
 

@@ -570,11 +570,14 @@ public:
 
   // == modifiers ==
 
-  // ft::pair<iterator, bool> unique_insert(const value_type& value) {
-  // iterator res = find(getKeyOfValue(value));
-  // if (res != end())
-  //   return ft::make_pair(res, false);
-  // }
+  // unique_insert()はキーが重複するか確認、重複なしのkeyのみ挿入する
+  ft::pair<iterator, bool> unique_insert(const value_type& value) {
+    iterator res = find(getKeyOfValue(value));
+    if (res == end())
+      return ft::make_pair(res, false);
+    else
+      return insert(value);
+  }
 
   // FIXME: return ft::pair<iterator, bool>
   // bool is wheather insert is succeed.
@@ -594,11 +597,15 @@ public:
     return ft::make_pair(iterator(new_node), true);
   }
 
-  // Iterator is in value_type
+  // iterator insert(iterator position, const value_type& val);
+
+  // 入れられる値だけ入る
+  // InputIt has value_type
   template <typename InputIt>
   iterator insert(InputIt first, InputIt last) {
     for (; first != last; first++) {
-      insert(*first);
+      // insert(*first);
+      unique_insert(*first);
     }
   }
 
@@ -614,8 +621,15 @@ public:
 
   // == lookup ==
   // size_type                                count(const Key& key) const;
-  // iterator                                 find(const Key& key);
-  // const_iterator                           find(const Key& key) const;
+  // TODO: check searchKey return NULL when size == 0
+  iterator find(const Key& key) {
+    node_pointer res = searchKey(key, root_);
+    return iterator(res);
+  }
+  const_iterator find(const Key& key) const {
+    node_pointer res = searchKey(key, root_);
+    return const_iterator(res);
+  }
   // ft::pair<iterator, iterator>             equal_range(const Key& key);
   // ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const;
   // iterator                                 lower_bound(const Key& key);
