@@ -118,43 +118,6 @@ bool operator<=(const vector_iterator<T>& lhs, const vector_iterator<U>& rhs) {
   return !(rhs < lhs);
 }
 
-// hituyou?
-// template <class T>
-// bool operator==(const vector_iterator<T>& rhs,
-//                 const vector_iterator<T>& lhs) {
-//   return rhs.base() == lhs.base();
-// }
-
-// template <class T>
-// bool operator!=(const vector_iterator<T>& rhs,
-//                 const vector_iterator<T>& lhs) {
-//   return !(rhs == lhs);
-// }
-
-// template <class T>
-// bool operator<(const vector_iterator<T>& rhs, const vector_iterator<T>&
-// lhs) {
-//   return rhs.base() < lhs.base();
-// }
-
-// template <class T>
-// bool operator>(const vector_iterator<T>& rhs, const vector_iterator<T>&
-// lhs) {
-//   return lhs < rhs;
-// }
-
-// template <class T>
-// bool operator>=(const vector_iterator<T>& rhs,
-//                 const vector_iterator<T>& lhs) {
-//   return !(rhs < lhs);
-// }
-
-// template <class T>
-// bool operator<=(const vector_iterator<T>& rhs,
-//                 const vector_iterator<T>& lhs) {
-//   return !(lhs < rhs);
-// }
-
 }  // namespace ft
 
 #endif /* FT_CONTAINERS_INCLUDES_VECTOR_ITERATOR_HPP */
