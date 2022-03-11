@@ -11,7 +11,7 @@ struct pair {
   T2 second;
 
   // == constructor ==
-  pair() {}
+  pair() : first(T1()), second(T2()) {}
   pair(const T1& x, const T2& y) : first(x), second(y) {}
 
   template <class U1, class U2>

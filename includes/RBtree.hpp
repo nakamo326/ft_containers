@@ -25,7 +25,7 @@ struct _RBnode {
   node_pointer  parent_;
   _RBtree_color color_;
 
-  _RBnode(value_type value)
+  _RBnode(value_type value = Value())
       : value_(value),
         left_(NULL),
         right_(NULL),
@@ -602,7 +602,10 @@ public:
     }
   }
 
-  bool erase(const key_type& key) { return deleteNode(key); }
+  size_type erase(const key_type& key) {
+    // return static_cast<size_type>(deleteNode(key));
+    return (deleteNode(key));
+  }
 
   // from map
   // iterator  erase(const_iterator position);
