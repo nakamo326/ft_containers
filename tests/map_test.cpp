@@ -47,6 +47,26 @@ TEST(MapTest, copyConstructor) {
   }
 }
 
+TEST(MapTest, empty) {
+  ft::map<int, int> m;
+  EXPECT_EQ(m.empty(), true);
+  m.insert(ft::make_pair(0, 0));
+  EXPECT_EQ(m.empty(), false);
+}
+
+TEST(MapTest, size) {
+  ft::map<int, int> m;
+  EXPECT_EQ(m.size(), 0);
+  for (size_t i = 1; i <= 1000; i++) {
+    m.insert(ft::make_pair(i, i));
+    EXPECT_EQ(m.size(), i);
+  }
+  // for (size_t i = 1; i <= 1000; i++) {
+  //   m.erase(i);
+  //   EXPECT_EQ(m.size(), 1000 - i);
+  // }
+}
+
 TEST(MapTest, simpleInsert) {
   std::random_device rand;
   {
