@@ -69,3 +69,11 @@ TEST(MapTest, simpleInsert) {
     }
   }
 }
+
+TEST(MapTest, count) {
+  ft::map<int, int> m;
+  EXPECT_TRUE(m.count(0) == 0);
+  m.insert(ft::make_pair(0, 42));
+  EXPECT_TRUE(m.count(0) == 1);
+  EXPECT_TRUE(m.count(1) == 0);
+}

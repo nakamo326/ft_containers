@@ -121,7 +121,7 @@ public:
   void clear();
 
   // == lookup ==
-  size_type      count(const Key& key) const;
+  size_type      count(const Key& key) const { return tree_.count(key); }
   iterator       find(const Key& key) { return tree_.find(key); }
   const_iterator find(const Key& key) const { return tree_.find(key); }
   ft::pair<iterator, iterator>             equal_range(const Key& key);

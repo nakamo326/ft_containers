@@ -199,7 +199,7 @@ private:
     setBlack(node->parent_->parent_->right_);
   }
 
-  node_pointer searchKey(const key_type& key, node_pointer node) {
+  node_pointer searchKey(const key_type& key, node_pointer node) const {
     while (node != NULL) {
       if (getKeyOfValue(node->value_) == key)
         break;
@@ -577,8 +577,6 @@ public:
     return insert(value);
   }
 
-  // FIXME: return ft::pair<iterator, bool>
-  // bool is wheather insert is succeed.
   ft::pair<iterator, bool> insert(const value_type& value) {
     node_pointer new_node = alloc_.allocate(1);
     alloc_.construct(new_node, node_type(value));
@@ -617,7 +615,12 @@ public:
   // void clear();
 
   // == lookup ==
-  // size_type                                count(const Key& key) const;
+  size_type count(const Key& key) const {
+    node_pointer res = searchKey(key, root_);
+    if (res == NULL)
+      return 0;
+    return 1;
+  }
   // TODO: check searchKey return NULL when size == 0
   iterator find(const Key& key) {
     node_pointer res = searchKey(key, root_);
