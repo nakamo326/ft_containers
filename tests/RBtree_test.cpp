@@ -86,24 +86,24 @@ TEST(RBtreeTest, erase) {
 //   }
 // }
 
-TEST(RBtreeTest, BeginNodeTest) {
-  tree_type tree;
+// TEST(RBtreeTest, BeginNodeTest) {
+//   tree_type tree;
 
-  EXPECT_EQ(tree.getBeginNode(), static_cast<void *>(NULL));
-  tree.insert(ft::make_pair(10, 42));
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 10);
-  tree.erase(10);
-  EXPECT_EQ(tree.getBeginNode(), static_cast<void *>(NULL));
-  tree.insert(ft::make_pair(9, 42));
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 9);
-  tree.insert(ft::make_pair(8, 42));
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 8);
-  tree.erase(8);
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 9);
-  tree.insert(ft::make_pair(7, 42));
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 7);
-  tree.insert(ft::make_pair(6, 42));
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 6);
-  tree.erase(9);
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 6);
-}
+//   EXPECT_EQ(tree.getBeginNode(), tree.header_);
+//   tree.insert(ft::make_pair(10, 42));
+//   EXPECT_EQ(tree.getBeginNode()->value_.first, 10);
+//   tree.erase(10);
+//   EXPECT_EQ(tree.getBeginNode(), tree.header_);
+//   tree.insert(ft::make_pair(9, 42));
+//   EXPECT_EQ(tree.getBeginNode()->value_.first, 9);
+//   tree.insert(ft::make_pair(8, 42));
+//   EXPECT_EQ(tree.getBeginNode()->value_.first, 8);
+//   tree.erase(8);
+//   EXPECT_EQ(tree.getBeginNode()->value_.first, 9);
+//   tree.insert(ft::make_pair(7, 42));
+//   EXPECT_EQ(tree.getBeginNode()->value_.first, 7);
+//   tree.insert(ft::make_pair(6, 42));
+//   EXPECT_EQ(tree.getBeginNode()->value_.first, 6);
+//   tree.erase(9);
+//   EXPECT_EQ(tree.getBeginNode()->value_.first, 6);
+// }

@@ -248,8 +248,8 @@ private:
       if (parent->left_ == NULL) {
         parent->left_     = new_node;
         new_node->parent_ = parent;
-        if (begin_ != NULL && comp_(getKeyOfValue(new_node->value_),
-                                    getKeyOfValue(begin_->value_)))
+        if (begin_ != header_ && comp_(getKeyOfValue(new_node->value_),
+                                       getKeyOfValue(begin_->value_)))
           begin_ = new_node;
         return checkColor(new_node);
       }
@@ -362,8 +362,7 @@ private:
     if (target == begin_) {
       begin_ = begin_->parent_;
     }
-    _RBtree_color deleted_color = target->color_;
-    node_pointer  x, x_parent = target->parent_;
+    node_pointer x, x_parent = target->parent_;
     if (target->left_ == NULL) {
       x = target->right_;
       transplantNodes(target, target->right_);
@@ -384,9 +383,9 @@ private:
         else
           min->parent_->right_ = NULL;
       }
-      target        = min;
-      deleted_color = target->color_;
+      target = min;
     }
+    _RBtree_color deleted_color = target->color_;
     deallocateNode(target);
     if (deleted_color == e_black)
       fixDeletion(x, x_parent);
@@ -537,6 +536,7 @@ public:
         comp_(comp),
         alloc_(alloc) {
     initHeader();
+    begin_ = header_;
   }
 
   template <typename InputIt>
