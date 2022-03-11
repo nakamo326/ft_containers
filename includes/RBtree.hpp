@@ -365,11 +365,11 @@ private:
 
   // == delete ==
   bool deleteNode(const key_type& key) {
+    node_pointer x;
     node_pointer target = searchKey(key, root_);
     if (target == NULL)
       return false;
     updateBeginNodeDelete(target);
-    node_pointer x, x_parent = target->parent_;
     if (target->left_ == NULL) {
       x = target->right_;
       transplantNodes(target, target->right_);
@@ -379,19 +379,13 @@ private:
     } else {
       node_pointer min = searchMinimum(target->right_);
       x                = min->right_;
-      x_parent         = min->parent_;
 
-      copyVal(min, target);
-      if (min->right_ != NULL) {
-        transplantNodes(min, min->right_);
-      } else {
-        if (isLeftChild(min))
-          min->parent_->left_ = NULL;
-        else
-          min->parent_->right_ = NULL;
-      }
+      copyVal(min, target);  // target gets min value
+      transplantNodes(min, min->right_);
       target = min;
     }
+
+    node_pointer  x_parent      = target->parent_;
     _RBtree_color deleted_color = target->color_;
     deallocateNode(target);
     if (deleted_color == e_black)
