@@ -361,8 +361,6 @@ private:
       return false;
     if (target == begin_) {
       begin_ = begin_->parent_;
-      if (begin_ == header_)
-        begin_ = NULL;
     }
     _RBtree_color deleted_color = target->color_;
     node_pointer  x, x_parent = target->parent_;
