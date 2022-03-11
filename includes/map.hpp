@@ -114,7 +114,7 @@ public:
   }
 
   iterator  erase(const_iterator position);
-  size_type erase(const key_type& k);
+  size_type erase(const Key& key) { return tree_.erase(key); }
   iterator  erase(const_iterator first, const_iterator last);
 
   void swap(map& x);
