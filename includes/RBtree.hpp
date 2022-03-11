@@ -3,11 +3,10 @@
 
 #include <cstddef>
 #include <iostream>
-#include <memory>
 #include <stdexcept>
 
 #include "pair.hpp"
-#include "reverse_iterator.hpp"
+#include "utils.hpp"
 
 namespace ft {
 
@@ -218,6 +217,18 @@ private:
     return node;
   }
 
+  void updateBeginNodeInsert(node_pointer new_node) {
+    if (begin_ != header_ &&
+        comp_(getKeyOfValue(new_node->value_), getKeyOfValue(begin_->value_)))
+      begin_ = new_node;
+  }
+
+  void updateBeginNodeDelete(node_pointer target) {
+    if (target == begin_) {
+      begin_ = begin_->parent_;
+    }
+  }
+
   // set newNode to old position
   void transplantNodes(node_pointer old, node_pointer new_node) {
     if (old == root_) {
@@ -248,9 +259,7 @@ private:
       if (parent->left_ == NULL) {
         parent->left_     = new_node;
         new_node->parent_ = parent;
-        if (begin_ != header_ && comp_(getKeyOfValue(new_node->value_),
-                                       getKeyOfValue(begin_->value_)))
-          begin_ = new_node;
+        updateBeginNodeInsert(new_node);
         return checkColor(new_node);
       }
       return insert(parent->left_, new_node);
@@ -359,9 +368,7 @@ private:
     node_pointer target = searchKey(key, root_);
     if (target == NULL)
       return false;
-    if (target == begin_) {
-      begin_ = begin_->parent_;
-    }
+    updateBeginNodeDelete(target);
     node_pointer x, x_parent = target->parent_;
     if (target->left_ == NULL) {
       x = target->right_;
@@ -452,21 +459,6 @@ private:
       }
     }
     setBlack(node);
-  }
-
-  // == height ==
-  size_type height(node_pointer node) {
-    if (node == NULL)
-      return 0;
-    size_type leftHeight  = height(node->left_) + 1;
-    size_type rightHeight = height(node->right_) + 1;
-    return std::max(leftHeight, rightHeight);
-  }
-
-  size_type height() {
-    if (root_ == NULL)
-      return 0;
-    return height(root_) - 1;
   }
 
   size_type blackNodes(node_pointer node) {
