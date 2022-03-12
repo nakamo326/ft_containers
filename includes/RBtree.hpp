@@ -599,7 +599,6 @@ public:
   }
 
   size_type erase(const key_type& key) {
-    // return static_cast<size_type>(deleteNode(key));
     iterator target = find(key);
     if (target == end())
       return 0;
