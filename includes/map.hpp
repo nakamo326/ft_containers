@@ -113,7 +113,7 @@ public:
     return tree_.insert(first, last);
   }
 
-  iterator  erase(const_iterator position);
+  iterator  erase(const_iterator position) { return tree_.erase(position); }
   size_type erase(const Key& key) { return tree_.erase(key); }
   iterator  erase(const_iterator first, const_iterator last);
 
