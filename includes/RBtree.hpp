@@ -223,12 +223,6 @@ private:
       begin_ = new_node;
   }
 
-  void updateBeginNodeDelete(node_pointer target) {
-    if (target == begin_) {
-      begin_ = begin_->parent_;
-    }
-  }
-
   // == insert ==
   void insert(node_pointer parent, node_pointer new_node) {
     if (comp_(getKeyOfValue(parent->value_), getKeyOfValue(new_node->value_))) {
@@ -361,14 +355,10 @@ private:
       new_node->parent_ = old->parent_;
   }
 
-  bool deleteNode(const key_type& key) {
-    node_pointer  x, y, z;
+  bool deleteNode(node_pointer z) {
+    node_pointer  x, y;
     _RBtree_color y_color;
     node_pointer  x_parent;
-    z = searchKey(key, root_);
-    if (z == NULL)
-      return false;
-    updateBeginNodeDelete(z);
 
     y        = z;
     y_color  = y->color_;
@@ -600,14 +590,23 @@ public:
     }
   }
 
-  size_type erase(const key_type& key) {
-    // return static_cast<size_type>(deleteNode(key));
-    return (deleteNode(key));
+  void erase(const_iterator position) {
+    if (position == end())
+      return;
+    if (position.base() == begin_)
+      begin_ = begin_->parent_;
+    deleteNode(position.base());
   }
 
-  // from map
-  // iterator  erase(const_iterator position);
-  // size_type erase(const key_type& k);
+  size_type erase(const key_type& key) {
+    // return static_cast<size_type>(deleteNode(key));
+    iterator target = find(key);
+    if (target == end())
+      return 0;
+    erase(target);
+    return 1;
+  }
+
   // iterator  erase(const_iterator first, const_iterator last);
 
   // void swap(map& x);
