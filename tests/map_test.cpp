@@ -61,10 +61,10 @@ TEST(MapTest, size) {
     m.insert(ft::make_pair(i, i));
     EXPECT_EQ(m.size(), i);
   }
-  // for (size_t i = 1; i <= 1000; i++) {
-  //   m.erase(i);
-  //   EXPECT_EQ(m.size(), 1000 - i);
-  // }
+  for (size_t i = 1; i <= 1000; i++) {
+    m.erase(i);
+    EXPECT_EQ(m.size(), 1000 - i);
+  }
 }
 
 TEST(MapTest, simpleInsert) {

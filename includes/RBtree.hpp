@@ -229,23 +229,6 @@ private:
     }
   }
 
-  // set newNode to old position
-  void transplantNodes(node_pointer old, node_pointer new_node) {
-    if (old == root_) {
-      root_ = header_->left_ = new_node;
-    } else if (isLeftChild(old)) {
-      old->parent_->left_ = new_node;
-    } else {
-      old->parent_->right_ = new_node;
-    }
-    if (new_node != NULL)
-      new_node->parent_ = old->parent_;
-  }
-
-  void copyVal(node_pointer from, node_pointer to) {
-    to->value_ = from->value_;
-  }
-
   // == insert ==
   void insert(node_pointer parent, node_pointer new_node) {
     if (comp_(getKeyOfValue(parent->value_), getKeyOfValue(new_node->value_))) {
@@ -364,31 +347,60 @@ private:
   }
 
   // == delete ==
-  bool deleteNode(const key_type& key) {
-    node_pointer x;
-    node_pointer target = searchKey(key, root_);
-    if (target == NULL)
-      return false;
-    updateBeginNodeDelete(target);
-    if (target->left_ == NULL) {
-      x = target->right_;
-      transplantNodes(target, target->right_);
-    } else if (target->right_ == NULL) {
-      x = target->left_;
-      transplantNodes(target, target->left_);
-    } else {
-      node_pointer min = searchMinimum(target->right_);
-      x                = min->right_;
 
-      copyVal(min, target);  // target gets min value
-      transplantNodes(min, min->right_);
-      target = min;
+  // set newNode to old position
+  void transplantNodes(node_pointer old, node_pointer new_node) {
+    if (old == root_) {
+      root_ = header_->left_ = new_node;
+    } else if (isLeftChild(old)) {
+      old->parent_->left_ = new_node;
+    } else {
+      old->parent_->right_ = new_node;
+    }
+    if (new_node != NULL)
+      new_node->parent_ = old->parent_;
+  }
+
+  bool deleteNode(const key_type& key) {
+    node_pointer  x, y, z;
+    _RBtree_color y_color;
+    node_pointer  x_parent;
+    z = searchKey(key, root_);
+    if (z == NULL)
+      return false;
+    updateBeginNodeDelete(z);
+
+    y        = z;
+    y_color  = y->color_;
+    x_parent = y->parent_;
+
+    if (z->left_ == NULL) {
+      x = z->right_;
+      transplantNodes(z, z->right_);
+    } else if (z->right_ == NULL) {
+      x = z->left_;
+      transplantNodes(z, z->left_);
+    } else {
+      y        = searchMinimum(z->right_);
+      y_color  = y->color_;
+      x        = y->right_;
+      x_parent = y->parent_;
+
+      if (y->parent_ == z) {
+        x_parent = y;
+      } else {
+        transplantNodes(y, y->right_);
+        y->right_          = z->right_;
+        y->right_->parent_ = y;
+      }
+      transplantNodes(z, y);
+      y->left_          = z->left_;
+      y->left_->parent_ = y;
+      y->color_         = z->color_;
     }
 
-    node_pointer  x_parent      = target->parent_;
-    _RBtree_color deleted_color = target->color_;
-    deallocateNode(target);
-    if (deleted_color == e_black)
+    deallocateNode(z);
+    if (y_color == e_black)
       fixDeletion(x, x_parent);
     size_--;
     return true;
