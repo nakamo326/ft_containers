@@ -3,7 +3,9 @@
 
 #include <gtest/gtest.h>
 
+#include <limits>
 #include <random>
+#include <typeinfo>
 #include <vector>
 
 #include "pair.hpp"
@@ -45,6 +47,12 @@ TEST(MapTest, copyConstructor) {
     it++;
     f_it++;
   }
+}
+
+TEST(MapTest, MaxSize) {
+  std::map<int, int> s;
+  ft::map<int, int>  f;
+  EXPECT_EQ(s.max_size(), f.max_size());
 }
 
 TEST(MapTest, empty) {
