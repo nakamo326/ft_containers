@@ -125,7 +125,7 @@ public:
   // TODO:
   iterator erase(const_iterator first, const_iterator last);
 
-  void swap(map& x) { return tree_.swap(); }
+  void swap(map& x) { return tree_.swap(x); }
   void clear() { return tree_.clear(); }
 
   // == lookup ==
