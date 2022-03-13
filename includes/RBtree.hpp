@@ -545,11 +545,7 @@ public:
   RBtree& operator=(const RBtree& other) {
     // if (*this == other)
     //   return *this;
-    destroyTree(header_);
-    root_ = NULL;
-    initHeader();
-    begin_ = header_;
-    size_  = 0;
+    clear();
     comp_  = other.comp_;
     alloc_ = other.alloc_;
     insert(other.begin(), other.end());
@@ -624,10 +620,14 @@ public:
     std::swap(root_, x.root_);
     std::swap(begin_, x.begin_);
     std::swap(size_, x.size_);
-    std::swap(comp_, x.comp_);
-    std::swap(alloc_, x.alloc_);
   }
-  // void clear();
+  void clear() {
+    destroyTree(header_);
+    root_ = NULL;
+    initHeader();
+    begin_ = header_;
+    size_  = 0;
+  }
 
   // == lookup ==
   size_type count(const Key& key) const {
@@ -636,7 +636,7 @@ public:
       return 0;
     return 1;
   }
-  // TODO: check searchKey return NULL when size == 0
+
   iterator find(const Key& key) {
     node_pointer res = searchKey(key, root_);
     if (res == NULL)

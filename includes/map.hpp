@@ -123,8 +123,8 @@ public:
   size_type erase(const Key& key) { return tree_.erase(key); }
   iterator  erase(const_iterator first, const_iterator last);
 
-  void swap(map& x);
-  void clear();
+  void swap(map& x) { return tree_.swap(); }
+  void clear() { return tree_.clear(); }
 
   // == lookup ==
   size_type      count(const Key& key) const { return tree_.count(key); }

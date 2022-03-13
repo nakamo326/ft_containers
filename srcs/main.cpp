@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "function.hpp"
+#include "map.hpp"
 #include "pair.hpp"
 #include "vector.hpp"
 
@@ -45,6 +46,9 @@ int main() {
   print_map(m);
   std::cout << "\nfrom = ";
   print_map(from);
+
+  ft::map<int, int> ftm;
+  ftm.find(0);
 
   return 0;
 }
