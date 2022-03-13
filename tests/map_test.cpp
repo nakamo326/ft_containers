@@ -92,7 +92,7 @@ TEST(MapTest, simpleInsert) {
     for (size_t i = 0; i < times; i++) {
       m.insert(ft::make_pair(i, i));
       EXPECT_EQ(m.size(), i + 1);
-      // check m[i] == i
+      EXPECT_EQ(m[i], i);
     }
   }
   // {
