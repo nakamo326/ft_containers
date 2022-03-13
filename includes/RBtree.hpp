@@ -556,16 +556,12 @@ public:
 
   // == modifiers ==
 
-  // unique_insert()はキーが重複するか確認、重複なしのkeyのみ挿入する
-  ft::pair<iterator, bool> unique_insert(const value_type& value) {
+  // 重複を許可しない
+  ft::pair<iterator, bool> insert(const value_type& value) {
     iterator res = find(getKeyOfValue(value));
     if (res != end()) {
       return ft::make_pair(res, false);
     }
-    return insert(value);
-  }
-
-  ft::pair<iterator, bool> insert(const value_type& value) {
     node_pointer new_node = alloc_.allocate(1);
     alloc_.construct(new_node, node_type(value));
     if (root_ == NULL) {
@@ -582,6 +578,13 @@ public:
   }
 
   // iterator insert(iterator position, const value_type& val);
+
+  template <typename InputIt>
+  void insert(InputIt first, InputIt last) {
+    for (; first != last; first++) {
+      insert(*first);
+    }
+  }
 
   void erase(const_iterator position) {
     if (position == end())

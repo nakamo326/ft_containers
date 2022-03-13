@@ -106,16 +106,14 @@ public:
 
   // == modifiers ==
   pair<iterator, bool> insert(const value_type& val) {
-    return tree_.unique_insert(val);
+    return tree_.insert(val);
   }
   iterator insert(iterator position, const value_type& val) {
     return tree_.insert(position, val);
   }
   template <class InputIt>
   void insert(InputIt first, InputIt last) {
-    for (; first != last; first++) {
-      unique_insert(*first);
-    }
+    return tree_.insert(first, last);
   }
 
   iterator  erase(const_iterator position) { return tree_.erase(position); }

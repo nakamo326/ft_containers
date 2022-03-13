@@ -35,23 +35,6 @@ typedef ft::RBtree<int, ft::pair<int, int>, ft::_Select1st<ft::pair<int, int>>,
 //   }
 // }
 
-TEST(RBtreeTest, erase) {
-  std::random_device rand;
-  tree_type          tree;
-  std::vector<int>   keyList(4000);
-  for (size_t i = 0; i < 4000; i++) {
-    int tmp = rand() % 4000;
-    tree.insert(ft::make_pair(tmp, 0));
-    keyList[i] = tmp;
-    EXPECT_EQ(tree.size(), i + 1);
-  }
-  for (size_t i = 0; i < 4000; i++) {
-    tree.erase(keyList[i]);
-    ASSERT_EQ(tree.isValidTree(), true) << i << std::endl;
-    EXPECT_EQ(tree.size(), 4000 - (i + 1));
-  }
-}
-
 TEST(RBtreeTest, Random) {
   int                test_times = 40000;
   std::random_device rand;
@@ -97,17 +80,4 @@ TEST(RBtreeTest, BeginNodeTest) {
   EXPECT_EQ(tree.getBeginNode()->value_.first, 6);
   tree.erase(9);
   EXPECT_EQ(tree.getBeginNode()->value_.first, 6);
-}
-
-TEST(RBtreeTest, eraseForDebug) {
-  tree_type tree;
-  for (size_t i = 0; i < 100; i++) {
-    tree.insert(ft::make_pair(i, i));
-    EXPECT_EQ(tree.size(), i + 1);
-  }
-  for (size_t i = 0; i < 100; i++) {
-    tree.erase(i);
-    ASSERT_EQ(tree.isValidTree(), true) << i << std::endl;
-    EXPECT_EQ(tree.size(), 100 - (i + 1));
-  }
 }
