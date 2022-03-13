@@ -111,6 +111,7 @@ public:
   pair<iterator, bool> insert(const value_type& val) {
     return tree_.insert(val);
   }
+  // TODO:
   iterator insert(iterator position, const value_type& val) {
     return tree_.insert(position, val);
   }
@@ -121,7 +122,8 @@ public:
 
   iterator  erase(const_iterator position) { return tree_.erase(position); }
   size_type erase(const Key& key) { return tree_.erase(key); }
-  iterator  erase(const_iterator first, const_iterator last);
+  // TODO:
+  iterator erase(const_iterator first, const_iterator last);
 
   void swap(map& x) { return tree_.swap(); }
   void clear() { return tree_.clear(); }
@@ -130,6 +132,7 @@ public:
   size_type      count(const Key& key) const { return tree_.count(key); }
   iterator       find(const Key& key) { return tree_.find(key); }
   const_iterator find(const Key& key) const { return tree_.find(key); }
+  // TODO:
   ft::pair<iterator, iterator>             equal_range(const Key& key);
   ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const;
   iterator                                 lower_bound(const Key& key);
