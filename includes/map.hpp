@@ -78,10 +78,12 @@ public:
   // == assignation ==
   map& operator=(const map& other);
 
-  allocator_type get_allocator() const { return Alloc(); };
+  allocator_type get_allocator() const { return Alloc(); }
 
   // == element access ==
-  Tp& operator[](const Key& key);
+  Tp& operator[](const Key& key) {
+    return insert(std::make_pair(key, Tp())).first->second;
+  }
 
   // == iterators ==
   iterator               begin() { return tree_.begin(); }
