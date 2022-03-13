@@ -69,12 +69,6 @@ TEST(MapTest, assignation) {
   EXPECT_NE(from[42], m[42]);
 }
 
-TEST(MapTest, MaxSize) {
-  std::map<int, int> s;
-  ft::map<int, int>  f;
-  EXPECT_EQ(s.max_size(), f.max_size());
-}
-
 TEST(MapTest, empty) {
   ft::map<int, int> m;
   EXPECT_EQ(m.empty(), true);
@@ -93,6 +87,12 @@ TEST(MapTest, size) {
     m.erase(i);
     EXPECT_EQ(m.size(), 1000 - i);
   }
+}
+
+TEST(MapTest, MaxSize) {
+  std::map<int, int> s;
+  ft::map<int, int>  f;
+  EXPECT_EQ(s.max_size(), f.max_size());
 }
 
 TEST(MapTest, arrayOperator) {
@@ -156,4 +156,22 @@ TEST(MapTest, count) {
   m.insert(ft::make_pair(0, 42));
   EXPECT_TRUE(m.count(0) == 1);
   EXPECT_TRUE(m.count(1) == 0);
+}
+
+TEST(MapTest, KeyCompare) {
+  ft::map<int, int> m;
+
+  ft::map<int, int>::key_compare kc = m.key_comp();
+
+  EXPECT_EQ(kc(0, 1), true);
+  EXPECT_EQ(kc(42, 0), false);
+}
+
+TEST(MapTest, ValueCompare) {
+  ft::map<int, int> m;
+
+  ft::map<int, int>::value_compare vc = m.value_comp();
+
+  EXPECT_EQ(vc(ft::make_pair(0, 0), ft::make_pair(1, 0)), true);
+  EXPECT_EQ(vc(ft::make_pair(42, 0), ft::make_pair(1, 0)), false);
 }
