@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 
 #include "pair.hpp"
@@ -149,6 +150,7 @@ public:
   typedef _RBnode<value_type>                node_type;
   typedef node_type*                         node_pointer;
   typedef size_t                             size_type;
+  typedef std::ptrdiff_t                     difference_type;
   typedef RBtree_iterator<value_type*>       iterator;
   typedef RBtree_iterator<const value_type*> const_iterator;
 
@@ -539,9 +541,6 @@ public:
 
   ~RBtree() { destroyTree(header_); }
 
-  // == element access ==
-  // T& operator[](const Key& key);
-
   // == iterators ==
   iterator       begin() { return iterator(begin_); }
   const_iterator begin() const { return const_iterator(begin_); }
@@ -550,7 +549,10 @@ public:
 
   // == capacity ==
   size_type size() const { return size_; }
-  size_type max_size() { return alloc_.max_size(); }
+  size_type max_size() const {
+    return std::min<size_type>(alloc_.max_size(),
+                               std::numeric_limits<difference_type>::max());
+  }
 
   // == modifiers ==
 
@@ -580,15 +582,6 @@ public:
   }
 
   // iterator insert(iterator position, const value_type& val);
-
-  // 入れられる値だけ入る
-  // InputIt has value_type
-  template <typename InputIt>
-  void insert(InputIt first, InputIt last) {
-    for (; first != last; first++) {
-      unique_insert(*first);
-    }
-  }
 
   void erase(const_iterator position) {
     if (position == end())
