@@ -543,8 +543,8 @@ public:
 
   // == assignation ==
   RBtree& operator=(const RBtree& other) {
-    // if (*this == other)
-    //   return *this;
+    if (this == &other)
+      return *this;
     clear();
     comp_  = other.comp_;
     alloc_ = other.alloc_;
