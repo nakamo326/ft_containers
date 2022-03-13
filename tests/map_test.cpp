@@ -75,6 +75,15 @@ TEST(MapTest, size) {
   }
 }
 
+TEST(MapTest, arrayOperator) {
+  ft::map<int, int> m;
+  m[0] = 57;
+  EXPECT_EQ(m[0], 57);
+  EXPECT_EQ(m[42], int());
+  m[0] = 42;
+  EXPECT_EQ(m[0], 42);
+}
+
 TEST(MapTest, simpleInsert) {
   std::random_device rand;
   {
@@ -86,17 +95,40 @@ TEST(MapTest, simpleInsert) {
       // check m[i] == i
     }
   }
-  {
-    ft::map<int, int> m;
-    int               times = 10000;
-    for (size_t i = 0; i < times; i++) {
-      int tmp = rand() % times;
-      m.insert(ft::make_pair(tmp, i));
-      EXPECT_EQ(m.size(), i + 1);
-      // check m[i] == i
-    }
-  }
+  // {
+  //   ft::map<int, int> m;
+  //   int               times = 10000;
+  //   for (size_t i = 0; i < times; i++) {
+  //     int tmp = rand() % times;
+  //     m.insert(ft::make_pair(tmp, i));
+  //     EXPECT_EQ(m.size(), i + 1);
+  //     // check m[i] == i
+  //   }
+  // }
 }
+
+// TEST(MapTest, positionInsert) {
+//   std::random_device rand;
+//   {
+//     ft::map<int, int> m;
+//     int               times = 10000;
+//     for (size_t i = 0; i < times; i++) {
+//       m.insert(ft::make_pair(i, i));
+//       EXPECT_EQ(m.size(), i + 1);
+//       // check m[i] == i
+//     }
+//   }
+//   {
+//     ft::map<int, int> m;
+//     int               times = 10000;
+//     for (size_t i = 0; i < times; i++) {
+//       int tmp = rand() % times;
+//       m.insert(ft::make_pair(tmp, i));
+//       EXPECT_EQ(m.size(), i + 1);
+//       // check m[i] == i
+//     }
+//   }
+// }
 
 TEST(MapTest, count) {
   ft::map<int, int> m;
