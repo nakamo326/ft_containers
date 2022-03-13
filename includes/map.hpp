@@ -76,7 +76,10 @@ public:
   ~map() {}
 
   // == assignation ==
-  map& operator=(const map& other);
+  map& operator=(const map& other) {
+    tree_ = other.tree_;
+    return *this;
+  }
 
   allocator_type get_allocator() const { return Alloc(); }
 

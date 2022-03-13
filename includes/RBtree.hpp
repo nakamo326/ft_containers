@@ -541,6 +541,21 @@ public:
 
   ~RBtree() { destroyTree(header_); }
 
+  // == assignation ==
+  RBtree& operator=(const RBtree& other) {
+    // if (*this == other)
+    //   return *this;
+    destroyTree(header_);
+    root_ = NULL;
+    initHeader();
+    begin_ = header_;
+    size_  = 0;
+    comp_  = other.comp_;
+    alloc_ = other.alloc_;
+    insert(other.begin(), other.end());
+    return *this;
+  }
+
   // == iterators ==
   iterator       begin() { return iterator(begin_); }
   const_iterator begin() const { return const_iterator(begin_); }
@@ -604,7 +619,14 @@ public:
 
   // iterator  erase(const_iterator first, const_iterator last);
 
-  // void swap(map& x);
+  void swap(RBtree& x) {
+    std::swap(header_, x.header_);
+    std::swap(root_, x.root_);
+    std::swap(begin_, x.begin_);
+    std::swap(size_, x.size_);
+    std::swap(comp_, x.comp_);
+    std::swap(alloc_, x.alloc_);
+  }
   // void clear();
 
   // == lookup ==

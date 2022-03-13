@@ -49,6 +49,26 @@ TEST(MapTest, copyConstructor) {
   }
 }
 
+TEST(MapTest, assignation) {
+  ft::map<int, int> from;
+  for (int i = 0; i < 10; i++) {
+    from.insert(ft::make_pair(i, i));
+  }
+  ft::map<int, int> m;
+  for (int i = 0; i < 5; i++) {
+    from.insert(ft::make_pair(i, 42));
+  }
+
+  m = from;
+
+  EXPECT_EQ(m.size(), from.size());
+  for (size_t i = 0; i < 10; i++) {
+    EXPECT_EQ(from[i], m[i]);
+  }
+  m[42] = 42;
+  EXPECT_NE(from[42], m[42]);
+}
+
 TEST(MapTest, MaxSize) {
   std::map<int, int> s;
   ft::map<int, int>  f;

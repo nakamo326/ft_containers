@@ -38,10 +38,13 @@ int main() {
   from[0] = 57;
   from[1] = 99;
 
-  m.insert(from.begin(), from.end());
+  m       = from;
+  from[5] = 5;
 
-  std::cout << "\nmap = ";
+  std::cout << "\nm = ";
   print_map(m);
+  std::cout << "\nfrom = ";
+  print_map(from);
 
   return 0;
 }
