@@ -221,16 +221,20 @@ private:
   }
 
   // 挿入されたノードが左の子のときbeginノードは更新される可能性がある
-  void updateBeginNodeInsert(node_pointer new_node) {
+  void checkUpdateBeginNode(node_pointer new_node) {
     if (begin_ != header_ &&
         comp_(getKeyOfValue(new_node->value_), getKeyOfValue(begin_->value_)))
       begin_ = new_node;
   }
 
-  // nodeからkeyを挿入するべき親ノードを返す。もし同値のkeyをもつノードが見つかった時はその位置を返す。
+  // == insert ==
+
+  // rootからkeyを挿入するべき親ノードを返す。もし同値のkeyをもつノードが見つかった時はその位置を返す。
   // 同値のキーが見つかった時を除いて、挿入する枝がNULLであることが保証される。
-  node_pointer searchInsertPosition(const key_type& key, node_pointer node) {
-    node_pointer res = NULL;
+  // if root == NULL return NULL
+  node_pointer searchInsertPosition(const key_type& key) {
+    node_pointer node = root_;
+    node_pointer res  = NULL;
     while (node != NULL) {
       res = node;
       if (comp_(getKeyOfValue(node->value_), key)) {
@@ -250,32 +254,18 @@ private:
     new_node->parent_     = pos;
     if (root_ == NULL) {
       setRoot(new_node);
-    }
-    if (comp_(getKeyOfValue(pos->value_), value)) {
+    } else if (comp_(getKeyOfValue(pos->value_), getKeyOfValue(value))) {
       pos->right_ = new_node;
+    } else if (comp_(getKeyOfValue(value), getKeyOfValue(pos->value_))) {
+      pos->left_ = new_node;
+      checkUpdateBeginNode(new_node);
+    } else {
+      deallocateNode(new_node);
+      return ft::make_pair(iterator(pos), false);
     }
+    checkColor(new_node);
     size_++;
     return ft::make_pair(iterator(new_node), true);
-  }
-
-  // == insert ==
-  void insert(node_pointer parent, node_pointer new_node) {
-    if (comp_(getKeyOfValue(parent->value_), getKeyOfValue(new_node->value_))) {
-      if (parent->right_ == NULL) {
-        parent->right_    = new_node;
-        new_node->parent_ = parent;
-        return checkColor(new_node);
-      }
-      return insert(parent->right_, new_node);
-    } else {
-      if (parent->left_ == NULL) {
-        parent->left_     = new_node;
-        new_node->parent_ = parent;
-        updateBeginNodeInsert(new_node);
-        return checkColor(new_node);
-      }
-      return insert(parent->left_, new_node);
-    }
   }
 
   void checkColor(node_pointer node) {
@@ -616,18 +606,8 @@ public:
 
   // 重複を許可しない
   ft::pair<iterator, bool> insert(const value_type& value) {
-    iterator res = find(getKeyOfValue(value));
-    if (res != end()) {
-      return ft::make_pair(res, false);
-    }
-    node_pointer new_node = generateNode(value);
-    if (root_ == NULL) {
-      setRoot(new_node);
-    } else {
-      insert(root_, new_node);
-    }
-    size_++;
-    return ft::make_pair(iterator(new_node), true);
+    node_pointer res = searchInsertPosition(getKeyOfValue(value));
+    return insertWithPos(value, res);
   }
 
   pair<node_pointer, node_pointer> searchKeyWithHint(const key_type& key,
