@@ -204,12 +204,12 @@ private:
     while (node != NULL) {
       if (comp_(getKeyOfValue(node->value_), key))
         node = node->right_;
-      else if (key, comp_(getKeyOfValue(node->value_)))
+      else if (comp_(key, getKeyOfValue(node->value_)))
         node = node->left_;
       else
-        return NULL;
+        return node;
     }
-    return node;
+    return NULL;
   }
 
   node_pointer searchMinimum(node_pointer node) {

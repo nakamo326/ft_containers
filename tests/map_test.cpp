@@ -115,16 +115,27 @@ TEST(MapTest, simpleInsert) {
       EXPECT_EQ(m[i], i);
     }
   }
-  // {
-  //   ft::map<int, int> m;
-  //   int               times = 10000;
-  //   for (size_t i = 0; i < times; i++) {
-  //     int tmp = rand() % times;
-  //     m.insert(ft::make_pair(tmp, i));
-  //     EXPECT_EQ(m.size(), i + 1);
-  //     // check m[i] == i
-  //   }
-  // }
+  {
+    std::vector<int> v(10000);
+    for (size_t i = 0; i < 10000; i++) {
+      v[i] = i;
+    }
+    for (size_t i = 10000; i > 1; --i) {
+      size_t a = i - 1;
+      size_t b = rand() % i;
+      std::swap(v[a], v[b]);
+    }
+    ft::map<int, int> m;
+    for (size_t i = 0; i < 10000; i++) {
+      m.insert(ft::make_pair(v[i], v[i]));
+      EXPECT_EQ(m.size(), i + 1);
+    }
+    ft::map<int, int>::iterator it = m.begin();
+    for (size_t i = 0; i < 10000; i++) {
+      EXPECT_EQ((*it).first, i);
+      it++;
+    }
+  }
 }
 
 // TEST(MapTest, positionInsert) {
