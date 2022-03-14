@@ -81,3 +81,26 @@ TEST(RBtreeTest, BeginNodeTest) {
   tree.erase(9);
   EXPECT_EQ(tree.getBeginNode()->value_.first, 6);
 }
+
+TEST(RBtreeTest, positionInsert) {
+  std::random_device rand;
+  {
+    tree_type            tree;
+    tree_type::size_type size  = 0;
+    int                  times = 10000;
+    for (size_t i = 0; i < times; i++) {
+      int tmp    = rand() % times;
+      int choice = rand() % 3;
+      if (choice == 0) {
+        tree.insert(tree.find(tmp), ft::make_pair(tmp, 0));
+      } else if (choice == 1) {
+        tree.insert(tree.begin(), ft::make_pair(tmp, 0));
+      } else {
+        tree.insert(tree.end(), ft::make_pair(tmp, 0));
+      }
+      EXPECT_EQ(tree.isValidTree(), true);
+      if (tree.count(tmp))
+        size++;
+    }
+  }
+}
