@@ -200,15 +200,14 @@ private:
     setBlack(node->parent_->parent_->right_);
   }
 
-  // FIXME:
   node_pointer searchKey(const key_type& key, node_pointer node) const {
     while (node != NULL) {
-      if (getKeyOfValue(node->value_) == key)
-        break;
       if (comp_(getKeyOfValue(node->value_), key))
         node = node->right_;
-      else
+      else if (key, comp_(getKeyOfValue(node->value_)))
         node = node->left_;
+      else
+        return NULL;
     }
     return node;
   }
