@@ -213,22 +213,6 @@ private:
     return node;
   }
 
-  // nodeからkeyを挿入するべき親ノードを返す。もし同値のkeyをもつノードが見つかった時はNULLを返す。
-  node_pointer searchInsertPosition(const key_type& key, node_pointer node) {
-    node_pointer res;
-    while (node != NULL) {
-      res = node;
-      if (comp_(getKeyOfValue(node->value_), key)) {
-        node = node->right_;
-      } else if (comp_(key, getKeyOfValue(node->value_))) {
-        node = node->left_;
-      } else {
-        return NULL;
-      }
-    }
-    return res;
-  }
-
   node_pointer searchMinimum(node_pointer node) {
     while (node->left_ != NULL) {
       node = node->left_;
@@ -241,6 +225,37 @@ private:
     if (begin_ != header_ &&
         comp_(getKeyOfValue(new_node->value_), getKeyOfValue(begin_->value_)))
       begin_ = new_node;
+  }
+
+  // nodeからkeyを挿入するべき親ノードを返す。もし同値のkeyをもつノードが見つかった時はその位置を返す。
+  // 同値のキーが見つかった時を除いて、挿入する枝がNULLであることが保証される。
+  node_pointer searchInsertPosition(const key_type& key, node_pointer node) {
+    node_pointer res = NULL;
+    while (node != NULL) {
+      res = node;
+      if (comp_(getKeyOfValue(node->value_), key)) {
+        node = node->right_;
+      } else if (comp_(key, getKeyOfValue(node->value_))) {
+        node = node->left_;
+      } else {
+        return node;
+      }
+    }
+    return res;
+  }
+
+  ft::pair<iterator, bool> insertWithPos(const value_type& value,
+                                         node_pointer      pos) {
+    node_pointer new_node = generateNode(value);
+    new_node->parent_     = pos;
+    if (root_ == NULL) {
+      setRoot(new_node);
+    }
+    if (comp_(getKeyOfValue(pos->value_), value)) {
+      pos->right_ = new_node;
+    }
+    size_++;
+    return ft::make_pair(iterator(new_node), true);
   }
 
   // == insert ==
@@ -524,6 +539,14 @@ private:
     setBlack(header_);
   }
 
+  void setRoot(node_pointer new_root) {
+    root_          = new_root;
+    root_->parent_ = header_;
+    begin_         = root_;
+    header_->left_ = root_;
+    setBlack(root_);
+  }
+
   node_pointer generateNode(const value_type& value) {
     node_pointer new_node = alloc_.allocate(1);
     alloc_.construct(new_node, node_type(value));
@@ -599,11 +622,7 @@ public:
     }
     node_pointer new_node = generateNode(value);
     if (root_ == NULL) {
-      root_          = new_node;
-      root_->parent_ = header_;
-      begin_         = root_;
-      header_->left_ = root_;
-      setBlack(root_);
+      setRoot(new_node);
     } else {
       insert(root_, new_node);
     }
@@ -653,7 +672,7 @@ public:
       return insert(val).first;
     if (res.second == NULL) {
       node_pointer new_node = generateNode(val);
-      insert(res.first, new_node);
+      insertWithPos(new_node, res.first);
       size_++;
     }
     return iterator(res.first);
