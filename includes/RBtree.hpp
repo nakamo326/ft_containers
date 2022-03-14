@@ -603,17 +603,16 @@ public:
   }
 
   // == modifiers ==
-
-  // 重複を許可しない
   ft::pair<iterator, bool> insert(const value_type& value) {
     node_pointer res = searchInsertPosition(getKeyOfValue(value));
     return insertWithPos(value, res);
   }
 
-  pair<node_pointer, node_pointer> searchKeyWithHint(const key_type& key,
-                                                     iterator        hint) {
-    typedef pair<node_pointer, node_pointer> _Res;
-    node_pointer                             dummy = header_;
+  pair<iterator, node_pointer> searchKeyWithHint(const value_type& val,
+                                                 iterator          hint) {
+    typedef pair<iterator, node_pointer> _Res;
+    node_pointer                         dummy = header_;
+    key_type                             key   = getKeyOfValue(val);
 
     if (hint == end() || comp_(key, getKeyOfValue(*hint))) {
       // key < hint
@@ -621,41 +620,37 @@ public:
       if (prev == begin() || comp_(getKeyOfValue(*--prev), key)) {
         // prev < key < hint
         if (hint.base()->left_ == NULL) {
-          return _Res(hint.base(), hint.base()->left_);
+          return _Res(hint, hint.base()->left_);
         } else {
-          return _Res(prev.base(), prev.base()->right_);
+          return _Res(prev, prev.base()->right_);
         }
       }
-      return _Res(NULL, NULL);
+      return _Res(insert(val).first, dummy);
     } else if (comp_(key, getKeyOfValue(*hint))) {
       iterator next = hint;
       next++;
       if (next == end() || comp_(key, getKeyOfValue(*next))) {
         if (hint.base()->right_ == NULL) {
-          return _Res(hint.base(), hint.base()->right_);
+          return _Res(hint, hint.base()->right_);
         } else {
-          return _Res(hint.base(), hint.base()->left_);
+          return _Res(hint, hint.base()->left_);
         }
       }
-      return _Res(NULL, NULL);
+      return _Res(insert(val).first, dummy);
     }
     // key == *hint
-    return _Res(hint.base(), dummy);
+    return _Res(hint, dummy);
   }
 
   // 挿入された場合には、新しく挿入された要素を指すイテレータを返す。
   // 挿入されなかった場合には、xのキーと等価のキーを持つ要素へのイテレータを返す。
   iterator insert(iterator position, const value_type& val) {
-    pair<node_pointer, node_pointer> res =
-        searchKeyWithHint(getKeyOfValue(val), position);
-    if (res.first == NULL && res.second == NULL)
-      return insert(val).first;
+    pair<iterator, node_pointer> res = searchKeyWithHint(val, position);
     if (res.second == NULL) {
-      node_pointer new_node = generateNode(val);
-      insertWithPos(new_node, res.first);
+      insertWithPos(val, res.first.base());
       size_++;
     }
-    return iterator(res.first);
+    return res.first;
   }
 
   template <typename InputIt>
