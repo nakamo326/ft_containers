@@ -1,5 +1,5 @@
-#ifndef FT_CONTAINERS_INCLUDES_TREE_RBTREE_HPP
-#define FT_CONTAINERS_INCLUDES_TREE_RBTREE_HPP
+#ifndef FT_CONTAINERS_INCLUDES_RBTREE_HPP
+#define FT_CONTAINERS_INCLUDES_RBTREE_HPP
 
 #include <cstddef>
 #include <iostream>
@@ -213,6 +213,22 @@ private:
     return node;
   }
 
+  // nodeからkeyを挿入するべき親ノードを返す。もし同値のkeyをもつノードが見つかった時はNULLを返す。
+  node_pointer searchInsertPosition(const key_type& key, node_pointer node) {
+    node_pointer res;
+    while (node != NULL) {
+      res = node;
+      if (comp_(getKeyOfValue(node->value_), key)) {
+        node = node->right_;
+      } else if (comp_(key, getKeyOfValue(node->value_))) {
+        node = node->left_;
+      } else {
+        return NULL;
+      }
+    }
+    return res;
+  }
+
   node_pointer searchMinimum(node_pointer node) {
     while (node->left_ != NULL) {
       node = node->left_;
@@ -220,6 +236,7 @@ private:
     return node;
   }
 
+  // 挿入されたノードが左の子のときbeginノードは更新される可能性がある
   void updateBeginNodeInsert(node_pointer new_node) {
     if (begin_ != header_ &&
         comp_(getKeyOfValue(new_node->value_), getKeyOfValue(begin_->value_)))
@@ -600,15 +617,17 @@ public:
     node_pointer                             dummy = header_;
 
     if (hint == end() || comp_(key, getKeyOfValue(*hint))) {
+      // key < hint
       iterator prev = hint;
       if (prev == begin() || comp_(getKeyOfValue(*--prev), key)) {
+        // prev < key < hint
         if (hint.base()->left_ == NULL) {
           return _Res(hint.base(), hint.base()->left_);
         } else {
           return _Res(prev.base(), prev.base()->right_);
         }
       }
-      return _Res(searchKey(key, root_), dummy);
+      return _Res(NULL, NULL);
     } else if (comp_(key, getKeyOfValue(*hint))) {
       iterator next = hint;
       next++;
@@ -619,7 +638,7 @@ public:
           return _Res(hint.base(), hint.base()->left_);
         }
       }
-      return _Res(searchKey(key, root_), dummy);
+      return _Res(NULL, NULL);
     }
     // key == *hint
     return _Res(hint.base(), dummy);
@@ -630,10 +649,12 @@ public:
   iterator insert(iterator position, const value_type& val) {
     pair<node_pointer, node_pointer> res =
         searchKeyWithHint(getKeyOfValue(val), position);
+    if (res.first == NULL && res.second == NULL)
+      return insert(val).first;
     if (res.second == NULL) {
       node_pointer new_node = generateNode(val);
       insert(res.first, new_node);
-      size++;
+      size_++;
     }
     return iterator(res.first);
   }
@@ -739,4 +760,4 @@ public:
 
 }  // namespace ft
 
-#endif /* FT_CONTAINERS_INCLUDES_TREE_RBTREE_HPP */
+#endif /* FT_CONTAINERS_INCLUDES_RBTREE_HPP */

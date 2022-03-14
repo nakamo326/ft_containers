@@ -39,6 +39,7 @@ int main() {
   // ftm.insert(ft::make_pair(1, 42));
   ftm.insert(ft::make_pair(3, 42));
   ftm.insert(ftm.begin(), ft::make_pair(2, 57));
+  print_map(ftm);
   return 0;
 }
 
