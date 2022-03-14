@@ -227,7 +227,41 @@ private:
       begin_ = new_node;
   }
 
-  // == insert ==
+  // == insert helpers ==
+
+  pair<iterator, node_pointer> searchKeyWithHint(const value_type& val,
+                                                 iterator          hint) {
+    typedef pair<iterator, node_pointer> _Res;
+    node_pointer                         dummy = header_;
+    key_type                             key   = getKeyOfValue(val);
+
+    if (hint == end() || comp_(key, getKeyOfValue(*hint))) {
+      // key < hint
+      iterator prev = hint;
+      if (prev == begin() || comp_(getKeyOfValue(*--prev), key)) {
+        // prev < key < hint
+        if (hint.base()->left_ == NULL) {
+          return _Res(hint, hint.base()->left_);
+        } else {
+          return _Res(prev, prev.base()->right_);
+        }
+      }
+      return _Res(insert(val).first, dummy);
+    } else if (comp_(key, getKeyOfValue(*hint))) {
+      iterator next = hint;
+      next++;
+      if (next == end() || comp_(key, getKeyOfValue(*next))) {
+        if (hint.base()->right_ == NULL) {
+          return _Res(hint, hint.base()->right_);
+        } else {
+          return _Res(hint, hint.base()->left_);
+        }
+      }
+      return _Res(insert(val).first, dummy);
+    }
+    // key == *hint
+    return _Res(hint, dummy);
+  }
 
   // rootからkeyを挿入するべき親ノードを返す。もし同値のkeyをもつノードが見つかった時はその位置を返す。
   // 同値のキーが見つかった時を除いて、挿入する枝がNULLであることが保証される。
@@ -606,40 +640,6 @@ public:
   ft::pair<iterator, bool> insert(const value_type& value) {
     node_pointer res = searchInsertPosition(getKeyOfValue(value));
     return insertWithPos(value, res);
-  }
-
-  pair<iterator, node_pointer> searchKeyWithHint(const value_type& val,
-                                                 iterator          hint) {
-    typedef pair<iterator, node_pointer> _Res;
-    node_pointer                         dummy = header_;
-    key_type                             key   = getKeyOfValue(val);
-
-    if (hint == end() || comp_(key, getKeyOfValue(*hint))) {
-      // key < hint
-      iterator prev = hint;
-      if (prev == begin() || comp_(getKeyOfValue(*--prev), key)) {
-        // prev < key < hint
-        if (hint.base()->left_ == NULL) {
-          return _Res(hint, hint.base()->left_);
-        } else {
-          return _Res(prev, prev.base()->right_);
-        }
-      }
-      return _Res(insert(val).first, dummy);
-    } else if (comp_(key, getKeyOfValue(*hint))) {
-      iterator next = hint;
-      next++;
-      if (next == end() || comp_(key, getKeyOfValue(*next))) {
-        if (hint.base()->right_ == NULL) {
-          return _Res(hint, hint.base()->right_);
-        } else {
-          return _Res(hint, hint.base()->left_);
-        }
-      }
-      return _Res(insert(val).first, dummy);
-    }
-    // key == *hint
-    return _Res(hint, dummy);
   }
 
   // 挿入された場合には、新しく挿入された要素を指すイテレータを返す。
