@@ -35,21 +35,10 @@ int main() {
   m[2] = 2;
   m[3] = 3;
 
-  std::map<int, int> from;
-  from[0] = 57;
-  from[1] = 99;
-
-  m       = from;
-  from[5] = 5;
-
-  std::cout << "\nm = ";
-  print_map(m);
-  std::cout << "\nfrom = ";
-  print_map(from);
-
   ft::map<int, int> ftm;
-  ftm.find(0);
-
+  // ftm.insert(ft::make_pair(1, 42));
+  ftm.insert(ft::make_pair(3, 42));
+  ftm.insert(ftm.begin(), ft::make_pair(2, 57));
   return 0;
 }
 

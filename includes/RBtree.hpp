@@ -200,6 +200,7 @@ private:
     setBlack(node->parent_->parent_->right_);
   }
 
+  // FIXME:
   node_pointer searchKey(const key_type& key, node_pointer node) const {
     while (node != NULL) {
       if (getKeyOfValue(node->value_) == key)
@@ -506,6 +507,12 @@ private:
     setBlack(header_);
   }
 
+  node_pointer generateNode(const value_type& value) {
+    node_pointer new_node = alloc_.allocate(1);
+    alloc_.construct(new_node, node_type(value));
+    return new_node;
+  }
+
 private:
   node_pointer   header_;
   node_pointer   root_;
@@ -573,8 +580,7 @@ public:
     if (res != end()) {
       return ft::make_pair(res, false);
     }
-    node_pointer new_node = alloc_.allocate(1);
-    alloc_.construct(new_node, node_type(value));
+    node_pointer new_node = generateNode(value);
     if (root_ == NULL) {
       root_          = new_node;
       root_->parent_ = header_;
@@ -588,7 +594,49 @@ public:
     return ft::make_pair(iterator(new_node), true);
   }
 
-  // iterator insert(iterator position, const value_type& val);
+  pair<node_pointer, node_pointer> searchKeyWithHint(const key_type& key,
+                                                     iterator        hint) {
+    typedef pair<node_pointer, node_pointer> _Res;
+    node_pointer                             dummy = header_;
+
+    if (hint == end() || comp_(key, getKeyOfValue(*hint))) {
+      iterator prev = hint;
+      if (prev == begin() || comp_(getKeyOfValue(*--prev), key)) {
+        if (hint.base()->left_ == NULL) {
+          return _Res(hint.base(), hint.base()->left_);
+        } else {
+          return _Res(prev.base(), prev.base()->right_);
+        }
+      }
+      return _Res(searchKey(key, root_), dummy);
+    } else if (comp_(key, getKeyOfValue(*hint))) {
+      iterator next = hint;
+      next++;
+      if (next == end() || comp_(key, getKeyOfValue(*next))) {
+        if (hint.base()->right_ == NULL) {
+          return _Res(hint.base(), hint.base()->right_);
+        } else {
+          return _Res(hint.base(), hint.base()->left_);
+        }
+      }
+      return _Res(searchKey(key, root_), dummy);
+    }
+    // key == *hint
+    return _Res(hint.base(), dummy);
+  }
+
+  // 挿入された場合には、新しく挿入された要素を指すイテレータを返す。
+  // 挿入されなかった場合には、xのキーと等価のキーを持つ要素へのイテレータを返す。
+  iterator insert(iterator position, const value_type& val) {
+    pair<node_pointer, node_pointer> res =
+        searchKeyWithHint(getKeyOfValue(val), position);
+    if (res.second == NULL) {
+      node_pointer new_node = generateNode(val);
+      insert(res.first, new_node);
+      size++;
+    }
+    return iterator(res.first);
+  }
 
   template <typename InputIt>
   void insert(InputIt first, InputIt last) {
