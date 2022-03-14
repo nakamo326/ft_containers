@@ -644,11 +644,11 @@ public:
 
   // 挿入された場合には、新しく挿入された要素を指すイテレータを返す。
   // 挿入されなかった場合には、xのキーと等価のキーを持つ要素へのイテレータを返す。
+  // resは挿入すべき場所を示すイテレーターと、子があいているかを示すポインタ。
   iterator insert(iterator position, const value_type& val) {
     pair<iterator, node_pointer> res = searchKeyWithHint(val, position);
     if (res.second == NULL) {
-      insertWithPos(val, res.first.base());
-      size_++;
+      return insertWithPos(val, res.first.base()).first;
     }
     return res.first;
   }
