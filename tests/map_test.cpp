@@ -288,6 +288,19 @@ TEST(MapTest, find) {
   // cit->second = 57;
 }
 
+TEST(MapTest, lowerBound) {
+  ft::map<int, int> m;
+  m.insert(ft::make_pair(1, 1));
+  m.insert(ft::make_pair(3, 3));
+  m.insert(ft::make_pair(2, 2));
+  m.insert(ft::make_pair(0, 0));
+  m.insert(ft::make_pair(6, 6));
+
+  EXPECT_EQ(m.lower_bound(2)->second, 2);
+  EXPECT_EQ(m.lower_bound(2)->second, 2);
+  EXPECT_EQ(m.lower_bound(10), m.end());
+}
+
 TEST(MapTest, KeyCompare) {
   ft::map<int, int> m;
 

@@ -135,10 +135,12 @@ public:
   // TODO:
   ft::pair<iterator, iterator>             equal_range(const Key& key);
   ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const;
-  iterator                                 lower_bound(const Key& key);
-  const_iterator                           lower_bound(const Key& key) const;
-  iterator                                 upper_bound(const Key& key);
-  const_iterator                           upper_bound(const Key& key) const;
+  iterator       lower_bound(const Key& key) { return tree_.lower_bound(key); }
+  const_iterator lower_bound(const Key& key) const {
+    return tree_.lower_bound(key);
+  }
+  iterator       upper_bound(const Key& key);
+  const_iterator upper_bound(const Key& key) const;
 
   // == observers ==
   key_compare   key_comp() const { return key_compare(); };

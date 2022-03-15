@@ -709,16 +709,41 @@ public:
       return (end());
     return iterator(res);
   }
+
   const_iterator find(const Key& key) const {
     node_pointer res = searchKey(key, root_);
     if (res == NULL)
       return (end());
     return const_iterator(res);
   }
+
   // ft::pair<iterator, iterator>             equal_range(const Key& key);
   // ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const;
-  // iterator                                 lower_bound(const Key& key);
-  // const_iterator                           lower_bound(const Key& key) const;
+
+  // TODO: move to private
+  node_pointer lower_bound_helper(const key_type& key) {
+    node_pointer node = root_;
+    node_pointer res  = header_;
+    while (node != NULL) {
+      if (!comp_(getKeyOfValue(node->value_), key)) {
+        res  = node;
+        node = node->left_;
+      } else {
+        node = node->right_;
+      }
+    }
+    return res;
+  }
+  iterator lower_bound(const Key& key) {
+    node_pointer res = lower_bound_helper(key);
+    return iterator(res);
+  }
+
+  const_iterator lower_bound(const Key& key) const {
+    node_pointer res = lower_bound_helper(key);
+    return const_iterator(res);
+  }
+
   // iterator                                 upper_bound(const Key& key);
   // const_iterator                           upper_bound(const Key& key) const;
 
