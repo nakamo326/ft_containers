@@ -17,7 +17,7 @@ TEST(MapTest, constructor) {
 }
 
 TEST(MapTest, rangeConstructor) {
-  std::vector<ft::pair<const int, int> > from;
+  std::vector<ft::pair<const int, int>> from;
   for (int i = 0; i < 10; i++) {
     from.push_back(ft::make_pair(i, i));
     from.push_back(ft::make_pair(i, i));
@@ -69,6 +69,25 @@ TEST(MapTest, assignation) {
   EXPECT_NE(from[42], m[42]);
 }
 
+TEST(MapTest, GetAllocator) {
+  ft::map<int, int> f;
+
+  ft::map<int, int>::allocator_type a   = f.get_allocator();
+  ft::map<int, int>::value_type*    val = a.allocate(1);
+  val->second                           = 42;
+  EXPECT_EQ(val->second, 42);
+  a.deallocate(val, 1);
+}
+
+TEST(MapTest, arrayOperator) {
+  ft::map<int, int> m;
+  m[0] = 57;
+  EXPECT_EQ(m[0], 57);
+  EXPECT_EQ(m[42], int());
+  m[0] = 42;
+  EXPECT_EQ(m[0], 42);
+}
+
 TEST(MapTest, empty) {
   ft::map<int, int> m;
   EXPECT_EQ(m.empty(), true);
@@ -93,15 +112,6 @@ TEST(MapTest, MaxSize) {
   std::map<int, int> s;
   ft::map<int, int>  f;
   EXPECT_EQ(s.max_size(), f.max_size());
-}
-
-TEST(MapTest, arrayOperator) {
-  ft::map<int, int> m;
-  m[0] = 57;
-  EXPECT_EQ(m[0], 57);
-  EXPECT_EQ(m[42], int());
-  m[0] = 42;
-  EXPECT_EQ(m[0], 42);
 }
 
 TEST(MapTest, simpleInsert) {
@@ -138,28 +148,90 @@ TEST(MapTest, simpleInsert) {
   }
 }
 
+// lower_bound, upper_boundほしい
 // TEST(MapTest, positionInsert) {
 //   std::random_device rand;
 //   {
-//     ft::map<int, int> m;
-//     int               times = 10000;
+//     tree_type            tree;
+//     tree_type::size_type size  = 0;
+//     int                  times = 10000;
 //     for (size_t i = 0; i < times; i++) {
-//       m.insert(ft::make_pair(i, i));
-//       EXPECT_EQ(m.size(), i + 1);
-//       // check m[i] == i
-//     }
-//   }
-//   {
-//     ft::map<int, int> m;
-//     int               times = 10000;
-//     for (size_t i = 0; i < times; i++) {
-//       int tmp = rand() % times;
-//       m.insert(ft::make_pair(tmp, i));
-//       EXPECT_EQ(m.size(), i + 1);
-//       // check m[i] == i
+//       int tmp    = rand() % times;
+//       int choice = rand() % 3;
+//       if (choice == 0) {
+//         tree.insert(tree.find(tmp), ft::make_pair(tmp, 0));
+//       } else if (choice == 1) {
+//         tree.insert(tree.begin(), ft::make_pair(tmp, 0));
+//       } else {
+//         tree.insert(tree.end(), ft::make_pair(tmp, 0));
+//       }
+//       EXPECT_EQ(tree.isValidTree(), true);
 //     }
 //   }
 // }
+
+TEST(MapTest, rangeInsert) {
+  ft::map<int, int>               m;
+  std::vector<ft::pair<int, int>> v(1000);
+  for (size_t i = 0; i < 1000; i++) {
+    v[i] = ft::make_pair(i, i);
+  }
+  m.insert(v.begin(), v.end());
+  ft::map<int, int>::iterator it(m.begin());
+  for (size_t i = 0; it != m.end(); it++) {
+    EXPECT_EQ(it->first, i);
+    i++;
+  }
+}
+
+TEST(MapTest, Erase) {
+  ft::map<int, int> m;
+  int               times = 10000;
+  for (size_t i = 1; i <= times; i++) {
+    m.insert(ft::make_pair(i, i));
+  }
+  for (size_t i = 1; i <= times; i++) {
+    m.erase(i);
+    EXPECT_EQ(m.size(), times - i);
+    EXPECT_EQ(m.count(i), 0);
+  }
+}
+
+TEST(MapTest, Swap) {
+  ft::map<int, int> m;
+  int               times = 10000;
+  for (size_t i = 1; i <= times; i++) {
+    m.insert(ft::make_pair(i, i));
+  }
+  ft::map<int, int> n;
+  for (size_t i = 1; i <= 1000; i++) {
+    m.insert(ft::make_pair(i, 42));
+  }
+  ft::map<int, int>::iterator m_it = m.begin();
+  ft::map<int, int>::iterator n_it = n.begin();
+  n.swap(m);
+  EXPECT_EQ(n.size(), times);
+  for (int i = 1; m_it != n.end(); m_it++) {
+    EXPECT_EQ(m_it->first, i);
+    EXPECT_EQ(m_it->second, i);
+    i++;
+  }
+  for (int i = 1; n_it != m.end(); n_it++) {
+    EXPECT_EQ(n_it->first, i);
+    EXPECT_EQ(n_it->second, 42);
+    i++;
+  }
+}
+
+TEST(MapTest, Clear) {
+  ft::map<int, int> m;
+  int               times = 10000;
+  for (size_t i = 1; i <= times; i++) {
+    m.insert(ft::make_pair(i, i));
+  }
+  m.clear();
+  EXPECT_EQ(m.size(), 0);
+}
 
 TEST(MapTest, count) {
   ft::map<int, int> m;

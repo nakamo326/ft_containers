@@ -111,7 +111,6 @@ public:
   pair<iterator, bool> insert(const value_type& val) {
     return tree_.insert(val);
   }
-  // TODO:
   iterator insert(iterator position, const value_type& val) {
     return tree_.insert(position, val);
   }
@@ -125,7 +124,7 @@ public:
   // TODO:
   iterator erase(const_iterator first, const_iterator last);
 
-  void swap(map& x) { return tree_.swap(x); }
+  void swap(map& x) { return tree_.swap(x.tree_); }
   void clear() { return tree_.clear(); }
 
   // == lookup ==
