@@ -659,7 +659,7 @@ public:
     }
   }
 
-  void erase(const_iterator position) {
+  void erase(iterator position) {
     if (position == end())
       return;
     if (position.base() == begin_)
@@ -675,7 +675,11 @@ public:
     return 1;
   }
 
-  // iterator  erase(const_iterator first, const_iterator last);
+  void erase(const_iterator first, const_iterator last) {
+    while (first != last) {
+      erase(first++);
+    }
+  }
 
   void swap(RBtree& x) {
     std::swap(header_, x.header_);

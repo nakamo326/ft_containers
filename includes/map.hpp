@@ -119,10 +119,12 @@ public:
     return tree_.insert(first, last);
   }
 
-  iterator  erase(const_iterator position) { return tree_.erase(position); }
+  void      erase(iterator position) { return tree_.erase(position); }
   size_type erase(const Key& key) { return tree_.erase(key); }
   // TODO:
-  iterator erase(const_iterator first, const_iterator last);
+  void erase(const_iterator first, const_iterator last) {
+    tree_.erase(first, last);
+  }
 
   void swap(map& x) { return tree_.swap(x.tree_); }
   void clear() { return tree_.clear(); }

@@ -197,6 +197,17 @@ TEST(MapTest, Erase) {
   }
 }
 
+TEST(MapTest, rangeErase) {
+  ft::map<int, int> m;
+  int               times = 10000;
+  for (size_t i = 1; i <= times; i++) {
+    m.insert(ft::make_pair(i, i));
+  }
+  m.erase(m.begin(), m.end());
+  EXPECT_EQ(m.size(), 0);
+  EXPECT_EQ(m.begin(), m.end());
+}
+
 TEST(MapTest, Swap) {
   ft::map<int, int> m;
   int               times = 10000;
@@ -231,6 +242,7 @@ TEST(MapTest, Clear) {
   }
   m.clear();
   EXPECT_EQ(m.size(), 0);
+  EXPECT_EQ(m.begin(), m.end());
 }
 
 TEST(MapTest, count) {
