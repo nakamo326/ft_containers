@@ -155,26 +155,45 @@ public:
 // == non member functions ==
 template <class Key, class T, class Compare, class Alloc>
 bool operator==(const ft::map<Key, T, Compare, Alloc>& lhs,
-                const ft::map<Key, T, Compare, Alloc>& rhs);
+                const ft::map<Key, T, Compare, Alloc>& rhs) {
+  return lhs.tree_ == rhs.tree_;
+}
+
 template <class Key, class T, class Compare, class Alloc>
 bool operator!=(const ft::map<Key, T, Compare, Alloc>& lhs,
-                const ft::map<Key, T, Compare, Alloc>& rhs);
+                const ft::map<Key, T, Compare, Alloc>& rhs) {
+  return !(lhs == rhs);
+}
+
 template <class Key, class T, class Compare, class Alloc>
 bool operator<(const ft::map<Key, T, Compare, Alloc>& lhs,
-               const ft::map<Key, T, Compare, Alloc>& rhs);
-template <class Key, class T, class Compare, class Alloc>
-bool operator<=(const ft::map<Key, T, Compare, Alloc>& lhs,
-                const ft::map<Key, T, Compare, Alloc>& rhs);
+               const ft::map<Key, T, Compare, Alloc>& rhs) {
+  return lhs.tree_ < rhs.tree_;
+}
+
 template <class Key, class T, class Compare, class Alloc>
 bool operator>(const ft::map<Key, T, Compare, Alloc>& lhs,
-               const ft::map<Key, T, Compare, Alloc>& rhs);
+               const ft::map<Key, T, Compare, Alloc>& rhs) {
+  return rhs < lhs;
+}
+
+template <class Key, class T, class Compare, class Alloc>
+bool operator<=(const ft::map<Key, T, Compare, Alloc>& lhs,
+                const ft::map<Key, T, Compare, Alloc>& rhs) {
+  return !(rhs < lhs);
+}
+
 template <class Key, class T, class Compare, class Alloc>
 bool operator>=(const ft::map<Key, T, Compare, Alloc>& lhs,
-                const ft::map<Key, T, Compare, Alloc>& rhs);
+                const ft::map<Key, T, Compare, Alloc>& rhs) {
+  return !(lhs < rhs);
+}
 
 template <class Key, class T, class Compare, class Alloc>
 void swap(ft::map<Key, T, Compare, Alloc>& lhs,
-          ft::map<Key, T, Compare, Alloc>& rhs);
+          ft::map<Key, T, Compare, Alloc>& rhs) {
+  lhs.swap(rhs);
+}
 
 }  // namespace ft
 

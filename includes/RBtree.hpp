@@ -623,6 +623,39 @@ private:
     return new_node;
   }
 
+public:
+  // == for debug ==
+  void outputAllTree() { outputTree(root_); }
+
+  node_pointer getBeginNode() { return begin_; }
+
+  void outputTree(node_pointer node) {
+    if (node == NULL)
+      return;
+    node->outputInfo();
+    outputTree(node->left_);
+    outputTree(node->right_);
+    return;
+  }
+
+  void checkBlackNodes() { blackNodes(root_); }
+
+  bool isValidTree() {
+    if (root_ == NULL)
+      return true;
+    if (root_->parent_ != header_)
+      return false;
+    if (isRed(root_))
+      return false;
+    try {
+      checkBlackNodes();
+    } catch (const std::exception& e) {
+      std::cerr << e.what() << '\n';
+      return false;
+    }
+    return checkConsecutiveRed(root_);
+  }
+
 private:
   node_pointer   header_;
   node_pointer   root_;
@@ -688,9 +721,6 @@ public:
     return insertWithPos(value, res);
   }
 
-  // 挿入された場合には、新しく挿入された要素を指すイテレータを返す。
-  // 挿入されなかった場合には、xのキーと等価のキーを持つ要素へのイテレータを返す。
-  // resは挿入すべき場所を示すイテレーターと、子があいているかを示すポインタ。
   iterator insert(iterator position, const value_type& val) {
     pair<iterator, node_pointer> res = searchKeyWithHint(val, position);
     if (res.second == NULL) {
@@ -793,36 +823,14 @@ public:
     return const_iterator(res);
   }
 
-  // == for debug ==
-  void outputAllTree() { outputTree(root_); }
-
-  node_pointer getBeginNode() { return begin_; }
-
-  void outputTree(node_pointer node) {
-    if (node == NULL)
-      return;
-    node->outputInfo();
-    outputTree(node->left_);
-    outputTree(node->right_);
-    return;
+  friend bool operator==(const RBtree& lhs, const RBtree& rhs) {
+    return lhs.size() == rhs.size() &&
+           ft::equal(lhs.begin(), lhs.end(), rhs.begin());
   }
 
-  void checkBlackNodes() { blackNodes(root_); }
-
-  bool isValidTree() {
-    if (root_ == NULL)
-      return true;
-    if (root_->parent_ != header_)
-      return false;
-    if (isRed(root_))
-      return false;
-    try {
-      checkBlackNodes();
-    } catch (const std::exception& e) {
-      std::cerr << e.what() << '\n';
-      return false;
-    }
-    return checkConsecutiveRed(root_);
+  friend bool operator<(const RBtree& lhs, const RBtree& rhs) {
+    return ft::lexicographical_compare(
+        lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
   }
 };
 
