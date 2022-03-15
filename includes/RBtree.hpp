@@ -219,6 +219,34 @@ private:
     return node;
   }
 
+  node_pointer lower_bound_helper(const key_type& key) {
+    node_pointer node = root_;
+    node_pointer res  = header_;
+    while (node != NULL) {
+      if (!comp_(getKeyOfValue(node->value_), key)) {
+        res  = node;
+        node = node->left_;
+      } else {
+        node = node->right_;
+      }
+    }
+    return res;
+  }
+
+  node_pointer upper_bound_helper(const key_type& key) {
+    node_pointer node = root_;
+    node_pointer res  = header_;
+    while (node != NULL) {
+      if (comp_(key, getKeyOfValue(node->value_))) {
+        res  = node;
+        node = node->left_;
+      } else {
+        node = node->right_;
+      }
+    }
+    return res;
+  }
+
   // 挿入されたノードが左の子のときbeginノードは更新される可能性がある
   void checkUpdateBeginNode(node_pointer new_node) {
     if (begin_ != header_ &&
@@ -720,20 +748,6 @@ public:
   // ft::pair<iterator, iterator>             equal_range(const Key& key);
   // ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const;
 
-  // TODO: move to private
-  node_pointer lower_bound_helper(const key_type& key) {
-    node_pointer node = root_;
-    node_pointer res  = header_;
-    while (node != NULL) {
-      if (!comp_(getKeyOfValue(node->value_), key)) {
-        res  = node;
-        node = node->left_;
-      } else {
-        node = node->right_;
-      }
-    }
-    return res;
-  }
   iterator lower_bound(const Key& key) {
     node_pointer res = lower_bound_helper(key);
     return iterator(res);
@@ -744,8 +758,14 @@ public:
     return const_iterator(res);
   }
 
-  // iterator                                 upper_bound(const Key& key);
-  // const_iterator                           upper_bound(const Key& key) const;
+  iterator upper_bound(const Key& key) {
+    node_pointer res = upper_bound_helper(key);
+    return iterator(res);
+  }
+  const_iterator upper_bound(const Key& key) const {
+    node_pointer res = upper_bound_helper(key);
+    return const_iterator(res);
+  }
 
   // == for debug ==
   void outputAllTree() { outputTree(root_); }

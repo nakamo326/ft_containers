@@ -139,8 +139,10 @@ public:
   const_iterator lower_bound(const Key& key) const {
     return tree_.lower_bound(key);
   }
-  iterator       upper_bound(const Key& key);
-  const_iterator upper_bound(const Key& key) const;
+  iterator       upper_bound(const Key& key) { return tree_.upper_bound(key); }
+  const_iterator upper_bound(const Key& key) const {
+    return tree_.upper_bound(key);
+  }
 
   // == observers ==
   key_compare   key_comp() const { return key_compare(); };
