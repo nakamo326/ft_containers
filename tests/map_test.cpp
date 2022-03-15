@@ -263,7 +263,29 @@ TEST(MapTest, count) {
   EXPECT_TRUE(m.count(0) == 0);
   m.insert(ft::make_pair(0, 42));
   EXPECT_TRUE(m.count(0) == 1);
+  m.insert(ft::make_pair(0, 42));
+  EXPECT_TRUE(m.count(0) == 1);
   EXPECT_TRUE(m.count(1) == 0);
+}
+
+TEST(MapTest, find) {
+  ft::map<int, int> m;
+  m.insert(ft::make_pair(1, 42));
+  m.insert(ft::make_pair(3, 42));
+  m.insert(ft::make_pair(2, 42));
+
+  EXPECT_EQ(m.find(0), m.end());
+  EXPECT_NE(m.find(1), m.end());
+  EXPECT_EQ(m.find(1)->second, 42);
+  EXPECT_NE(m.find(2), m.end());
+  EXPECT_EQ(m.find(2)->second, 42);
+  EXPECT_NE(m.find(3), m.end());
+  EXPECT_EQ(m.find(3)->second, 42);
+  EXPECT_EQ(m.find(4), m.end());
+
+  ft::map<int, int>::const_iterator cit = m.find(1);
+  // cannot assign
+  // cit->second = 57;
 }
 
 TEST(MapTest, KeyCompare) {
