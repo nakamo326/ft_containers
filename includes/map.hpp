@@ -132,9 +132,12 @@ public:
   size_type      count(const Key& key) const { return tree_.count(key); }
   iterator       find(const Key& key) { return tree_.find(key); }
   const_iterator find(const Key& key) const { return tree_.find(key); }
-  // TODO:
-  ft::pair<iterator, iterator>             equal_range(const Key& key);
-  ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const;
+  ft::pair<iterator, iterator> equal_range(const Key& key) {
+    return tree_.equal_range(key);
+  }
+  ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const {
+    return tree_.equal_range(key);
+  }
   iterator       lower_bound(const Key& key) { return tree_.lower_bound(key); }
   const_iterator lower_bound(const Key& key) const {
     return tree_.lower_bound(key);

@@ -288,6 +288,26 @@ TEST(MapTest, find) {
   // cit->second = 57;
 }
 
+TEST(MapTest, equalRange) {
+  ft::map<int, int> m;
+  m.insert(ft::make_pair(1, 1));
+  m.insert(ft::make_pair(3, 3));
+  m.insert(ft::make_pair(2, 2));
+  m.insert(ft::make_pair(0, 0));
+  m.insert(ft::make_pair(6, 6));
+
+  EXPECT_EQ(m.lower_bound(-1), m.equal_range(-1).first);
+  EXPECT_EQ(m.upper_bound(-1), m.equal_range(-1).second);
+  EXPECT_EQ(m.lower_bound(2), m.equal_range(2).first);
+  EXPECT_EQ(m.upper_bound(2), m.equal_range(2).second);
+  EXPECT_EQ(m.lower_bound(3), m.equal_range(3).first);
+  EXPECT_EQ(m.upper_bound(3), m.equal_range(3).second);
+  EXPECT_EQ(m.lower_bound(5), m.equal_range(5).first);
+  EXPECT_EQ(m.upper_bound(5), m.equal_range(5).second);
+  EXPECT_EQ(m.lower_bound(8), m.equal_range(8).first);
+  EXPECT_EQ(m.upper_bound(8), m.equal_range(8).second);
+}
+
 TEST(MapTest, lowerBound) {
   ft::map<int, int> m;
   m.insert(ft::make_pair(1, 1));

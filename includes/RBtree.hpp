@@ -219,9 +219,29 @@ private:
     return node;
   }
 
-  node_pointer lower_bound_helper(const key_type& key) {
-    node_pointer node = root_;
-    node_pointer res  = header_;
+  ft::pair<node_pointer, node_pointer> equal_range_helper(const Key& key) {
+    node_pointer node  = root_;
+    node_pointer upper = header_;
+
+    while (node != NULL) {
+      if (comp_(getKeyOfValue(node->value_), key)) {
+        node = node->right_;
+      } else if (comp_(key, getKeyOfValue(node->value_))) {
+        upper = node;
+        node  = node->left_;
+      } else {
+        node_pointer l_node = node->left_;
+        node_pointer lower  = node;
+        node                = node->right_;
+        return ft::make_pair(lower_bound_helper(l_node, lower, key),
+                             upper_bound_helper(node, upper, key));
+      }
+    }
+    return ft::make_pair(upper, upper);
+  }
+
+  node_pointer lower_bound_helper(node_pointer node, node_pointer res,
+                                  const key_type& key) {
     while (node != NULL) {
       if (!comp_(getKeyOfValue(node->value_), key)) {
         res  = node;
@@ -233,9 +253,8 @@ private:
     return res;
   }
 
-  node_pointer upper_bound_helper(const key_type& key) {
-    node_pointer node = root_;
-    node_pointer res  = header_;
+  node_pointer upper_bound_helper(node_pointer node, node_pointer res,
+                                  const key_type& key) {
     while (node != NULL) {
       if (comp_(key, getKeyOfValue(node->value_))) {
         res  = node;
@@ -745,25 +764,32 @@ public:
     return const_iterator(res);
   }
 
-  // ft::pair<iterator, iterator>             equal_range(const Key& key);
-  // ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const;
+  ft::pair<iterator, iterator> equal_range(const Key& key) {
+    ft::pair<node_pointer, node_pointer> res = equal_range_helper(key);
+    return ft::make_pair(iterator(res.first), iterator(res.second));
+  }
+
+  ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const {
+    ft::pair<node_pointer, node_pointer> res = equal_range_helper(key);
+    return ft::make_pair(const_iterator(res.first), const_iterator(res.second));
+  }
 
   iterator lower_bound(const Key& key) {
-    node_pointer res = lower_bound_helper(key);
+    node_pointer res = lower_bound_helper(root_, header_, key);
     return iterator(res);
   }
 
   const_iterator lower_bound(const Key& key) const {
-    node_pointer res = lower_bound_helper(key);
+    node_pointer res = lower_bound_helper(root_, header_, key);
     return const_iterator(res);
   }
 
   iterator upper_bound(const Key& key) {
-    node_pointer res = upper_bound_helper(key);
+    node_pointer res = upper_bound_helper(root_, header_, key);
     return iterator(res);
   }
   const_iterator upper_bound(const Key& key) const {
-    node_pointer res = upper_bound_helper(key);
+    node_pointer res = upper_bound_helper(root_, header_, key);
     return const_iterator(res);
   }
 
