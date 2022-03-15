@@ -197,6 +197,19 @@ TEST(MapTest, Erase) {
   }
 }
 
+TEST(MapTest, positionErase) {
+  ft::map<int, int> m;
+  int               times = 10000;
+  for (size_t i = 1; i <= times; i++) {
+    m.insert(ft::make_pair(i, i));
+  }
+  for (size_t i = 1; i <= times; i++) {
+    m.erase(m.find(i));
+    EXPECT_EQ(m.size(), times - i);
+    EXPECT_EQ(m.count(i), 0);
+  }
+}
+
 TEST(MapTest, rangeErase) {
   ft::map<int, int> m;
   int               times = 10000;

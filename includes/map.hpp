@@ -121,8 +121,7 @@ public:
 
   void      erase(iterator position) { return tree_.erase(position); }
   size_type erase(const Key& key) { return tree_.erase(key); }
-  // TODO:
-  void erase(const_iterator first, const_iterator last) {
+  void      erase(const_iterator first, const_iterator last) {
     tree_.erase(first, last);
   }
 
