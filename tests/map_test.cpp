@@ -368,7 +368,7 @@ TEST(MapTest, ComparisonOperators) {
   EXPECT_EQ(m <= c, true);
   EXPECT_EQ(m >= c, true);
 
-  c[3] = 42;
+  m[3] = -10;
   EXPECT_EQ(m == c, false);
   EXPECT_EQ(m != c, true);
   EXPECT_EQ(m < c, true);
@@ -376,7 +376,7 @@ TEST(MapTest, ComparisonOperators) {
   EXPECT_EQ(m <= c, true);
   EXPECT_EQ(m >= c, false);
 
-  c[3] = 3;
+  m[3] = 3;
   c.insert(ft::make_pair(4, 4));
   EXPECT_EQ(m == c, false);
   EXPECT_EQ(m != c, true);
