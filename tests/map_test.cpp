@@ -148,27 +148,40 @@ TEST(MapTest, simpleInsert) {
   }
 }
 
-// lower_bound, upper_boundほしい
-// TEST(MapTest, positionInsert) {
-//   std::random_device rand;
-//   {
-//     tree_type            tree;
-//     tree_type::size_type size  = 0;
-//     int                  times = 10000;
-//     for (size_t i = 0; i < times; i++) {
-//       int tmp    = rand() % times;
-//       int choice = rand() % 3;
-//       if (choice == 0) {
-//         tree.insert(tree.find(tmp), ft::make_pair(tmp, 0));
-//       } else if (choice == 1) {
-//         tree.insert(tree.begin(), ft::make_pair(tmp, 0));
-//       } else {
-//         tree.insert(tree.end(), ft::make_pair(tmp, 0));
-//       }
-//       EXPECT_EQ(tree.isValidTree(), true);
-//     }
-//   }
-// }
+TEST(MapTest, positionInsert) {
+  std::random_device rand;
+  ft::map<int, int>  m;
+  int                times = 10000;
+  std::vector<int>   v(times);
+  for (size_t i = 0; i < times; i++) {
+    v[i] = i;
+  }
+  for (size_t i = times; i > 1; --i) {
+    size_t a = i - 1;
+    size_t b = rand() % i;
+    std::swap(v[a], v[b]);
+  }
+
+  for (size_t i = 0; i < times; i++) {
+    int choice = rand() % 4;
+    if (choice == 0) {
+      m.insert(m.begin(), ft::make_pair(v[i], v[i]));
+    } else if (choice == 1) {
+      m.insert(m.end(), ft::make_pair(v[i], v[i]));
+    } else if (choice == 2) {
+      m.insert(m.upper_bound(v[i]), ft::make_pair(v[i], v[i]));
+    } else if (choice == 3) {
+      m.insert(m.lower_bound(v[i]), ft::make_pair(v[i], v[i]));
+    }
+  }
+
+  ft::map<int, int>::iterator it  = m.begin();
+  int                         num = it->first;
+  it++;
+  for (; it != m.end(); it++) {
+    EXPECT_EQ(num < (it->first), true);
+  }
+}
 
 TEST(MapTest, rangeInsert) {
   ft::map<int, int>               m;
