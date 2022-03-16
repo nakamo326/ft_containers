@@ -142,7 +142,7 @@ bool operator!=(const RBtree_iterator<T>& lhs, const RBtree_iterator<U>& rhs) {
 // case) map
 // key == value.first value == ft::pair<key, ...> KeyOfValue == _Select1st
 template <typename Key, typename Value, typename KeyOfValue, typename Comp,
-          typename Pair_alloc_type = std::allocator<Value> >
+          typename Alloc = std::allocator<Value> >
 class RBtree {
 public:
   typedef Key                                key_type;
@@ -154,10 +154,10 @@ public:
   typedef RBtree_iterator<value_type*>       iterator;
   typedef RBtree_iterator<const value_type*> const_iterator;
 
-  typedef RBtree<Key, Value, KeyOfValue, Comp, Pair_alloc_type> _Self;
+  typedef RBtree<Key, Value, KeyOfValue, Comp, Alloc> _Self;
 
-  typedef typename Pair_alloc_type::template rebind<_RBnode<Value> >::other
-      node_allocator;
+  typedef
+      typename Alloc::template rebind<_RBnode<Value> >::other node_allocator;
 
 private:
   // == accessor ==
@@ -667,8 +667,7 @@ private:
   // === public member function ===
 public:
   // == constructor / destructor ==
-  RBtree(const Comp&            comp  = Comp(),
-         const Pair_alloc_type& alloc = Pair_alloc_type())
+  RBtree(const Comp& comp = Comp(), const Alloc& alloc = Alloc())
       : header_(NULL),
         root_(NULL),
         begin_(NULL),
