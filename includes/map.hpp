@@ -150,6 +150,14 @@ public:
   // == observers ==
   key_compare   key_comp() const { return key_compare(); };
   value_compare value_comp() const { return value_compare(key_compare()); };
+
+  template <class _Key, class _T, class _Compare, class _Alloc>
+  friend bool operator==(const ft::map<_Key, _T, _Compare, _Alloc>& lhs,
+                         const ft::map<_Key, _T, _Compare, _Alloc>& rhs);
+
+  template <class _Key, class _T, class _Compare, class _Alloc>
+  friend bool operator<(const ft::map<_Key, _T, _Compare, _Alloc>& lhs,
+                        const ft::map<_Key, _T, _Compare, _Alloc>& rhs);
 };
 
 // == non member functions ==

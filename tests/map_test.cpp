@@ -351,3 +351,54 @@ TEST(MapTest, ValueCompare) {
   EXPECT_EQ(vc(ft::make_pair(0, 0), ft::make_pair(1, 0)), true);
   EXPECT_EQ(vc(ft::make_pair(42, 0), ft::make_pair(1, 0)), false);
 }
+
+TEST(MapTest, ComparisonOperators) {
+  ft::map<int, int> m;
+  m.insert(ft::make_pair(0, 0));
+  m.insert(ft::make_pair(1, 1));
+  m.insert(ft::make_pair(2, 2));
+  m.insert(ft::make_pair(3, 3));
+
+  ft::map<int, int> c(m);
+
+  EXPECT_EQ(m == c, true);
+  EXPECT_EQ(m != c, false);
+  EXPECT_EQ(m < c, false);
+  EXPECT_EQ(m > c, false);
+  EXPECT_EQ(m <= c, true);
+  EXPECT_EQ(m >= c, true);
+
+  c[3] = 42;
+  EXPECT_EQ(m == c, false);
+  EXPECT_EQ(m != c, true);
+  EXPECT_EQ(m < c, true);
+  EXPECT_EQ(m > c, false);
+  EXPECT_EQ(m <= c, true);
+  EXPECT_EQ(m >= c, false);
+
+  c[3] = 3;
+  c.insert(ft::make_pair(4, 4));
+  EXPECT_EQ(m == c, false);
+  EXPECT_EQ(m != c, true);
+  EXPECT_EQ(m < c, true);
+  EXPECT_EQ(m > c, false);
+  EXPECT_EQ(m <= c, true);
+  EXPECT_EQ(m >= c, false);
+
+  m.insert(ft::make_pair(4, 42));
+  EXPECT_EQ(m == c, false);
+  EXPECT_EQ(m != c, true);
+  EXPECT_EQ(m < c, false);
+  EXPECT_EQ(m > c, true);
+  EXPECT_EQ(m <= c, false);
+  EXPECT_EQ(m >= c, true);
+
+  m[4] = 4;
+  c[2] = 42;
+  EXPECT_EQ(m == c, false);
+  EXPECT_EQ(m != c, true);
+  EXPECT_EQ(m < c, true);
+  EXPECT_EQ(m > c, false);
+  EXPECT_EQ(m <= c, true);
+  EXPECT_EQ(m >= c, false);
+}
