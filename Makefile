@@ -5,12 +5,20 @@ CXX := clang++
 CXXFLAGS := -Wall -Wextra -Werror -MMD -MP -Wshadow -std=c++98 -pedantic-errors
 INCLUDES := -I./includes
 
-
 SRCDIR := srcs
 OBJDIR := objs
 SRCFILE := $(shell find $(SRCDIR) -name "*.cpp" -type f)
+# === object file of "all" source file, DON'T USE this directly. === #
 OBJS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.o))
 DEPS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.d))
+
+# === source dir for each target binary. these dir is child of $(SRCDIR) === #
+R_SRCDIR := run_src
+R_OBJS = $(filter $(OBJDIR)/$(R_SRCDIR)/%.o,$(OBJS))
+T_SRCDIR := tests
+T_OBJS = $(filter $(OBJDIR)/$(T_SRCDIR)/%.o,$(OBJS))
+B_SRCDIR := benchmark
+B_OBJS = $(filter $(OBJDIR)/$(B_SRCDIR)/%.o,$(OBJS))
 
 # ==== Path to makefile for google test ==== #
 GTESTDIR := googletest
@@ -23,7 +31,7 @@ ALIGN := $(shell tr ' ' '\n' <<<"$(SRCFILE)" | while read line; do echo \
 all: $(NAME)
 -include $(DEPS)
 
-$(NAME): $(OBJS)
+$(NAME): $(R_OBJS)
 	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o $@
 	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)$@$(NC)" 
 
@@ -34,17 +42,18 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$$(yes ' ' | head -n $$(expr $(ALIGN) - $$((`echo $< | wc -m` - 1))) | tr -d '\n') -> \
 	$(GRN)$@$(NC)"
 
-debug: CXXFLAGS += -g -fsanitize=integer -fsanitize=address -DDEBUG
-debug: re
+#make run -> main.cppにべた書きできるように
+run: all
+	./$(NAME)
 
-test: $(filter-out %main.o,$(OBJS))
+#make test -> 機能を確認するためのテスト。実行が速い。
+test:
 	$(MAKE) -C $(GTESTDIR)
 
-cav: $(filter-out %main.o,$(OBJS))
-	$(MAKE) -C $(GTESTDIR) cav
+#make bench -> ベンチマークテスト。実行時間が長いテストも含む。stdライブラリとftライブラリで比較できるように二つのバイナリを用意する。時間測定
 
-cmp: CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic-errors -Wshadow -DSTD
-cmp: $(filter-out %main.o,$(OBJS)) srcs/main.cpp
+stdbin: CXXFLAGS += -DSTD
+stdbin: $(filter-out %main.o,$(OBJS)) srcs/main.cpp
 	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o std
 	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)std$(NC)" 
 
@@ -59,13 +68,12 @@ clean:
 fclean: clean
 	$(RM) $(NAME) std
 
-re: fclean
-	$(MAKE) all
+re: fclean all
 
-run: all
-	./$(NAME)
+debug: CXXFLAGS += -g -fsanitize=integer -fsanitize=address -DDEBUG
+debug: re
 
-.PHONY: all clean fclean re debug test cmp run
+.PHONY: all clean fclean re debug test run
 
 # ==== Color define ==== #
 YLW := \033[33m
