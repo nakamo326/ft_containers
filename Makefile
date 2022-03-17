@@ -20,6 +20,9 @@ T_OBJS = $(filter $(OBJDIR)/$(T_SRCDIR)/%.o,$(OBJS))
 B_SRCDIR := benchmark
 B_OBJS = $(filter $(OBJDIR)/$(B_SRCDIR)/%.o,$(OBJS))
 
+STDBIN = stdbin
+FTBIN = ftbin
+
 # ==== Path to makefile for google test ==== #
 GTESTDIR := googletest
 
@@ -42,22 +45,28 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$$(yes ' ' | head -n $$(expr $(ALIGN) - $$((`echo $< | wc -m` - 1))) | tr -d '\n') -> \
 	$(GRN)$@$(NC)"
 
-# make run -> main.cppにべた書きできるように
 run: all
 	./$(NAME)
 
-# make test -> 機能を確認するためのテスト。実行が速い。
+test: $(T_OBJS)
+	:
 
 # google test run
 gtest:
 	$(MAKE) -C $(GTESTDIR)
 
-# make bench -> ベンチマークテスト。実行時間が長いテストも含む。stdライブラリとftライブラリで比較できるように二つのバイナリを用意する。時間測定
+# make bench -> ベンチマークテスト。実行時間が長いテストも含む。
+# stdライブラリとftライブラリで比較できるように二つのバイナリを用意する。
+bench: $(STDBIN) $(FTBIN)
+	echo hello
 
-stdbin: CXXFLAGS += -DSTD
-stdbin: $(filter-out %main.o,$(OBJS)) srcs/main.cpp
-	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o std
-	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)std$(NC)" 
+$(STDBIN): $(B_OBJS)
+	@$(CXX) $(CXXFLAGS) -DSTD $^ $(INCLUDES) -o $(STDBIN)
+	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)$(STDBIN)$(NC)" 
+
+$(FTBIN): $(B_OBJS)
+	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o $(FTBIN)
+	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)$(FTBIN)$(NC)" 
 
 .PHONY: ref
 ref:
@@ -68,14 +77,14 @@ clean:
 	$(RM) -r $(OBJDIR)
 
 fclean: clean
-	$(RM) $(NAME) std
+	$(RM) $(NAME) $(STDBIN) $(FTBIN)
 
 re: fclean all
 
 debug: CXXFLAGS += -g -fsanitize=integer -fsanitize=address -DDEBUG
 debug: re
 
-.PHONY: all clean fclean re debug test gtest run
+.PHONY: all clean fclean re debug test gtest run bench
 
 # ==== Color define ==== #
 YLW := \033[33m

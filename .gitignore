@@ -19,7 +19,8 @@ objs
 *.out
 *.app
 exe
-std
+stdbin
+ftbin
 
 # Google Test
 googletest/*
