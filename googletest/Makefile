@@ -3,7 +3,6 @@ NAME := tester
 SHELL := /bin/bash
 CXX := clang++
 CXXFLAGS = -std=c++11 -MMD -MP -DDEBUG -g -fsanitize=integer -fsanitize=address
-# CXXFLAGS = -std=c++11 -MMD -MP -DDEBUG -g -fsanitize=integer -fsanitize=address -fprofile-arcs -ftest-coverage
 LIBS := -lpthread
 INCLUDES := -I. -I../includes
 
@@ -13,17 +12,15 @@ GTEST_RELEASE := googletest-$(basename $(basename $(notdir $(GTEST_URL))))
 
 SRCDIR := ../srcs
 OBJDIR := ../objs
-MAIN_SUFFIX := main.cpp
-SRCFILE := $(filter-out %$(MAIN_SUFFIX),$(shell find $(SRCDIR) -name "*.cpp" -type f))
+SRCFILE := $(shell find $(SRCDIR) -name "*.cpp" -type f)
+# === object file of "all" source file, DON'T USE this directly. === #
 OBJS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.o))
 DEPS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.d))
 
-# ==== Path to test ==== #
-TESTDIR := ../tests
-TOBJDIR := tobjs
-TESTS := $(shell find $(TESTDIR) -name "*.cpp" -type f)
-TOBJS = $(patsubst $(TESTDIR)%,$(TOBJDIR)%,$(TESTS:.cpp=.o))
-TDEPS = $(patsubst $(TESTDIR)%,$(TOBJDIR)%,$(TESTS:.cpp=.d))
+# === source dir for each target binary. these dir is child of $(SRCDIR) === #
+T_SRCDIR := tests
+T_OBJS = $(filter $(OBJDIR)/$(T_SRCDIR)/%.o,$(OBJS))
+T_DEPS = $(filter $(OBJDIR)/$(T_SRCDIR)/%.d,$(OBJS))
 
 GTSRCDIR := gtest
 GTOBJDIR := gobjs
@@ -36,7 +33,7 @@ GTDEPS   := $(patsubst $(GTSRCDIR)%,$(GTOBJDIR)%,$(GTESTSRC:.cc=.d))
 all: $(NAME)
 -include $(DEPS) $(TDEPS) $(GTDEPS)
 
-$(NAME): $(OBJS) $(GTOBJS) $(TOBJS)
+$(NAME): $(GTOBJS) $(T_OBJS)
 	$(CXX) $(CXXFLAGS) $^ $(INCLUDES) $(LIBS) -o $@
 	./$@ || :
 	$(RM) $@
@@ -45,8 +42,8 @@ $(GTOBJDIR)/%.o: $(GTSRCDIR)/%.cc
 	@mkdir -p $(GTOBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
 
-$(TOBJDIR)/%.o: $(TESTDIR)/%.cpp
-	@mkdir -p $(TOBJDIR)/$(*D)
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(OBJDIR)/$(*D)
 	$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
 
 $(GTESTSRC): $(GTSRCDIR)
@@ -60,24 +57,13 @@ $(GTEST_RELEASE):
 	if [ ! -f $(notdir $(GTEST_URL)) ]; then curl -OL $(GTEST_URL); fi
 	tar -xzf $(notdir $(GTEST_URL)) $(GTEST_RELEASE) && $(RM) $(notdir $(GTEST_URL))
 
-cav: re
-	lcov -c -b . -d . -o cov_test.info
-	genhtml cov_test.info -o cov_test
-
 clean:
-	$(RM) $(TOBJS)
-	$(RM) -r $(TOBJDIR)
-	$(RM) -r cov_test.info
-	$(RM) -r tester
-	$(RM) -r *.gcda
-	$(RM) -r *.gcno
-	$(RM) -r *.info
-	$(RM) -r cov_test
+	$(RM) $(T_OBJS) $(T_DEPS)
+	$(RM) -r $(OBJDIR)/$(T_SRCDIR)
 
 fclean: clean
 	$(RM) $(NAME)
 
-re : fclean
-	$(MAKE) all
+re: fclean all
 
-.PHONY: all clean fclean re cav
+.PHONY: all clean fclean re

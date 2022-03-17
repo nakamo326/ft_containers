@@ -3,7 +3,7 @@ NAME := exe
 SHELL := /bin/bash
 CXX := clang++
 CXXFLAGS := -Wall -Wextra -Werror -MMD -MP -Wshadow -std=c++98 -pedantic-errors
-INCLUDES := -I./includes
+INCLUDES = -I./includes -I./$(GTESTDIR)
 
 SRCDIR := srcs
 OBJDIR := objs
@@ -37,20 +37,22 @@ $(NAME): $(R_OBJS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(OBJDIR)/$(*D)
-	@$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
+	$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
 	@echo -e "compile: $(MGN)$<$(NC)\
 	$$(yes ' ' | head -n $$(expr $(ALIGN) - $$((`echo $< | wc -m` - 1))) | tr -d '\n') -> \
 	$(GRN)$@$(NC)"
 
-#make run -> main.cppにべた書きできるように
+# make run -> main.cppにべた書きできるように
 run: all
 	./$(NAME)
 
-#make test -> 機能を確認するためのテスト。実行が速い。
-test:
+# make test -> 機能を確認するためのテスト。実行が速い。
+
+# google test run
+gtest:
 	$(MAKE) -C $(GTESTDIR)
 
-#make bench -> ベンチマークテスト。実行時間が長いテストも含む。stdライブラリとftライブラリで比較できるように二つのバイナリを用意する。時間測定
+# make bench -> ベンチマークテスト。実行時間が長いテストも含む。stdライブラリとftライブラリで比較できるように二つのバイナリを用意する。時間測定
 
 stdbin: CXXFLAGS += -DSTD
 stdbin: $(filter-out %main.o,$(OBJS)) srcs/main.cpp
@@ -73,7 +75,7 @@ re: fclean all
 debug: CXXFLAGS += -g -fsanitize=integer -fsanitize=address -DDEBUG
 debug: re
 
-.PHONY: all clean fclean re debug test run
+.PHONY: all clean fclean re debug test gtest run
 
 # ==== Color define ==== #
 YLW := \033[33m
