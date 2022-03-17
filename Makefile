@@ -12,7 +12,7 @@ SRCFILE := $(shell find $(SRCDIR) -name "*.cpp" -type f)
 OBJS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.o))
 DEPS = $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCFILE:.cpp=.d))
 
-# === source dir for each target binary. these dir is child of $(SRCDIR) === #
+# === source dir for each target binary. these dirs are children of $(SRCDIR) === #
 R_SRCDIR := run_src
 R_OBJS = $(filter $(OBJDIR)/$(R_SRCDIR)/%.o,$(OBJS))
 T_SRCDIR := tests
