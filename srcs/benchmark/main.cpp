@@ -1,11 +1,6 @@
-#include <vector>
-
-#include "benchmark.hpp"
-#include "vector.hpp"
+void vector_bench_entry(void);
 
 int main(void) {
-  NS::vector<int> v;
-  v.push_back(5);
-  std::cout << v[0] << std::endl;
+  vector_bench_entry();
   return 0;
 }

@@ -1,0 +1,10 @@
+#ifndef FT_CONTAINERS_INCLUDES_NAMESPACE_HPP
+#define FT_CONTAINERS_INCLUDES_NAMESPACE_HPP
+
+#ifdef STD
+#define NS std
+#else
+#define NS ft
+#endif
+
+#endif /* FT_CONTAINERS_INCLUDES_NAMESPACE_HPP */

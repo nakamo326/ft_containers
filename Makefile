@@ -40,7 +40,7 @@ $(NAME): $(R_OBJS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(OBJDIR)/$(*D)
-	$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
+	@$(CXX) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
 	@echo -e "compile: $(MGN)$<$(NC)\
 	$$(yes ' ' | head -n $$(expr $(ALIGN) - $$((`echo $< | wc -m` - 1))) | tr -d '\n') -> \
 	$(GRN)$@$(NC)"
@@ -48,25 +48,29 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 run: all
 	./$(NAME)
 
+# stdライブラリとftライブラリで比較できるように二つのバイナリを用意する。
 test: $(T_OBJS)
 	:
+
+$(STDBIN): $(T_OBJS)
+	@$(CXX) $(CXXFLAGS) -DSTD $^ $(INCLUDES) -o $(STDBIN)
+	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)$(STDBIN)$(NC)" 
+
+$(FTBIN): $(T_OBJS)
+	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o $(FTBIN)
+	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)$(FTBIN)$(NC)" 
 
 # google test run
 gtest:
 	$(MAKE) -C $(GTESTDIR)
 
 # make bench -> ベンチマークテスト。実行時間が長いテストも含む。
-# stdライブラリとftライブラリで比較できるように二つのバイナリを用意する。
-bench: $(STDBIN) $(FTBIN)
-	echo hello
+bench: $(B_OBJS)
+	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o bench
+	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)bench$(NC)" 
+	./bench
+	$(RM) bench
 
-$(STDBIN): $(B_OBJS)
-	@$(CXX) $(CXXFLAGS) -DSTD $^ $(INCLUDES) -o $(STDBIN)
-	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)$(STDBIN)$(NC)" 
-
-$(FTBIN): $(B_OBJS)
-	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o $(FTBIN)
-	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)$(FTBIN)$(NC)" 
 
 .PHONY: ref
 ref:
@@ -84,7 +88,7 @@ re: fclean all
 debug: CXXFLAGS += -g -fsanitize=integer -fsanitize=address -DDEBUG
 debug: re
 
-.PHONY: all clean fclean re debug test gtest run bench
+.PHONY: all clean fclean re debug test gtest run
 
 # ==== Color define ==== #
 YLW := \033[33m
