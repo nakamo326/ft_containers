@@ -29,17 +29,13 @@ void print_map(Map& m) {
 }
 
 int main() {
-  std::map<int, int> m;
-  m[0] = 42;
-  m[5] = 5;
-  m[2] = 2;
-  m[3] = 3;
+  std::vector<int> f(3546, 42);
 
-  ft::map<int, int> ftm;
-  // ftm.insert(ft::make_pair(1, 42));
-  // ftm.insert(ft::make_pair(3, 42));
-  ftm.insert(ftm.end(), ft::make_pair(4, 57));
-  print_map(ftm);
+  std::vector<int> v(f.begin(), f.begin() + 1500);
+  std::cout << v.size() << std::endl;
+  std::vector<int> vv(f.begin(), f.end());
+  std::cout << vv.size() << std::endl;
+
   return 0;
 }
 
