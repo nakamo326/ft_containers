@@ -160,12 +160,192 @@ public:
       typename Alloc::template rebind<_RBnode<Value> >::other node_allocator;
 
 private:
+  node_pointer   header_;
+  node_pointer   root_;
+  node_pointer   begin_;
+  size_t         size_;
+  Comp           comp_;
+  node_allocator alloc_;
+
+  // === public member function ===
+public:
+  // == constructor / destructor ==
+  RBtree(const Comp& comp = Comp(), const Alloc& alloc = Alloc())
+      : header_(NULL),
+        root_(NULL),
+        begin_(NULL),
+        size_(0),
+        comp_(comp),
+        alloc_(alloc) {
+    initHeader();
+    begin_ = header_;
+  }
+
+  template <typename InputIt>
+  RBtree(InputIt first, InputIt last, const Comp& comp,
+         const node_allocator& alloc)
+      : RBtree(comp, alloc) {
+    insert(first, last);
+  }
+
+  RBtree(const _Self& other)
+      : RBtree(other.begin(), other.end(), Comp(), node_allocator()) {}
+
+  ~RBtree() { destroyTree(header_); }
+
+  // == assignation ==
+  RBtree& operator=(const RBtree& other) {
+    if (this == &other)
+      return *this;
+    clear();
+    comp_  = other.comp_;
+    alloc_ = other.alloc_;
+    insert(other.begin(), other.end());
+    return *this;
+  }
+
+  // == iterators ==
+  iterator       begin() { return iterator(begin_); }
+  const_iterator begin() const { return const_iterator(begin_); }
+  iterator       end() { return iterator(header_); }
+  const_iterator end() const { return const_iterator(header_); }
+
+  // == capacity ==
+  size_type size() const { return size_; }
+  size_type max_size() const {
+    return std::min<size_type>(alloc_.max_size(),
+                               std::numeric_limits<difference_type>::max());
+  }
+
+  // == modifiers ==
+  ft::pair<iterator, bool> insert(const value_type& value) {
+    node_pointer res = searchInsertPosition(getKeyOfValue(value));
+    return insertWithPos(value, res);
+  }
+
+  iterator insert(iterator position, const value_type& val) {
+    pair<iterator, node_pointer> res = searchKeyWithHint(val, position);
+    if (res.second == NULL) {
+      return insertWithPos(val, res.first.base()).first;
+    }
+    return res.first;
+  }
+
+  template <typename InputIt>
+  void insert(InputIt first, InputIt last) {
+    for (; first != last; first++) {
+      insert(*first);
+    }
+  }
+
+  void erase(iterator position) {
+    if (position == end())
+      return;
+    if (position.base() == begin_)
+      begin_ = begin_->parent_;
+    deleteNode(position.base());
+  }
+
+  size_type erase(const key_type& key) {
+    iterator target = find(key);
+    if (target == end())
+      return 0;
+    erase(target);
+    return 1;
+  }
+
+  void erase(const_iterator first, const_iterator last) {
+    while (first != last) {
+      erase(first++);
+    }
+  }
+
+  void swap(RBtree& x) {
+    std::swap(header_, x.header_);
+    std::swap(root_, x.root_);
+    std::swap(begin_, x.begin_);
+    std::swap(size_, x.size_);
+  }
+  void clear() {
+    destroyTree(header_);
+    root_ = NULL;
+    initHeader();
+    begin_ = header_;
+    size_  = 0;
+  }
+
+  // == lookup ==
+  size_type count(const Key& key) const {
+    node_pointer res = searchKey(key, root_);
+    if (res == NULL)
+      return 0;
+    return 1;
+  }
+
+  iterator find(const Key& key) {
+    node_pointer res = searchKey(key, root_);
+    if (res == NULL)
+      return (end());
+    return iterator(res);
+  }
+
+  const_iterator find(const Key& key) const {
+    node_pointer res = searchKey(key, root_);
+    if (res == NULL)
+      return (end());
+    return const_iterator(res);
+  }
+
+  ft::pair<iterator, iterator> equal_range(const Key& key) {
+    ft::pair<node_pointer, node_pointer> res = equal_range_helper(key);
+    return ft::make_pair(iterator(res.first), iterator(res.second));
+  }
+
+  ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const {
+    ft::pair<node_pointer, node_pointer> res = equal_range_helper(key);
+    return ft::make_pair(const_iterator(res.first), const_iterator(res.second));
+  }
+
+  iterator lower_bound(const Key& key) {
+    node_pointer res = lower_bound_helper(root_, header_, key);
+    return iterator(res);
+  }
+
+  const_iterator lower_bound(const Key& key) const {
+    node_pointer res = lower_bound_helper(root_, header_, key);
+    return const_iterator(res);
+  }
+
+  iterator upper_bound(const Key& key) {
+    node_pointer res = upper_bound_helper(root_, header_, key);
+    return iterator(res);
+  }
+  const_iterator upper_bound(const Key& key) const {
+    node_pointer res = upper_bound_helper(root_, header_, key);
+    return const_iterator(res);
+  }
+
+  friend bool operator==(const RBtree& lhs, const RBtree& rhs) {
+    return lhs.size() == rhs.size() &&
+           ft::equal(lhs.begin(), lhs.end(), rhs.begin());
+  }
+
+  friend bool operator<(const RBtree& lhs, const RBtree& rhs) {
+    return ft::lexicographical_compare(
+        lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+  }
+
+private:
   // == accessor ==
   bool isBlack(node_pointer node) {
     return node == NULL || node->color_ == e_black;
   }
 
-  bool isRed(node_pointer node) { return node->color_ == e_red; }
+  bool isRed(node_pointer node) {
+    if (node == NULL)
+      return false;
+    return node->color_ == e_red;
+  }
 
   void setBlack(node_pointer node) {
     if (node == NULL)
@@ -654,182 +834,6 @@ public:
       return false;
     }
     return checkConsecutiveRed(root_);
-  }
-
-private:
-  node_pointer   header_;
-  node_pointer   root_;
-  node_pointer   begin_;
-  size_t         size_;
-  Comp           comp_;
-  node_allocator alloc_;
-
-  // === public member function ===
-public:
-  // == constructor / destructor ==
-  RBtree(const Comp& comp = Comp(), const Alloc& alloc = Alloc())
-      : header_(NULL),
-        root_(NULL),
-        begin_(NULL),
-        size_(0),
-        comp_(comp),
-        alloc_(alloc) {
-    initHeader();
-    begin_ = header_;
-  }
-
-  template <typename InputIt>
-  RBtree(InputIt first, InputIt last, const Comp& comp,
-         const node_allocator& alloc)
-      : RBtree(comp, alloc) {
-    insert(first, last);
-  }
-
-  RBtree(const _Self& other)
-      : RBtree(other.begin(), other.end(), Comp(), node_allocator()) {}
-
-  ~RBtree() { destroyTree(header_); }
-
-  // == assignation ==
-  RBtree& operator=(const RBtree& other) {
-    if (this == &other)
-      return *this;
-    clear();
-    comp_  = other.comp_;
-    alloc_ = other.alloc_;
-    insert(other.begin(), other.end());
-    return *this;
-  }
-
-  // == iterators ==
-  iterator       begin() { return iterator(begin_); }
-  const_iterator begin() const { return const_iterator(begin_); }
-  iterator       end() { return iterator(header_); }
-  const_iterator end() const { return const_iterator(header_); }
-
-  // == capacity ==
-  size_type size() const { return size_; }
-  size_type max_size() const {
-    return std::min<size_type>(alloc_.max_size(),
-                               std::numeric_limits<difference_type>::max());
-  }
-
-  // == modifiers ==
-  ft::pair<iterator, bool> insert(const value_type& value) {
-    node_pointer res = searchInsertPosition(getKeyOfValue(value));
-    return insertWithPos(value, res);
-  }
-
-  iterator insert(iterator position, const value_type& val) {
-    pair<iterator, node_pointer> res = searchKeyWithHint(val, position);
-    if (res.second == NULL) {
-      return insertWithPos(val, res.first.base()).first;
-    }
-    return res.first;
-  }
-
-  template <typename InputIt>
-  void insert(InputIt first, InputIt last) {
-    for (; first != last; first++) {
-      insert(*first);
-    }
-  }
-
-  void erase(iterator position) {
-    if (position == end())
-      return;
-    if (position.base() == begin_)
-      begin_ = begin_->parent_;
-    deleteNode(position.base());
-  }
-
-  size_type erase(const key_type& key) {
-    iterator target = find(key);
-    if (target == end())
-      return 0;
-    erase(target);
-    return 1;
-  }
-
-  void erase(const_iterator first, const_iterator last) {
-    while (first != last) {
-      erase(first++);
-    }
-  }
-
-  void swap(RBtree& x) {
-    std::swap(header_, x.header_);
-    std::swap(root_, x.root_);
-    std::swap(begin_, x.begin_);
-    std::swap(size_, x.size_);
-  }
-  void clear() {
-    destroyTree(header_);
-    root_ = NULL;
-    initHeader();
-    begin_ = header_;
-    size_  = 0;
-  }
-
-  // == lookup ==
-  size_type count(const Key& key) const {
-    node_pointer res = searchKey(key, root_);
-    if (res == NULL)
-      return 0;
-    return 1;
-  }
-
-  iterator find(const Key& key) {
-    node_pointer res = searchKey(key, root_);
-    if (res == NULL)
-      return (end());
-    return iterator(res);
-  }
-
-  const_iterator find(const Key& key) const {
-    node_pointer res = searchKey(key, root_);
-    if (res == NULL)
-      return (end());
-    return const_iterator(res);
-  }
-
-  ft::pair<iterator, iterator> equal_range(const Key& key) {
-    ft::pair<node_pointer, node_pointer> res = equal_range_helper(key);
-    return ft::make_pair(iterator(res.first), iterator(res.second));
-  }
-
-  ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const {
-    ft::pair<node_pointer, node_pointer> res = equal_range_helper(key);
-    return ft::make_pair(const_iterator(res.first), const_iterator(res.second));
-  }
-
-  iterator lower_bound(const Key& key) {
-    node_pointer res = lower_bound_helper(root_, header_, key);
-    return iterator(res);
-  }
-
-  const_iterator lower_bound(const Key& key) const {
-    node_pointer res = lower_bound_helper(root_, header_, key);
-    return const_iterator(res);
-  }
-
-  iterator upper_bound(const Key& key) {
-    node_pointer res = upper_bound_helper(root_, header_, key);
-    return iterator(res);
-  }
-  const_iterator upper_bound(const Key& key) const {
-    node_pointer res = upper_bound_helper(root_, header_, key);
-    return const_iterator(res);
-  }
-
-  friend bool operator==(const RBtree& lhs, const RBtree& rhs) {
-    return lhs.size() == rhs.size() &&
-           ft::equal(lhs.begin(), lhs.end(), rhs.begin());
-  }
-
-  friend bool operator<(const RBtree& lhs, const RBtree& rhs) {
-    return ft::lexicographical_compare(
-        lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
   }
 };
 
