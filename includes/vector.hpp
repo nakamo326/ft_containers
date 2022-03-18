@@ -36,12 +36,7 @@ private:
   pointer        cap_;
   allocator_type alloc_;
 
-#ifdef DEBUG
-public:
-#else
 private:
-#endif
-
   void      vallocate(size_type n);
   void      vdeallocate();
   size_type recommend(size_type new_size) const;
