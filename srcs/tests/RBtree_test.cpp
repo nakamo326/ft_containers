@@ -63,23 +63,23 @@ typedef ft::RBtree<int, ft::pair<int, int>, ft::_Select1st<ft::pair<int, int>>,
 TEST(RBtreeTest, BeginNodeTest) {
   tree_type tree;
 
-  EXPECT_EQ(tree.getBeginNode(), tree.begin().base());
+  EXPECT_EQ(tree.get_begin_node(), tree.begin().base());
   tree.insert(ft::make_pair(10, 42));
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 10);
+  EXPECT_EQ(tree.get_begin_node()->value_.first, 10);
   tree.erase(10);
-  EXPECT_EQ(tree.getBeginNode(), tree.begin().base());
+  EXPECT_EQ(tree.get_begin_node(), tree.begin().base());
   tree.insert(ft::make_pair(9, 42));
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 9);
+  EXPECT_EQ(tree.get_begin_node()->value_.first, 9);
   tree.insert(ft::make_pair(8, 42));
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 8);
+  EXPECT_EQ(tree.get_begin_node()->value_.first, 8);
   tree.erase(8);
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 9);
+  EXPECT_EQ(tree.get_begin_node()->value_.first, 9);
   tree.insert(ft::make_pair(7, 42));
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 7);
+  EXPECT_EQ(tree.get_begin_node()->value_.first, 7);
   tree.insert(ft::make_pair(6, 42));
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 6);
+  EXPECT_EQ(tree.get_begin_node()->value_.first, 6);
   tree.erase(9);
-  EXPECT_EQ(tree.getBeginNode()->value_.first, 6);
+  EXPECT_EQ(tree.get_begin_node()->value_.first, 6);
 }
 
 TEST(RBtreeTest, positionInsert) {
@@ -98,7 +98,7 @@ TEST(RBtreeTest, positionInsert) {
       } else {
         tree.insert(tree.end(), ft::make_pair(tmp, 0));
       }
-      EXPECT_EQ(tree.isValidTree(), true);
+      EXPECT_EQ(tree.is_valid_tree(), true);
       if (tree.count(tmp))
         size++;
     }
