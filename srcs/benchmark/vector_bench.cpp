@@ -269,6 +269,40 @@ void vec_max_size_ft(void) {
   }
 }
 
+void vec_reserve_std(void) {
+  std::vector<int> v(1000);
+  for (size_t i = 0; i < 1000; i++) {
+    v[i] = i;
+  }
+
+  for (size_t i = 0; i < 100000; i++) {
+    v.reserve(i);
+  }
+}
+void vec_reserve_ft(void) {
+  ft::vector<int> v(1000);
+  for (size_t i = 0; i < 1000; i++) {
+    v[i] = i;
+  }
+
+  for (size_t i = 0; i < 100000; i++) {
+    v.reserve(i);
+  }
+}
+
+void vec_clear_std(void) {
+  for (size_t i = 0; i < 50000; i++) {
+    std::vector<int> v(i);
+    pre_v.clear();
+  }
+}
+void vec_clear_ft(void) {
+  for (size_t i = 0; i < 50000; i++) {
+    ft::vector<int> v(i);
+    v.clear();
+  }
+}
+
 // ======================================================
 void vector_bench_entry(void) {
   for (size_t i = 0; i < 100000; i++) {
@@ -293,4 +327,6 @@ void vector_bench_entry(void) {
   Benchmark("size", vec_size_std, vec_size_ft);
   Benchmark("capacity", vec_capacity_std, vec_capacity_ft);
   Benchmark("max_size", vec_max_size_std, vec_max_size_ft);
+  Benchmark("reserve", vec_reserve_std, vec_reserve_ft);
+  Benchmark("clear", vec_clear_std, vec_clear_ft);
 }
