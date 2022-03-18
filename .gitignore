@@ -21,6 +21,7 @@ objs
 exe
 stdbin
 ftbin
+benchmark
 
 # Google Test
 googletest/*

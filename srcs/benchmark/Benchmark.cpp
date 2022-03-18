@@ -33,11 +33,11 @@ Benchmark::Benchmark(const char *test_name, void (*std_func)(void),
 
 Benchmark::~Benchmark() {
   double std_time, ft_time, times;
-  std::cout << GRN "[ RUN      ]" NC << test_name_ << std::endl;
+  std::cout << GRN "[ RUN      ] " NC << test_name_ << std::endl;
   std_time = run_bench(std_func_);
   ft_time  = run_bench(ft_func_);
   times    = ft_time / std_time;
-  std::cout << GRN "[       OK ]" NC << test_name_;
+  std::cout << GRN "[       OK ] " NC << test_name_;
   std::cout << BLU " (" << std::setprecision(2) << times << "x)" << std::endl;
 }
 
