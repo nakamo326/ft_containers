@@ -212,24 +212,24 @@ public:
     return begin_[pos];
   }
 
-  reference       front() { return *begin_; };
-  const_reference front() const { return *begin_; };
-  reference       back() { return *(end_ - 1); };
-  const_reference back() const { return *(end_ - 1); };
+  reference       front() { return *begin_; }
+  const_reference front() const { return *begin_; }
+  reference       back() { return *(end_ - 1); }
+  const_reference back() const { return *(end_ - 1); }
 
   // == iterator ==
-  iterator               begin() { return iterator(begin_); };
-  const_iterator         begin() const { return const_iterator(begin_); };
-  iterator               end() { return iterator(end_); };
-  const_iterator         end() const { return const_iterator(end_); };
-  reverse_iterator       rbegin() { return reverse_iterator(end()); };
+  iterator               begin() { return iterator(begin_); }
+  const_iterator         begin() const { return const_iterator(begin_); }
+  iterator               end() { return iterator(end_); }
+  const_iterator         end() const { return const_iterator(end_); }
+  reverse_iterator       rbegin() { return reverse_iterator(end()); }
   const_reverse_iterator rbegin() const {
     return const_reverse_iterator(end());
-  };
-  reverse_iterator       rend() { return reverse_iterator(begin()); };
+  }
+  reverse_iterator       rend() { return reverse_iterator(begin()); }
   const_reverse_iterator rend() const {
     return const_reverse_iterator(begin());
-  };
+  }
 
   // == capacity ==
   bool      empty() const { return begin_ == end_; }
