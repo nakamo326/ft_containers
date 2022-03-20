@@ -20,9 +20,6 @@ double timespec_diff(struct timespec *start, struct timespec *stop) {
   return result.tv_sec * 1000 + (double)result.tv_nsec / 1000000;
 }
 
-// 二つのテスト関数を受け取るクラス,（プラステスト名）
-// デストラクタで時間を測定しながら二つの関数を実行
-
 Benchmark::Benchmark() {}
 
 Benchmark::Benchmark(const Benchmark &x) { (void)x; }
