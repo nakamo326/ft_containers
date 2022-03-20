@@ -378,6 +378,7 @@ template <class T, class Alloc>
 bool operator<=(const vector<T, Alloc>& __x, const vector<T, Alloc>& __y) {
   return !(__y < __x);
 }
+
 template <class T, class Alloc>
 void swap(vector<T, Alloc>& __x, vector<T, Alloc>& __y) {
   __x.swap(__y);

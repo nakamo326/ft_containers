@@ -2,7 +2,7 @@ NAME := exe
 
 SHELL := /bin/bash
 CXX := clang++
-CXXFLAGS := -Wall -Wextra -Werror -MMD -MP -Wshadow -std=c++98 -pedantic-errors
+CXXFLAGS := -Wall -Wextra -Werror -MMD -MP -Wshadow -std=c++98 -pedantic-errors -O3
 INCLUDES = -I./includes -I./$(GTESTDIR)
 
 SRCDIR := srcs
