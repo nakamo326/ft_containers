@@ -6,69 +6,42 @@
 std::vector<int> pre_v(100000);
 ft::vector<int>  pre_f(100000);
 
-void vec_construct_value_std(void) {
+template <typename T>
+void vec_construct_value(void) {
   for (size_t i = 0; i < 100000; i++) {
-    std::vector<int> v(i, 42);
-  }
-}
-void vec_construct_value_ft(void) {
-  for (size_t i = 0; i < 100000; i++) {
-    ft::vector<int> v(i, 42);
+    T v(i, 42);
   }
 }
 
-void vec_construct_iter_std(void) {
+template <typename T>
+void vec_construct_iter(void) {
   for (size_t i = 0; i < 100000; i++) {
-    std::vector<int> v(pre_v.begin(), pre_v.end());
-  }
-}
-void vec_construct_iter_ft(void) {
-  for (size_t i = 0; i < 100000; i++) {
-    ft::vector<int> v(pre_v.begin(), pre_v.end());
+    T v(pre_v.begin(), pre_v.end());
   }
 }
 
-void vec_simple_assign_std(void) {
-  std::vector<int> v;
-
-  for (size_t i = 0; i < 100000; i++) {
-    v.assign(i, 42);
-  }
-}
-void vec_simple_assign_ft(void) {
-  ft::vector<int> v;
+template <typename T>
+void vec_simple_assign(void) {
+  T v;
 
   for (size_t i = 0; i < 100000; i++) {
     v.assign(i, 42);
   }
 }
 
-void vec_range_assign_std(void) {
-  std::vector<int> v;
-
-  for (size_t i = 0; i < 100000; i++) {
-    v.assign(pre_v.begin(), pre_v.end());
-  }
-}
-void vec_range_assign_ft(void) {
-  ft::vector<int> v;
+template <typename T>
+void vec_range_assign(void) {
+  T v;
 
   for (size_t i = 0; i < 100000; i++) {
     v.assign(pre_v.begin(), pre_v.end());
   }
 }
 
-void vec_get_allocator_std(void) {
-  std::vector<int>                 v;
-  std::vector<int>::allocator_type a;
-
-  for (size_t i = 0; i < 10000000; i++) {
-    a = v.get_allocator();
-  }
-}
-void vec_get_allocator_ft(void) {
-  ft::vector<int>                 v;
-  ft::vector<int>::allocator_type a;
+template <typename T>
+void vec_get_allocator(void) {
+  T                          v;
+  typename T::allocator_type a;
 
   for (size_t i = 0; i < 10000000; i++) {
     a = v.get_allocator();
@@ -271,18 +244,9 @@ void vec_max_size_ft(void) {
   }
 }
 
-void vec_reserve_std(void) {
-  std::vector<int> v(1000);
-  for (size_t i = 0; i < 1000; i++) {
-    v[i] = i;
-  }
-
-  for (size_t i = 0; i < 100000; i++) {
-    v.reserve(i);
-  }
-}
-void vec_reserve_ft(void) {
-  ft::vector<int> v(1000);
+template <typename T>
+void vec_reserve(void) {
+  T v(1000);
   for (size_t i = 0; i < 1000; i++) {
     v[i] = i;
   }
@@ -292,42 +256,35 @@ void vec_reserve_ft(void) {
   }
 }
 
-void vec_clear_std(void) {
+template <typename T>
+void vec_clear(void) {
   for (size_t i = 0; i < 50000; i++) {
-    std::vector<int> v(i);
-    v.clear();
-  }
-}
-void vec_clear_ft(void) {
-  for (size_t i = 0; i < 50000; i++) {
-    ft::vector<int> v(i);
+    T v(i);
     v.clear();
   }
 }
 
-void vec_insert_std(void) {
-  std::vector<int> v;
-  for (size_t i = 0; i < 50000; i++) {
-    v.insert(v.begin(), i);
-  }
-}
-void vec_insert_ft(void) {
-  ft::vector<int> v;
+template <typename T>
+void vec_insert(void) {
+  T v;
   for (size_t i = 0; i < 50000; i++) {
     v.insert(v.begin(), i);
   }
 }
 
-void vec_insert_count_std(void) {
-  std::vector<int> v;
-  for (size_t i = 0; i < 1000; i++) {
+template <typename T>
+void vec_insert_count(void) {
+  T v;
+  for (size_t i = 0; i < 2000; i++) {
     v.insert(v.begin(), i, i);
   }
 }
-void vec_insert_count_ft(void) {
-  ft::vector<int> v;
-  for (size_t i = 0; i < 1000; i++) {
-    v.insert(v.begin(), i, i);
+
+template <typename T>
+void vec_insert_iter(void) {
+  T v;
+  for (size_t i = 0; i < 200; i++) {
+    v.insert(v.begin(), pre_v.begin(), pre_v.end());
   }
 }
 
@@ -338,11 +295,21 @@ void vector_bench_entry(void) {
     pre_f[i] = i;
   }
 
-  Benchmark("constructValue", vec_construct_value_std, vec_construct_value_ft);
-  Benchmark("constructIter", vec_construct_iter_std, vec_construct_iter_ft);
-  Benchmark("simpleAssign", vec_simple_assign_std, vec_simple_assign_ft);
-  Benchmark("rangeAssign", vec_range_assign_std, vec_range_assign_ft);
-  Benchmark("getAllocator", vec_get_allocator_std, vec_get_allocator_ft);
+  Benchmark("constructValue",
+            vec_construct_value<std::vector<int> >,
+            vec_construct_value<ft::vector<int> >);
+  Benchmark("constructIter",
+            vec_construct_iter<std::vector<int> >,
+            vec_construct_iter<ft::vector<int> >);
+  Benchmark("simpleAssign",
+            vec_simple_assign<std::vector<int> >,
+            vec_simple_assign<ft::vector<int> >);
+  Benchmark("rangeAssign",
+            vec_range_assign<std::vector<int> >,
+            vec_range_assign<ft::vector<int> >);
+  Benchmark("getAllocator",
+            vec_get_allocator<std::vector<int> >,
+            vec_get_allocator<ft::vector<int> >);
   Benchmark("arrayOperator", vec_array_op_std, vec_array_op_ft);
   Benchmark("at", vec_at_std, vec_at_ft);
   Benchmark("front", vec_front_std, vec_front_ft);
@@ -355,8 +322,15 @@ void vector_bench_entry(void) {
   Benchmark("size", vec_size_std, vec_size_ft);
   Benchmark("capacity", vec_capacity_std, vec_capacity_ft);
   Benchmark("max_size", vec_max_size_std, vec_max_size_ft);
-  Benchmark("reserve", vec_reserve_std, vec_reserve_ft);
-  Benchmark("clear", vec_clear_std, vec_clear_ft);
-  Benchmark("insert", vec_insert_std, vec_insert_ft);
-  Benchmark("insertCount", vec_insert_count_std, vec_insert_count_ft);
+  Benchmark(
+      "reserve", vec_reserve<std::vector<int> >, vec_reserve<ft::vector<int> >);
+  Benchmark("clear", vec_clear<std::vector<int> >, vec_clear<ft::vector<int> >);
+  Benchmark(
+      "insert", vec_insert<std::vector<int> >, vec_insert<ft::vector<int> >);
+  Benchmark("insertCount",
+            vec_insert_count<std::vector<int> >,
+            vec_insert_count<ft::vector<int> >);
+  Benchmark("insertIter",
+            vec_insert_iter<std::vector<int> >,
+            vec_insert_iter<ft::vector<int> >);
 }
