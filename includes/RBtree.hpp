@@ -184,12 +184,28 @@ public:
   template <typename InputIt>
   RBtree(InputIt first, InputIt last, const Comp& comp,
          const node_allocator& alloc)
-      : RBtree(comp, alloc) {
+      : header_(NULL),
+        root_(NULL),
+        begin_(NULL),
+        size_(0),
+        comp_(comp),
+        alloc_(alloc) {
+    init_header();
+    begin_ = header_;
     insert(first, last);
   }
 
   RBtree(const _Self& other)
-      : RBtree(other.begin(), other.end(), Comp(), node_allocator()) {}
+      : header_(NULL),
+        root_(NULL),
+        begin_(NULL),
+        size_(0),
+        comp_(Comp()),
+        alloc_(node_allocator()) {
+    init_header();
+    begin_ = header_;
+    insert(other.begin(), other.end());
+  }
 
   ~RBtree() { destroy_tree(header_); }
 
