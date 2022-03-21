@@ -1,5 +1,6 @@
 #include <vector>
 
+#include "Color.hpp"
 #include "benchmark/Benchmark.hpp"
 #include "vector.hpp"
 
@@ -334,7 +335,7 @@ void vector_bench_entry(void) {
     pre_sv[i] = i;
     pre_fv[i] = i;
   }
-
+  std::cout << GRN "[ -------- ] " NC << "Vector" << std::endl;
   Benchmark("constructValue",
             vec_construct_value<std::vector<int> >,
             vec_construct_value<ft::vector<int> >);
