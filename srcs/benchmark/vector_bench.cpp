@@ -288,6 +288,46 @@ void vec_insert_iter(void) {
   }
 }
 
+template <typename T>
+void vec_erase(void) {
+  T v(100000);
+  for (size_t i = 0; i < 100000; i++) {
+    v.erase(v.begin());
+  }
+}
+
+template <typename T>
+void vec_erase_iter(void) {
+  T v(100000);
+  for (size_t i = 0; i < 20000; i++) {
+    v.erase(v.begin(), v.begin() + 5);
+  }
+}
+
+template <typename T>
+void vec_push_back(void) {
+  T v;
+  for (size_t i = 0; i < 50000; i++) {
+    v.push_back(i);
+  }
+}
+
+template <typename T>
+void vec_pop_back(void) {
+  T v(1000000, 42);
+  for (size_t i = 0; i < 1000000; i++) {
+    v.pop_back();
+  }
+}
+
+template <typename T>
+void vec_resize(void) {
+  T v;
+  for (size_t i = 1; i < 1000; i++) {
+    v.resize(i * 100);
+  }
+}
+
 // ======================================================
 void vector_bench_entry(void) {
   for (size_t i = 0; i < 100000; i++) {
@@ -333,4 +373,16 @@ void vector_bench_entry(void) {
   Benchmark("insertIter",
             vec_insert_iter<std::vector<int> >,
             vec_insert_iter<ft::vector<int> >);
+  Benchmark("erase", vec_erase<std::vector<int> >, vec_erase<ft::vector<int> >);
+  Benchmark("eraseIter",
+            vec_erase_iter<std::vector<int> >,
+            vec_erase_iter<ft::vector<int> >);
+  Benchmark("pushback",
+            vec_push_back<std::vector<int> >,
+            vec_push_back<ft::vector<int> >);
+  Benchmark("popback",
+            vec_pop_back<std::vector<int> >,
+            vec_pop_back<ft::vector<int> >);
+  Benchmark(
+      "resize", vec_resize<std::vector<int> >, vec_resize<ft::vector<int> >);
 }
