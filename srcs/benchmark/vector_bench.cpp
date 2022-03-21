@@ -3,8 +3,8 @@
 #include "benchmark/Benchmark.hpp"
 #include "vector.hpp"
 
-std::vector<int> pre_v(100000);
-ft::vector<int>  pre_f(100000);
+std::vector<int> pre_sv(100000);
+ft::vector<int>  pre_fv(100000);
 
 template <typename T>
 void vec_construct_value(void) {
@@ -16,7 +16,7 @@ void vec_construct_value(void) {
 template <typename T>
 void vec_construct_iter(void) {
   for (size_t i = 0; i < 100000; i++) {
-    T v(pre_v.begin(), pre_v.end());
+    T v(pre_sv.begin(), pre_sv.end());
   }
 }
 
@@ -34,7 +34,7 @@ void vec_range_assign(void) {
   T v;
 
   for (size_t i = 0; i < 100000; i++) {
-    v.assign(pre_v.begin(), pre_v.end());
+    v.assign(pre_sv.begin(), pre_sv.end());
   }
 }
 
@@ -53,7 +53,7 @@ void vec_array_op_std(void) {
 
   for (size_t j = 0; j < 10; j++) {
     for (size_t i = 0; i < 1000000; i++) {
-      n = pre_v[i];
+      n = pre_sv[i];
     }
   }
 }
@@ -62,7 +62,7 @@ void vec_array_op_ft(void) {
 
   for (size_t j = 0; j < 10; j++) {
     for (size_t i = 0; i < 1000000; i++) {
-      n = pre_f[i];
+      n = pre_fv[i];
     }
   }
 }
@@ -72,7 +72,7 @@ void vec_at_std(void) {
 
   for (size_t j = 0; j < 10; j++) {
     for (size_t i = 0; i < 100000; i++) {
-      n = pre_v.at(i);
+      n = pre_sv.at(i);
     }
   }
 }
@@ -81,7 +81,7 @@ void vec_at_ft(void) {
 
   for (size_t j = 0; j < 10; j++) {
     for (size_t i = 0; i < 100000; i++) {
-      n = pre_f.at(i);
+      n = pre_fv.at(i);
     }
   }
 }
@@ -90,14 +90,14 @@ void vec_front_std(void) {
   int n;
 
   for (size_t i = 0; i < 10000000; i++) {
-    n = pre_v.front();
+    n = pre_sv.front();
   }
 }
 void vec_front_ft(void) {
   int n;
 
   for (size_t i = 0; i < 10000000; i++) {
-    n = pre_f.front();
+    n = pre_fv.front();
   }
 }
 
@@ -105,14 +105,14 @@ void vec_back_std(void) {
   int n;
 
   for (size_t i = 0; i < 10000000; i++) {
-    n = pre_v.back();
+    n = pre_sv.back();
   }
 }
 void vec_back_ft(void) {
   int n;
 
   for (size_t i = 0; i < 10000000; i++) {
-    n = pre_f.back();
+    n = pre_fv.back();
   }
 }
 
@@ -120,14 +120,14 @@ void vec_begin_std(void) {
   std::vector<int>::iterator it;
 
   for (size_t i = 0; i < 100000000; i++) {
-    it = pre_v.begin();
+    it = pre_sv.begin();
   }
 }
 void vec_begin_ft(void) {
   ft::vector<int>::iterator it;
 
   for (size_t i = 0; i < 100000000; i++) {
-    it = pre_f.begin();
+    it = pre_fv.begin();
   }
 }
 
@@ -135,14 +135,14 @@ void vec_end_std(void) {
   std::vector<int>::iterator it;
 
   for (size_t i = 0; i < 100000000; i++) {
-    it = pre_v.end();
+    it = pre_sv.end();
   }
 }
 void vec_end_ft(void) {
   ft::vector<int>::iterator it;
 
   for (size_t i = 0; i < 100000000; i++) {
-    it = pre_f.end();
+    it = pre_fv.end();
   }
 }
 
@@ -150,14 +150,14 @@ void vec_rbegin_std(void) {
   std::vector<int>::reverse_iterator it;
 
   for (size_t i = 0; i < 10000000; i++) {
-    it = pre_v.rbegin();
+    it = pre_sv.rbegin();
   }
 }
 void vec_rbegin_ft(void) {
   ft::vector<int>::reverse_iterator it;
 
   for (size_t i = 0; i < 10000000; i++) {
-    it = pre_f.rbegin();
+    it = pre_fv.rbegin();
   }
 }
 
@@ -165,21 +165,21 @@ void vec_rend_std(void) {
   std::vector<int>::reverse_iterator it;
 
   for (size_t i = 0; i < 10000000; i++) {
-    it = pre_v.rend();
+    it = pre_sv.rend();
   }
 }
 void vec_rend_ft(void) {
   ft::vector<int>::reverse_iterator it;
 
   for (size_t i = 0; i < 10000000; i++) {
-    it = pre_f.rend();
+    it = pre_fv.rend();
   }
 }
 
 void vec_empty_std(void) {
   int num = 0;
   for (size_t i = 0; i < 10000000; i++) {
-    if (pre_v.empty()) {
+    if (pre_sv.empty()) {
       num++;
     };
   }
@@ -187,7 +187,7 @@ void vec_empty_std(void) {
 void vec_empty_ft(void) {
   int num = 0;
   for (size_t i = 0; i < 10000000; i++) {
-    if (pre_f.empty()) {
+    if (pre_fv.empty()) {
       num++;
     };
   }
@@ -196,7 +196,7 @@ void vec_empty_ft(void) {
 void vec_size_std(void) {
   int num = 0;
   for (size_t i = 0; i < 10000000; i++) {
-    if (pre_v.size()) {
+    if (pre_sv.size()) {
       num++;
     };
   }
@@ -204,7 +204,7 @@ void vec_size_std(void) {
 void vec_size_ft(void) {
   int num = 0;
   for (size_t i = 0; i < 10000000; i++) {
-    if (pre_f.size()) {
+    if (pre_fv.size()) {
       num++;
     };
   }
@@ -213,7 +213,7 @@ void vec_size_ft(void) {
 void vec_capacity_std(void) {
   int num = 0;
   for (size_t i = 0; i < 10000000; i++) {
-    if (pre_v.capacity()) {
+    if (pre_sv.capacity()) {
       num++;
     };
   }
@@ -221,7 +221,7 @@ void vec_capacity_std(void) {
 void vec_capacity_ft(void) {
   int num = 0;
   for (size_t i = 0; i < 10000000; i++) {
-    if (pre_f.capacity()) {
+    if (pre_fv.capacity()) {
       num++;
     };
   }
@@ -230,7 +230,7 @@ void vec_capacity_ft(void) {
 void vec_max_size_std(void) {
   int num = 0;
   for (size_t i = 0; i < 10000000; i++) {
-    if (pre_v.max_size()) {
+    if (pre_sv.max_size()) {
       num++;
     };
   }
@@ -238,7 +238,7 @@ void vec_max_size_std(void) {
 void vec_max_size_ft(void) {
   int num = 0;
   for (size_t i = 0; i < 10000000; i++) {
-    if (pre_f.max_size()) {
+    if (pre_fv.max_size()) {
       num++;
     };
   }
@@ -284,7 +284,7 @@ template <typename T>
 void vec_insert_iter(void) {
   T v;
   for (size_t i = 0; i < 200; i++) {
-    v.insert(v.begin(), pre_v.begin(), pre_v.end());
+    v.insert(v.begin(), pre_sv.begin(), pre_sv.end());
   }
 }
 
@@ -331,8 +331,8 @@ void vec_resize(void) {
 // ======================================================
 void vector_bench_entry(void) {
   for (size_t i = 0; i < 100000; i++) {
-    pre_v[i] = i;
-    pre_f[i] = i;
+    pre_sv[i] = i;
+    pre_fv[i] = i;
   }
 
   Benchmark("constructValue",
