@@ -487,14 +487,14 @@ private:
         }
       }
       return _Res(insert(val).first, dummy);
-    } else if (comp_(key, get_key(*hint))) {
+    } else if (comp_(get_key(*hint), key)) {
       iterator next = hint;
       next++;
       if (next == end() || comp_(key, get_key(*next))) {
         if (hint.base()->right_ == NULL) {
           return _Res(hint, hint.base()->right_);
         } else {
-          return _Res(hint, hint.base()->left_);
+          return _Res(next, next.base()->left_);
         }
       }
       return _Res(insert(val).first, dummy);
