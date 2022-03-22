@@ -29,20 +29,41 @@ void print_map(Map& m) {
 }
 
 int main() {
+  // {
+  //   std::map<int, int> v;
+  //   for (size_t i = 0; i < 50; i++) {
+  //     v.insert(v.begin(), std::make_pair(i, i));
+  //   }
+  //   print_map(v);
+  // }
+  // {
+  //   ft::map<int, int> v;
+  //   for (size_t i = 0; i < 50; i++) {
+  //     v.insert(v.begin(), ft::make_pair(i, i));
+  //   }
+  //   print_map(v);
+  // }
+
   {
-    std::map<int, int> v;
-    for (size_t i = 0; i < 50; i++) {
-      v.insert(v.begin(), std::make_pair(i, i));
+    std::map<int, int> m;
+    for (size_t i = 0; i < 100000; i++) {
+      m.insert(std::make_pair(i, i));
     }
-    print_map(v);
-  }
-  {
-    ft::map<int, int> v;
-    for (size_t i = 0; i < 50; i++) {
-      v.insert(v.begin(), ft::make_pair(i, i));
+
+    for (size_t i = 0; i < 20000; i++) {
+      m.erase(m.find(i * 5), m.find((i + 1) * 5));
     }
-    print_map(v);
   }
+
+  // {
+  //   ft::map<int, int> m;
+  //   for (size_t i = 0; i < 100000; i++) {
+  //     m.insert(ft::make_pair(i, i));
+  //   }
+  //   for (size_t i = 0; i < 20000; i++) {
+  //     m.erase(m.find(i), m.find(i + 5));
+  //   }
+  // }
 
   return 0;
 }

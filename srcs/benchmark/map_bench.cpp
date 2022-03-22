@@ -291,18 +291,16 @@ void map_erase_ft(void) {
 void map_erase_iter_std(void) {
   std::map<int, int> m(pre_sm);
   for (size_t i = 0; i < 20000; i++) {
-    m.erase(m.find(i), m.find(i + 5));
+    m.erase(m.find(i * 5), m.find((i + 1) * 5));
   }
 }
 
 void map_erase_iter_ft(void) {
   ft::map<int, int> m(pre_fm);
   for (size_t i = 0; i < 20000; i++) {
-    m.erase(m.find(i), m.find(i + 5));
+    m.erase(m.find(i * 5), m.find((i + 1) * 5));
   }
 }
-
-
 
 /*
 template <typename T>
