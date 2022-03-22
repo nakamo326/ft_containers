@@ -302,48 +302,57 @@ void map_erase_iter_ft(void) {
   }
 }
 
-/*
-template <typename T>
-void map_erase_iter(void) {
-  T v(100000);
+void map_swap_std(void) {
+  std::map<int, int> m;
+  for (size_t i = 0; i < 100000; i++) {
+    m.swap(pre_sm);
+  }
+}
+
+void map_swap_ft(void) {
+  ft::map<int, int> m;
+  for (size_t i = 0; i < 100000; i++) {
+    m.swap(pre_fm);
+  }
+}
+
+void map_clear_std(void) {
+  std::map<int, int> m(pre_sm);
   for (size_t i = 0; i < 20000; i++) {
-    v.erase(v.begin(), v.begin() + 5);
+    m.clear();
   }
 }
 
-template <typename T>
-void map_push_back(void) {
-  T v;
-  for (size_t i = 0; i < 50000; i++) {
-    v.push_back(i);
+void map_clear_ft(void) {
+  ft::map<int, int> m(pre_fm);
+  for (size_t i = 0; i < 20000; i++) {
+    m.clear();
   }
 }
 
-template <typename T>
-void map_pop_back(void) {
-  T v(1000000, 42);
-  for (size_t i = 0; i < 1000000; i++) {
-    v.pop_back();
+void map_count_std(void) {
+  for (size_t i = 0; i < 100000; i++) {
+    pre_sm.count(i);
   }
 }
 
-template <typename T>
-void map_resize(void) {
-  T v;
-  for (size_t i = 1; i < 1000; i++) {
-    v.resize(i * 100);
+void map_count_ft(void) {
+  for (size_t i = 0; i < 100000; i++) {
+    pre_fm.count(i);
   }
 }
 
-template <typename T>
-void map_clear(void) {
-  for (size_t i = 0; i < 50000; i++) {
-    T v(i);
-    v.clear();
+void map_find_std(void) {
+  for (size_t i = 0; i < 100000; i++) {
+    pre_sm.find(i);
   }
 }
 
-*/
+void map_find_ft(void) {
+  for (size_t i = 0; i < 100000; i++) {
+    pre_fm.find(i);
+  }
+}
 
 // ======================================================
 void map_bench_entry(void) {
@@ -388,17 +397,10 @@ void map_bench_entry(void) {
   Benchmark("erasePos", map_erase_pos_std, map_erase_pos_ft);
   Benchmark("erase", map_erase_std, map_erase_ft);
   Benchmark("eraseIter", map_erase_iter_std, map_erase_iter_ft);
-  /*
-  Benchmark("pushback",
-            map_push_back<std::map<int, int> >,
-            map_push_back<ft::map<int, int> >);
-  Benchmark("popback",
-            map_pop_back<std::map<int, int> >,
-            map_pop_back<ft::map<int, int> >);
-  Benchmark("resize",
-            map_resize<std::map<int, int> >,
-            map_resize<ft::map<int, int> >);
-  Benchmark(
-      "clear", map_clear<std::map<int, int> >, map_clear<ft::map<int, int> >);
-            */
+  Benchmark("swap", map_swap_std, map_swap_ft);
+  Benchmark("clear", map_clear_std, map_clear_ft);
+  Benchmark("count", map_count_std, map_count_ft);
+  Benchmark("count", map_find_std, map_find_ft);
+
+  std::cout << std::endl;
 }
