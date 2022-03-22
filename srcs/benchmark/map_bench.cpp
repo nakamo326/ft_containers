@@ -1,4 +1,7 @@
+#include <cstdlib>
+#include <ctime>
 #include <map>
+#include <vector>
 
 #include "Color.hpp"
 #include "benchmark/Benchmark.hpp"
@@ -6,6 +9,7 @@
 
 std::map<int, int> pre_sm;
 ft::map<int, int>  pre_fm;
+std::vector<int>   random_v(50000);
 
 template <typename T>
 void map_construct_value(void) {
@@ -193,84 +197,114 @@ void map_max_size_ft(void) {
 }
 
 void map_insert_std(void) {
-  std::map<int, int> v;
+  std::map<int, int> m;
   for (size_t i = 0; i < 50000; i++) {
-    v.insert(std::make_pair(i, i));
+    m.insert(std::make_pair(i, i));
   }
 }
 
 void map_insert_ft(void) {
-  ft::map<int, int> v;
+  ft::map<int, int> m;
   for (size_t i = 0; i < 50000; i++) {
-    v.insert(ft::make_pair(i, i));
+    m.insert(ft::make_pair(i, i));
   }
-}
-
-// void map_insert_pos_std(void) {
-//   std::map<int, int> v;
-//   for (size_t i = 0; i < 50000; i++) {
-//     v.insert(v.find(i), std::make_pair(i, i));
-//   }
-// }
-
-// void map_insert_pos_ft(void) {
-//   ft::map<int, int> v;
-//   for (size_t i = 0; i < 50000; i++) {
-//     v.insert(v.find(i), ft::make_pair(i, i));
-//   }
-// }
-
-template <typename Map>
-void print_map(Map& m) {
-  std::cout << '{';
-  typename Map::iterator it(m.begin());
-  for (; it != m.end(); it++)
-    std::cout << it->first << ':' << it->second << ' ';
-  std::cout << "}\n";
 }
 
 void map_insert_pos_std(void) {
-  std::map<int, int> v;
-  for (size_t i = 0; i < 50; i++) {
-    v.insert(v.begin(), std::make_pair(i, i));
+  std::map<int, int> m;
+
+  for (size_t i = 0; i < 50000; i++) {
+    if (i % 4 == 0) {
+      m.insert(m.begin(), std::make_pair(random_v[i], random_v[i]));
+    } else if (i % 4 == 1) {
+      m.insert(m.end(), std::make_pair(random_v[i], random_v[i]));
+    } else if (i % 4 == 2) {
+      m.insert(m.upper_bound(random_v[i]),
+               std::make_pair(random_v[i], random_v[i]));
+    } else if (i % 4 == 3) {
+      m.insert(m.lower_bound(random_v[i]),
+               std::make_pair(random_v[i], random_v[i]));
+    }
   }
-  print_map(v);
 }
 
 void map_insert_pos_ft(void) {
-  ft::map<int, int> v;
-  for (size_t i = 0; i < 50; i++) {
-    v.insert(v.begin(), ft::make_pair(i, i));
+  ft::map<int, int> m;
+
+  for (size_t i = 0; i < 50000; i++) {
+    if (i % 4 == 0) {
+      m.insert(m.begin(), ft::make_pair(random_v[i], random_v[i]));
+    } else if (i % 4 == 1) {
+      m.insert(m.end(), ft::make_pair(random_v[i], random_v[i]));
+    } else if (i % 4 == 2) {
+      m.insert(m.upper_bound(random_v[i]),
+               ft::make_pair(random_v[i], random_v[i]));
+    } else if (i % 4 == 3) {
+      m.insert(m.lower_bound(random_v[i]),
+               ft::make_pair(random_v[i], random_v[i]));
+    }
   }
-  print_map(v);
 }
+
+void map_insert_iter_std(void) {
+  std::map<int, int> m;
+  for (size_t i = 0; i < 10; i++) {
+    m.insert(pre_sm.begin(), pre_sm.end());
+  }
+}
+
+void map_insert_iter_ft(void) {
+  ft::map<int, int> m;
+  for (size_t i = 0; i < 10; i++) {
+    m.insert(pre_fm.begin(), pre_fm.end());
+  }
+}
+
+void map_erase_pos_std(void) {
+  std::map<int, int> m(pre_sm);
+  for (size_t i = 0; i < 100000; i++) {
+    m.erase(m.begin());
+  }
+}
+
+void map_erase_pos_ft(void) {
+  ft::map<int, int> m(pre_fm);
+  for (size_t i = 0; i < 100000; i++) {
+    m.erase(m.begin());
+  }
+}
+
+void map_erase_std(void) {
+  std::map<int, int> m(pre_sm);
+  for (size_t i = 0; i < 100000; i++) {
+    m.erase(i);
+  }
+}
+
+void map_erase_ft(void) {
+  ft::map<int, int> m(pre_fm);
+  for (size_t i = 0; i < 100000; i++) {
+    m.erase(i);
+  }
+}
+
+void map_erase_iter_std(void) {
+  std::map<int, int> m(pre_sm);
+  for (size_t i = 0; i < 20000; i++) {
+    m.erase(m.find(i), m.find(i + 5));
+  }
+}
+
+void map_erase_iter_ft(void) {
+  ft::map<int, int> m(pre_fm);
+  for (size_t i = 0; i < 20000; i++) {
+    m.erase(m.find(i), m.find(i + 5));
+  }
+}
+
+
 
 /*
-
-template <typename T>
-void map_insert_count(void) {
-  T v;
-  for (size_t i = 0; i < 2000; i++) {
-    v.insert(v.begin(), i, i);
-  }
-}
-
-template <typename T>
-void map_insert_iter(void) {
-  T v;
-  for (size_t i = 0; i < 200; i++) {
-    v.insert(v.begin(), pre_v.begin(), pre_v.end());
-  }
-}
-
-template <typename T>
-void map_erase(void) {
-  T v(100000);
-  for (size_t i = 0; i < 100000; i++) {
-    v.erase(v.begin());
-  }
-}
-
 template <typename T>
 void map_erase_iter(void) {
   T v(100000);
@@ -315,9 +349,20 @@ void map_clear(void) {
 
 // ======================================================
 void map_bench_entry(void) {
+  std::srand(std::time(NULL));
+
   for (size_t i = 0; i < 100000; i++) {
     pre_sm.insert(std::make_pair(i, i));
     pre_fm.insert(ft::make_pair(i, i));
+  }
+
+  for (size_t i = 0; i < 50000; i++) {
+    random_v[i] = i;
+  }
+  for (size_t i = 50000; i > 1; --i) {
+    size_t a = i - 1;
+    size_t b = std::rand() % i;
+    std::swap(random_v[a], random_v[b]);
   }
 
   std::cout << GRN "[ -------- ] " NC << "Map" << std::endl;
@@ -340,16 +385,12 @@ void map_bench_entry(void) {
   Benchmark("max_size", map_max_size_std, map_max_size_ft);
   Benchmark("insert", map_insert_std, map_insert_ft);
   Benchmark("insertPosition", map_insert_pos_std, map_insert_pos_ft);
+  Benchmark("insertIter", map_insert_iter_std, map_insert_iter_ft);
 
+  Benchmark("erasePos", map_erase_pos_std, map_erase_pos_ft);
+  Benchmark("erase", map_erase_std, map_erase_ft);
+  Benchmark("eraseIter", map_erase_iter_std, map_erase_iter_ft);
   /*
-  Benchmark("insertIter",
-            map_insert_iter<std::map<int, int> >,
-            map_insert_iter<ft::map<int, int> >);
-  Benchmark(
-      "erase", map_erase<std::map<int, int> >, map_erase<ft::map<int, int> >);
-  Benchmark("eraseIter",
-            map_erase_iter<std::map<int, int> >,
-            map_erase_iter<ft::map<int, int> >);
   Benchmark("pushback",
             map_push_back<std::map<int, int> >,
             map_push_back<ft::map<int, int> >);

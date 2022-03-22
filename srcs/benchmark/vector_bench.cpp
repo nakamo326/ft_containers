@@ -386,4 +386,5 @@ void vector_bench_entry(void) {
             vec_pop_back<ft::vector<int> >);
   Benchmark(
       "resize", vec_resize<std::vector<int> >, vec_resize<ft::vector<int> >);
+  std::cout << std::endl;
 }
