@@ -331,27 +331,112 @@ void map_clear_ft(void) {
 }
 
 void map_count_std(void) {
+  size_t res;
   for (size_t i = 0; i < 100000; i++) {
-    pre_sm.count(i);
+    res = pre_sm.count(i);
   }
 }
 
 void map_count_ft(void) {
+  size_t res;
   for (size_t i = 0; i < 100000; i++) {
-    pre_fm.count(i);
+    res = pre_fm.count(i);
   }
 }
 
 void map_find_std(void) {
+  size_t                       count = 0;
+  std::map<int, int>::iterator it;
   for (size_t i = 0; i < 100000; i++) {
-    pre_sm.find(i);
+    it = pre_sm.find(i);
+    if (it != pre_sm.end())
+      count++;
   }
+  std::cout << count << std::endl;
 }
 
 void map_find_ft(void) {
+  size_t                      count = 0;
+  ft::map<int, int>::iterator it;
   for (size_t i = 0; i < 100000; i++) {
-    pre_fm.find(i);
+    it = pre_fm.find(i);
+    if (it != pre_fm.end())
+      count++;
   }
+  std::cout << count << std::endl;
+}
+
+void map_equal_range_std(void) {
+  typedef std::map<int, int>::iterator it;
+  std::pair<it, it>                    res;
+  size_t                               count = 0;
+
+  for (size_t j = 0; j < 10; j++) {
+    for (size_t i = 0; i < 100000; i++) {
+      res = pre_sm.equal_range(i);
+      if (res.first != pre_sm.end())
+        count++;
+    }
+  }
+  std::cout << count << std::endl;
+}
+
+void map_equal_range_ft(void) {
+  typedef ft::map<int, int>::iterator it;
+  ft::pair<it, it>                    res;
+  size_t                              count = 0;
+  for (size_t j = 0; j < 10; j++) {
+    for (size_t i = 0; i < 100000; i++) {
+      res = pre_fm.equal_range(i);
+      if (res.first != pre_fm.end())
+        count++;
+    }
+  }
+  std::cout << count << std::endl;
+}
+
+void map_lower_bound_std(void) {
+  size_t                       count = 0;
+  std::map<int, int>::iterator it;
+  for (size_t i = 0; i < 100000; i++) {
+    it = pre_sm.lower_bound(i);
+    if (it != pre_sm.end())
+      count++;
+  }
+  std::cout << count << std::endl;
+}
+
+void map_lower_bound_ft(void) {
+  size_t                      count = 0;
+  ft::map<int, int>::iterator it;
+  for (size_t i = 0; i < 100000; i++) {
+    it = pre_fm.lower_bound(i);
+    if (it != pre_fm.end())
+      count++;
+  }
+  std::cout << count << std::endl;
+}
+
+void map_upper_bound_std(void) {
+  size_t                       count = 0;
+  std::map<int, int>::iterator it;
+  for (size_t i = 0; i < 100000; i++) {
+    it = pre_sm.upper_bound(i);
+    if (it != pre_sm.end())
+      count++;
+  }
+  std::cout << count << std::endl;
+}
+
+void map_upper_bound_ft(void) {
+  size_t                      count = 0;
+  ft::map<int, int>::iterator it;
+  for (size_t i = 0; i < 100000; i++) {
+    it = pre_fm.upper_bound(i);
+    if (it != pre_fm.end())
+      count++;
+  }
+  std::cout << count << std::endl;
 }
 
 // ======================================================
@@ -400,7 +485,10 @@ void map_bench_entry(void) {
   Benchmark("swap", map_swap_std, map_swap_ft);
   Benchmark("clear", map_clear_std, map_clear_ft);
   Benchmark("count", map_count_std, map_count_ft);
-  Benchmark("count", map_find_std, map_find_ft);
+  Benchmark("find", map_find_std, map_find_ft);
+  Benchmark("equal_range", map_equal_range_std, map_equal_range_ft);
+  Benchmark("lower_bound", map_lower_bound_std, map_lower_bound_ft);
+  Benchmark("upper_bound", map_upper_bound_std, map_upper_bound_ft);
 
   std::cout << std::endl;
 }
