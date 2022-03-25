@@ -331,17 +331,19 @@ void map_clear_ft(void) {
 }
 
 void map_count_std(void) {
-  size_t res;
+  size_t res = 0;
   for (size_t i = 0; i < 100000; i++) {
-    res = pre_sm.count(i);
+    res += pre_sm.count(i);
   }
+  std::cout << res << std::endl;
 }
 
 void map_count_ft(void) {
-  size_t res;
+  size_t res = 0;
   for (size_t i = 0; i < 100000; i++) {
-    res = pre_fm.count(i);
+    res += pre_fm.count(i);
   }
+  std::cout << res << std::endl;
 }
 
 void map_find_std(void) {

@@ -308,17 +308,19 @@ void set_clear_ft(void) {
 }
 
 void set_count_std(void) {
-  size_t res;
+  size_t res = 0;
   for (size_t i = 0; i < 100000; i++) {
-    res = pre_ss.count(i);
+    res += pre_ss.count(i);
   }
+  std::cout << res << std::endl;
 }
 
 void set_count_ft(void) {
-  size_t res;
+  size_t res = 0;
   for (size_t i = 0; i < 100000; i++) {
-    res = pre_fs.count(i);
+    res += pre_fs.count(i);
   }
+  std::cout << res << std::endl;
 }
 
 void set_find_std(void) {
