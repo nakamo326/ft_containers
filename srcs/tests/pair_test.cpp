@@ -1,6 +1,10 @@
 #include "pair.hpp"
 
+#if __cplusplus >= 201103L
 #include <gtest/gtest.h>
+#else
+#include "testframe/testframe.hpp"
+#endif
 
 TEST(pair_test, constructor) {
   std::pair<int, int> std_pair(10, 10);

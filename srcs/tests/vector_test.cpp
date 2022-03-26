@@ -1,6 +1,10 @@
 #include "vector.hpp"
 
+#if __cplusplus >= 201103L
 #include <gtest/gtest.h>
+#else
+#include "testframe/testframe.hpp"
+#endif
 
 #include <typeinfo>
 #include <vector>
@@ -8,27 +12,17 @@
 class TestClass {
 public:
   int* p;
-  TestClass() {
-    // std::cout << __func__ << std::endl;
-    p = new int;
-  }
+  TestClass() { p = new int; }
   TestClass(int num) {
-    // std::cout << __func__ << std::endl;
     p  = new int;
     *p = num;
   }
   TestClass(const TestClass& other) {
-    // std::cout << __func__ << std::endl;
     p  = new int;
     *p = *(other.p);
   }
-  ~TestClass() {
-    // std::cout << __func__ << std::endl;
-
-    delete p;
-  }
+  ~TestClass() { delete p; }
   TestClass& operator=(const TestClass& other) {
-    // std::cout << __func__ << std::endl;
     *p = *(other.p);
     return *this;
   }
@@ -308,8 +302,8 @@ TEST(VectorTest, BeginAndEnd) {
     f.push_back(i);
     s.push_back(i);
   }
-  auto sit = s.begin();
-  auto fit = f.begin();
+  std::vector<int>::iterator sit = s.begin();
+  ft::vector<int>::iterator  fit = f.begin();
 
   EXPECT_EQ(*sit, *fit);
 
@@ -317,8 +311,8 @@ TEST(VectorTest, BeginAndEnd) {
     sit++;
     fit++;
   }
-  auto send = s.end();
-  auto fend = f.end();
+  std::vector<int>::iterator send = s.end();
+  ft::vector<int>::iterator  fend = f.end();
   EXPECT_EQ(sit, send);
   EXPECT_EQ(fit, fend);
 }
@@ -353,7 +347,7 @@ TEST(VectorTest, InsertWithValue) {
   }
   std::vector<int> ts;
   ft::vector<int>  tf;
-  for (size_t i = 0; i < 1000; i++) {
+  for (int i = 0; i < 1000; i++) {
     ts.insert(ts.begin(), i);
     tf.insert(tf.begin(), i);
     EXPECT_EQ(ts[0], i);
@@ -406,8 +400,8 @@ TEST(VectorTest, EraseOne) {
     f.push_back(i);
     s.push_back(i);
   }
-  auto sret = s.erase(s.begin() + 50);
-  auto fret = f.erase(f.begin() + 50);
+  std::vector<int>::iterator sret = s.erase(s.begin() + 50);
+  ft::vector<int>::iterator  fret = f.erase(f.begin() + 50);
   EXPECT_EQ(*sret, *fret);
   EXPECT_EQ(s.size(), f.size());
   EXPECT_EQ(s.capacity(), f.capacity());
@@ -437,8 +431,8 @@ TEST(VectorTest, EraseIter) {
     f.push_back(i);
     s.push_back(i);
   }
-  auto sret = s.erase(s.begin() + 50, s.begin() + 60);
-  auto fret = f.erase(f.begin() + 50, f.begin() + 60);
+  std::vector<int>::iterator sret = s.erase(s.begin() + 50, s.begin() + 60);
+  ft::vector<int>::iterator  fret = f.erase(f.begin() + 50, f.begin() + 60);
   EXPECT_EQ(*sret, *fret);
   EXPECT_EQ(s.size(), f.size());
   EXPECT_EQ(s.capacity(), f.capacity());

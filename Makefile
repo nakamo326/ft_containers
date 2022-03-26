@@ -49,8 +49,10 @@ run: all
 	./$(NAME)
 
 # stdライブラリとftライブラリで比較できるように二つのバイナリを用意する。
-test: $(T_OBJS)
-	:
+test:
+	clang++ --std=c++98 srcs/tests/testframe.cpp $(INCLUDES) -o test
+	./test && :
+	$(RM) test
 
 $(STDBIN): $(T_OBJS)
 	@$(CXX) $(CXXFLAGS) -DSTD $^ $(INCLUDES) -o $(STDBIN)
@@ -64,7 +66,6 @@ $(FTBIN): $(T_OBJS)
 gtest:
 	$(MAKE) -C $(GTESTDIR)
 
-# make bench -> ベンチマークテスト。実行時間が長いテストも含む。
 bench: $(B_OBJS)
 	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o bench
 	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)bench$(NC)" 

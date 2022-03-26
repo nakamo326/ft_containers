@@ -1,6 +1,10 @@
 #include "stack.hpp"
 
+#if __cplusplus >= 201103L
 #include <gtest/gtest.h>
+#else
+#include "testframe/testframe.hpp"
+#endif
 
 #include <deque>
 #include <vector>
@@ -97,16 +101,16 @@ TEST(StackTest, NonMemberFunction) {
 
 // same test with std::vector
 TEST(StackTest, ConstructorWithStdVector) {
-  std::vector<int>                 v;
-  ft::stack<int, std::vector<int>> s(v);
+  std::vector<int>                  v;
+  ft::stack<int, std::vector<int> > s(v);
   EXPECT_EQ(s.size(), 0);
   EXPECT_EQ(s.empty(), true);
 }
 
 TEST(StackTest, AssignationWithStdVector) {
-  std::vector<int>                 v;
-  ft::stack<int, std::vector<int>> s1(v);
-  ft::stack<int, std::vector<int>> s2;
+  std::vector<int>                  v;
+  ft::stack<int, std::vector<int> > s1(v);
+  ft::stack<int, std::vector<int> > s2;
   s1.push(1);
   s1.push(2);
   s1.push(3);
@@ -118,8 +122,8 @@ TEST(StackTest, AssignationWithStdVector) {
 }
 
 TEST(StackTest, ElementAccessWithStdVector) {
-  std::vector<int>                 v;
-  ft::stack<int, std::vector<int>> s(v);
+  std::vector<int>                  v;
+  ft::stack<int, std::vector<int> > s(v);
   s.push(1);
   s.push(2);
   s.push(3);
@@ -127,8 +131,8 @@ TEST(StackTest, ElementAccessWithStdVector) {
 }
 
 TEST(StackTest, CapacityWithStdVector) {
-  std::vector<int>                 v;
-  ft::stack<int, std::vector<int>> s(v);
+  std::vector<int>                  v;
+  ft::stack<int, std::vector<int> > s(v);
   EXPECT_EQ(s.empty(), true);
   EXPECT_EQ(s.size(), 0);
   s.push(1);
@@ -140,8 +144,8 @@ TEST(StackTest, CapacityWithStdVector) {
 }
 
 TEST(StackTest, ModifiresWithStdVector) {
-  std::vector<int>                 v;
-  ft::stack<int, std::vector<int>> s(v);
+  std::vector<int>                  v;
+  ft::stack<int, std::vector<int> > s(v);
   s.push(1);
   s.push(2);
   s.push(3);
@@ -155,9 +159,9 @@ TEST(StackTest, ModifiresWithStdVector) {
 }
 
 TEST(StackTest, NonMemberFunctionWithStdVector) {
-  std::vector<int>                 v;
-  ft::stack<int, std::vector<int>> s1(v);
-  ft::stack<int, std::vector<int>> s2;
+  std::vector<int>                  v;
+  ft::stack<int, std::vector<int> > s1(v);
+  ft::stack<int, std::vector<int> > s2;
   s1.push(1);
   s1.push(2);
   s1.push(3);

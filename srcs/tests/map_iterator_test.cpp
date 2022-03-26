@@ -1,4 +1,8 @@
+#if __cplusplus >= 201103L
 #include <gtest/gtest.h>
+#else
+#include "testframe/testframe.hpp"
+#endif
 
 #include "map.hpp"
 
