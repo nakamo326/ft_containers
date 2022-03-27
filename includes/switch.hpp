@@ -1,0 +1,10 @@
+#ifndef FT_CONTAINERS_INCLUDES_SWITCH_HPP
+#define FT_CONTAINERS_INCLUDES_SWITCH_HPP
+
+#ifdef STD
+#define LIB std
+#else
+#define LIB ft
+#endif
+
+#endif /* FT_CONTAINERS_INCLUDES_SWITCH_HPP */
