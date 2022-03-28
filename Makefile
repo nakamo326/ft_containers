@@ -54,10 +54,10 @@ test: $(STDBIN) $(FTBIN)
 	$(RM) $(STDBIN) $(FTBIN)
 
 $(STDBIN):
-	clang++ --std=c++98 -DSTD srcs/tests/testframe.cpp $(INCLUDES) -o $(STDBIN)
+	clang++ --std=c++98 -DSTD includes/testframe/testframe.cpp $(INCLUDES) -o $(STDBIN)
 
 $(FTBIN):
-	clang++ --std=c++98 srcs/tests/testframe.cpp $(INCLUDES) -o $(FTBIN)
+	clang++ --std=c++98 includes/testframe/testframe.cpp $(INCLUDES) -o $(FTBIN)
 
 # google test run
 gtest:
