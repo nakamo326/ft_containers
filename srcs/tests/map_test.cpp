@@ -1,34 +1,35 @@
 
 #include "map.hpp"
 
+#include "switch.hpp"
+
 #if __cplusplus >= 201103L
 #include <gtest/gtest.h>
 #else
 #include "testframe/testframe.hpp"
 #endif
 
-#include <limits>
-#include <random>
-#include <typeinfo>
+#include <cstdlib>
+#include <ctime>
 #include <vector>
 
 #include "pair.hpp"
 
 TEST(MapTest, constructor) {
-  ft::map<int, int> m;
+  LIB::map<int, int> m;
 
   EXPECT_EQ(m.size(), 0);
 }
 
 TEST(MapTest, rangeConstructor) {
-  std::vector<ft::pair<const int, int>> from;
+  std::vector<LIB::pair<const int, int> > from;
   for (int i = 0; i < 10; i++) {
-    from.push_back(ft::make_pair(i, i));
-    from.push_back(ft::make_pair(i, i));
+    from.push_back(LIB::make_pair(i, i));
+    from.push_back(LIB::make_pair(i, i));
   }
-  ft::map<int, int> m(from.begin(), from.end());
+  LIB::map<int, int> m(from.begin(), from.end());
 
-  ft::map<int, int>::iterator it = m.begin();
+  LIB::map<int, int>::iterator it = m.begin();
   EXPECT_EQ(m.size(), 10);
   for (int i = 0; i < 10; i++) {
     EXPECT_EQ(*it, from.at(i * 2));
@@ -37,14 +38,14 @@ TEST(MapTest, rangeConstructor) {
 }
 
 TEST(MapTest, copyConstructor) {
-  ft::map<int, int> from;
+  LIB::map<int, int> from;
   for (int i = 0; i < 10; i++) {
-    from.insert(ft::make_pair(i, i));
+    from.insert(LIB::make_pair(i, i));
   }
-  ft::map<int, int> m(from);
+  LIB::map<int, int> m(from);
 
-  ft::map<int, int>::iterator it   = m.begin();
-  ft::map<int, int>::iterator f_it = from.begin();
+  LIB::map<int, int>::iterator it   = m.begin();
+  LIB::map<int, int>::iterator f_it = from.begin();
   EXPECT_EQ(m.size(), 10);
   for (int i = 0; i < 10; i++) {
     EXPECT_EQ(*it, *f_it);
@@ -54,13 +55,13 @@ TEST(MapTest, copyConstructor) {
 }
 
 TEST(MapTest, assignation) {
-  ft::map<int, int> from;
+  LIB::map<int, int> from;
   for (int i = 0; i < 10; i++) {
-    from.insert(ft::make_pair(i, i));
+    from.insert(LIB::make_pair(i, i));
   }
-  ft::map<int, int> m;
+  LIB::map<int, int> m;
   for (int i = 0; i < 5; i++) {
-    from.insert(ft::make_pair(i, 42));
+    from.insert(LIB::make_pair(i, 42));
   }
 
   m = from;
@@ -74,17 +75,17 @@ TEST(MapTest, assignation) {
 }
 
 TEST(MapTest, GetAllocator) {
-  ft::map<int, int> f;
+  LIB::map<int, int> f;
 
-  ft::map<int, int>::allocator_type a   = f.get_allocator();
-  ft::map<int, int>::value_type*    val = a.allocate(1);
-  val->second                           = 42;
+  LIB::map<int, int>::allocator_type a   = f.get_allocator();
+  LIB::map<int, int>::value_type*    val = a.allocate(1);
+  val->second                            = 42;
   EXPECT_EQ(val->second, 42);
   a.deallocate(val, 1);
 }
 
 TEST(MapTest, arrayOperator) {
-  ft::map<int, int> m;
+  LIB::map<int, int> m;
   m[0] = 57;
   EXPECT_EQ(m[0], 57);
   EXPECT_EQ(m[42], int());
@@ -93,17 +94,17 @@ TEST(MapTest, arrayOperator) {
 }
 
 TEST(MapTest, empty) {
-  ft::map<int, int> m;
+  LIB::map<int, int> m;
   EXPECT_EQ(m.empty(), true);
-  m.insert(ft::make_pair(0, 0));
+  m.insert(LIB::make_pair(0, 0));
   EXPECT_EQ(m.empty(), false);
 }
 
 TEST(MapTest, size) {
-  ft::map<int, int> m;
+  LIB::map<int, int> m;
   EXPECT_EQ(m.size(), 0);
   for (size_t i = 1; i <= 1000; i++) {
-    m.insert(ft::make_pair(i, i));
+    m.insert(LIB::make_pair(i, i));
     EXPECT_EQ(m.size(), i);
   }
   for (size_t i = 1; i <= 1000; i++) {
@@ -112,19 +113,13 @@ TEST(MapTest, size) {
   }
 }
 
-TEST(MapTest, MaxSize) {
-  std::map<int, int> s;
-  ft::map<int, int>  f;
-  EXPECT_EQ(s.max_size(), f.max_size());
-}
-
 TEST(MapTest, simpleInsert) {
-  std::random_device rand;
+  std::srand(time(NULL));
   {
-    ft::map<int, int> m;
-    int               times = 10000;
+    LIB::map<int, int> m;
+    int                times = 10000;
     for (size_t i = 0; i < times; i++) {
-      m.insert(ft::make_pair(i, i));
+      m.insert(LIB::make_pair(i, i));
       EXPECT_EQ(m.size(), i + 1);
       EXPECT_EQ(m[i], i);
     }
@@ -139,12 +134,12 @@ TEST(MapTest, simpleInsert) {
       size_t b = rand() % i;
       std::swap(v[a], v[b]);
     }
-    ft::map<int, int> m;
+    LIB::map<int, int> m;
     for (size_t i = 0; i < 10000; i++) {
-      m.insert(ft::make_pair(v[i], v[i]));
+      m.insert(LIB::make_pair(v[i], v[i]));
       EXPECT_EQ(m.size(), i + 1);
     }
-    ft::map<int, int>::iterator it = m.begin();
+    LIB::map<int, int>::iterator it = m.begin();
     for (size_t i = 0; i < 10000; i++) {
       EXPECT_EQ((*it).first, i);
       it++;
@@ -153,8 +148,8 @@ TEST(MapTest, simpleInsert) {
 }
 
 TEST(MapTest, positionInsert) {
-  std::random_device rand;
-  ft::map<int, int>  m;
+  std::srand(time(NULL));
+  LIB::map<int, int> m;
   int                times = 10000;
   std::vector<int>   v(times);
   for (size_t i = 0; i < times; i++) {
@@ -169,18 +164,18 @@ TEST(MapTest, positionInsert) {
   for (size_t i = 0; i < times; i++) {
     int choice = rand() % 4;
     if (choice == 0) {
-      m.insert(m.begin(), ft::make_pair(v[i], v[i]));
+      m.insert(m.begin(), LIB::make_pair(v[i], v[i]));
     } else if (choice == 1) {
-      m.insert(m.end(), ft::make_pair(v[i], v[i]));
+      m.insert(m.end(), LIB::make_pair(v[i], v[i]));
     } else if (choice == 2) {
-      m.insert(m.upper_bound(v[i]), ft::make_pair(v[i], v[i]));
+      m.insert(m.upper_bound(v[i]), LIB::make_pair(v[i], v[i]));
     } else if (choice == 3) {
-      m.insert(m.lower_bound(v[i]), ft::make_pair(v[i], v[i]));
+      m.insert(m.lower_bound(v[i]), LIB::make_pair(v[i], v[i]));
     }
   }
 
-  ft::map<int, int>::iterator it  = m.begin();
-  int                         num = it->first;
+  LIB::map<int, int>::iterator it  = m.begin();
+  int                          num = it->first;
   it++;
   for (; it != m.end(); it++) {
     EXPECT_EQ(num < (it->first), true);
@@ -188,13 +183,13 @@ TEST(MapTest, positionInsert) {
 }
 
 TEST(MapTest, rangeInsert) {
-  ft::map<int, int>               m;
-  std::vector<ft::pair<int, int>> v(1000);
+  LIB::map<int, int>                m;
+  std::vector<LIB::pair<int, int> > v(1000);
   for (size_t i = 0; i < 1000; i++) {
-    v[i] = ft::make_pair(i, i);
+    v[i] = LIB::make_pair(i, i);
   }
   m.insert(v.begin(), v.end());
-  ft::map<int, int>::iterator it(m.begin());
+  LIB::map<int, int>::iterator it(m.begin());
   for (size_t i = 0; it != m.end(); it++) {
     EXPECT_EQ(it->first, i);
     i++;
@@ -202,10 +197,10 @@ TEST(MapTest, rangeInsert) {
 }
 
 TEST(MapTest, Erase) {
-  ft::map<int, int> m;
-  int               times = 10000;
+  LIB::map<int, int> m;
+  int                times = 10000;
   for (size_t i = 1; i <= times; i++) {
-    m.insert(ft::make_pair(i, i));
+    m.insert(LIB::make_pair(i, i));
   }
   for (size_t i = 1; i <= times; i++) {
     m.erase(i);
@@ -215,10 +210,10 @@ TEST(MapTest, Erase) {
 }
 
 TEST(MapTest, positionErase) {
-  ft::map<int, int> m;
-  int               times = 10000;
+  LIB::map<int, int> m;
+  int                times = 10000;
   for (size_t i = 1; i <= times; i++) {
-    m.insert(ft::make_pair(i, i));
+    m.insert(LIB::make_pair(i, i));
   }
   for (size_t i = 1; i <= times; i++) {
     m.erase(m.find(i));
@@ -228,10 +223,10 @@ TEST(MapTest, positionErase) {
 }
 
 TEST(MapTest, rangeErase) {
-  ft::map<int, int> m;
-  int               times = 10000;
+  LIB::map<int, int> m;
+  int                times = 10000;
   for (size_t i = 1; i <= times; i++) {
-    m.insert(ft::make_pair(i, i));
+    m.insert(LIB::make_pair(i, i));
   }
   m.erase(m.begin(), m.end());
   EXPECT_EQ(m.size(), 0);
@@ -239,17 +234,17 @@ TEST(MapTest, rangeErase) {
 }
 
 TEST(MapTest, Swap) {
-  ft::map<int, int> m;
-  int               times = 10000;
+  LIB::map<int, int> m;
+  int                times = 10000;
   for (size_t i = 1; i <= times; i++) {
-    m.insert(ft::make_pair(i, i));
+    m.insert(LIB::make_pair(i, i));
   }
-  ft::map<int, int> n;
+  LIB::map<int, int> n;
   for (size_t i = 1; i <= 1000; i++) {
-    m.insert(ft::make_pair(i, 42));
+    m.insert(LIB::make_pair(i, 42));
   }
-  ft::map<int, int>::iterator m_it = m.begin();
-  ft::map<int, int>::iterator n_it = n.begin();
+  LIB::map<int, int>::iterator m_it = m.begin();
+  LIB::map<int, int>::iterator n_it = n.begin();
   n.swap(m);
   EXPECT_EQ(n.size(), times);
   for (int i = 1; m_it != n.end(); m_it++) {
@@ -265,10 +260,10 @@ TEST(MapTest, Swap) {
 }
 
 TEST(MapTest, Clear) {
-  ft::map<int, int> m;
-  int               times = 10000;
+  LIB::map<int, int> m;
+  int                times = 10000;
   for (size_t i = 1; i <= times; i++) {
-    m.insert(ft::make_pair(i, i));
+    m.insert(LIB::make_pair(i, i));
   }
   m.clear();
   EXPECT_EQ(m.size(), 0);
@@ -276,20 +271,20 @@ TEST(MapTest, Clear) {
 }
 
 TEST(MapTest, count) {
-  ft::map<int, int> m;
+  LIB::map<int, int> m;
   EXPECT_TRUE(m.count(0) == 0);
-  m.insert(ft::make_pair(0, 42));
+  m.insert(LIB::make_pair(0, 42));
   EXPECT_TRUE(m.count(0) == 1);
-  m.insert(ft::make_pair(0, 42));
+  m.insert(LIB::make_pair(0, 42));
   EXPECT_TRUE(m.count(0) == 1);
   EXPECT_TRUE(m.count(1) == 0);
 }
 
 TEST(MapTest, find) {
-  ft::map<int, int> m;
-  m.insert(ft::make_pair(1, 42));
-  m.insert(ft::make_pair(3, 42));
-  m.insert(ft::make_pair(2, 42));
+  LIB::map<int, int> m;
+  m.insert(LIB::make_pair(1, 42));
+  m.insert(LIB::make_pair(3, 42));
+  m.insert(LIB::make_pair(2, 42));
 
   EXPECT_EQ(m.find(0), m.end());
   EXPECT_NE(m.find(1), m.end());
@@ -300,18 +295,18 @@ TEST(MapTest, find) {
   EXPECT_EQ(m.find(3)->second, 42);
   EXPECT_EQ(m.find(4), m.end());
 
-  ft::map<int, int>::const_iterator cit = m.find(1);
+  LIB::map<int, int>::const_iterator cit = m.find(1);
   // cannot assign
   // cit->second = 57;
 }
 
 TEST(MapTest, equalRange) {
-  ft::map<int, int> m;
-  m.insert(ft::make_pair(1, 1));
-  m.insert(ft::make_pair(3, 3));
-  m.insert(ft::make_pair(2, 2));
-  m.insert(ft::make_pair(0, 0));
-  m.insert(ft::make_pair(6, 6));
+  LIB::map<int, int> m;
+  m.insert(LIB::make_pair(1, 1));
+  m.insert(LIB::make_pair(3, 3));
+  m.insert(LIB::make_pair(2, 2));
+  m.insert(LIB::make_pair(0, 0));
+  m.insert(LIB::make_pair(6, 6));
 
   EXPECT_EQ(m.lower_bound(-1), m.equal_range(-1).first);
   EXPECT_EQ(m.upper_bound(-1), m.equal_range(-1).second);
@@ -326,12 +321,12 @@ TEST(MapTest, equalRange) {
 }
 
 TEST(MapTest, lowerBound) {
-  ft::map<int, int> m;
-  m.insert(ft::make_pair(1, 1));
-  m.insert(ft::make_pair(3, 3));
-  m.insert(ft::make_pair(2, 2));
-  m.insert(ft::make_pair(0, 0));
-  m.insert(ft::make_pair(6, 6));
+  LIB::map<int, int> m;
+  m.insert(LIB::make_pair(1, 1));
+  m.insert(LIB::make_pair(3, 3));
+  m.insert(LIB::make_pair(2, 2));
+  m.insert(LIB::make_pair(0, 0));
+  m.insert(LIB::make_pair(6, 6));
 
   EXPECT_EQ(m.lower_bound(2)->second, 2);
   EXPECT_EQ(m.lower_bound(3)->second, 3);
@@ -339,12 +334,12 @@ TEST(MapTest, lowerBound) {
 }
 
 TEST(MapTest, upperBound) {
-  ft::map<int, int> m;
-  m.insert(ft::make_pair(1, 1));
-  m.insert(ft::make_pair(3, 3));
-  m.insert(ft::make_pair(2, 2));
-  m.insert(ft::make_pair(0, 0));
-  m.insert(ft::make_pair(6, 6));
+  LIB::map<int, int> m;
+  m.insert(LIB::make_pair(1, 1));
+  m.insert(LIB::make_pair(3, 3));
+  m.insert(LIB::make_pair(2, 2));
+  m.insert(LIB::make_pair(0, 0));
+  m.insert(LIB::make_pair(6, 6));
 
   EXPECT_EQ(m.upper_bound(2)->second, 3);
   EXPECT_EQ(m.upper_bound(3)->second, 6);
@@ -352,31 +347,31 @@ TEST(MapTest, upperBound) {
 }
 
 TEST(MapTest, KeyCompare) {
-  ft::map<int, int> m;
+  LIB::map<int, int> m;
 
-  ft::map<int, int>::key_compare kc = m.key_comp();
+  LIB::map<int, int>::key_compare kc = m.key_comp();
 
   EXPECT_EQ(kc(0, 1), true);
   EXPECT_EQ(kc(42, 0), false);
 }
 
 TEST(MapTest, ValueCompare) {
-  ft::map<int, int> m;
+  LIB::map<int, int> m;
 
-  ft::map<int, int>::value_compare vc = m.value_comp();
+  LIB::map<int, int>::value_compare vc = m.value_comp();
 
-  EXPECT_EQ(vc(ft::make_pair(0, 0), ft::make_pair(1, 0)), true);
-  EXPECT_EQ(vc(ft::make_pair(42, 0), ft::make_pair(1, 0)), false);
+  EXPECT_EQ(vc(LIB::make_pair(0, 0), LIB::make_pair(1, 0)), true);
+  EXPECT_EQ(vc(LIB::make_pair(42, 0), LIB::make_pair(1, 0)), false);
 }
 
 TEST(MapTest, ComparisonOperators) {
-  ft::map<int, int> m;
-  m.insert(ft::make_pair(0, 0));
-  m.insert(ft::make_pair(1, 1));
-  m.insert(ft::make_pair(2, 2));
-  m.insert(ft::make_pair(3, 3));
+  LIB::map<int, int> m;
+  m.insert(LIB::make_pair(0, 0));
+  m.insert(LIB::make_pair(1, 1));
+  m.insert(LIB::make_pair(2, 2));
+  m.insert(LIB::make_pair(3, 3));
 
-  ft::map<int, int> c(m);
+  LIB::map<int, int> c(m);
 
   EXPECT_EQ(m == c, true);
   EXPECT_EQ(m != c, false);
@@ -394,7 +389,7 @@ TEST(MapTest, ComparisonOperators) {
   EXPECT_EQ(m >= c, false);
 
   m[3] = 3;
-  c.insert(ft::make_pair(4, 4));
+  c.insert(LIB::make_pair(4, 4));
   EXPECT_EQ(m == c, false);
   EXPECT_EQ(m != c, true);
   EXPECT_EQ(m < c, true);
@@ -402,7 +397,7 @@ TEST(MapTest, ComparisonOperators) {
   EXPECT_EQ(m <= c, true);
   EXPECT_EQ(m >= c, false);
 
-  m.insert(ft::make_pair(4, 42));
+  m.insert(LIB::make_pair(4, 42));
   EXPECT_EQ(m == c, false);
   EXPECT_EQ(m != c, true);
   EXPECT_EQ(m < c, false);
@@ -418,4 +413,138 @@ TEST(MapTest, ComparisonOperators) {
   EXPECT_EQ(m > c, false);
   EXPECT_EQ(m <= c, true);
   EXPECT_EQ(m >= c, false);
+}
+
+TEST(MapIteratorTest, Iterator) {
+  LIB::map<int, int> m;
+
+  m.insert(LIB::make_pair(7, 7));
+  m.insert(LIB::make_pair(1, 1));
+  m.insert(LIB::make_pair(3, 3));
+  m.insert(LIB::make_pair(2, 2));
+  m.insert(LIB::make_pair(4, 4));
+  m.insert(LIB::make_pair(6, 6));
+  m.insert(LIB::make_pair(5, 5));
+
+  LIB::map<int, int>::iterator it = m.begin();
+  EXPECT_EQ((*it).second, 1);
+  EXPECT_EQ(it->second, 1);
+  (*it).second = 42;
+  EXPECT_EQ((*it).second, 42);
+  EXPECT_EQ(it->second, 42);
+  it->second = 57;
+  EXPECT_EQ((*it).second, 57);
+  EXPECT_EQ(it->second, 57);
+  ++it;
+  EXPECT_EQ((*it).second, 2);
+  EXPECT_EQ(it->second, 2);
+  it++;
+  EXPECT_EQ((*it).second, 3);
+  EXPECT_EQ(it->second, 3);
+  --it;
+  EXPECT_EQ((*it).second, 2);
+  EXPECT_EQ(it->second, 2);
+  it--;
+  for (int i = 1; it != m.end(); it++) {
+    EXPECT_EQ(it->first, i);
+    i++;
+  }
+}
+
+TEST(MapIteratorTest, ConstIterator) {
+  LIB::map<int, int> m;
+
+  m.insert(LIB::make_pair(7, 7));
+  m.insert(LIB::make_pair(1, 1));
+  m.insert(LIB::make_pair(3, 3));
+  m.insert(LIB::make_pair(2, 2));
+  m.insert(LIB::make_pair(4, 4));
+  m.insert(LIB::make_pair(6, 6));
+  m.insert(LIB::make_pair(5, 5));
+
+  LIB::map<int, int>::const_iterator it = m.begin();
+  EXPECT_EQ((*it).second, 1);
+  EXPECT_EQ(it->second, 1);
+  ++it;
+  EXPECT_EQ((*it).second, 2);
+  EXPECT_EQ(it->second, 2);
+  it++;
+  EXPECT_EQ((*it).second, 3);
+  EXPECT_EQ(it->second, 3);
+  --it;
+  EXPECT_EQ((*it).second, 2);
+  EXPECT_EQ(it->second, 2);
+  it--;
+  for (int i = 1; it != m.end(); it++) {
+    EXPECT_EQ(it->first, i);
+    i++;
+  }
+}
+
+TEST(MapIteratorTest, ReverseIterator) {
+  LIB::map<int, int> m;
+
+  m.insert(LIB::make_pair(7, 7));
+  m.insert(LIB::make_pair(1, 1));
+  m.insert(LIB::make_pair(3, 3));
+  m.insert(LIB::make_pair(2, 2));
+  m.insert(LIB::make_pair(4, 4));
+  m.insert(LIB::make_pair(6, 6));
+  m.insert(LIB::make_pair(5, 5));
+
+  LIB::map<int, int>::reverse_iterator rit(m.rbegin());
+
+  EXPECT_EQ((*rit).second, 7);
+  EXPECT_EQ(rit->second, 7);
+  (*rit).second = 42;
+  EXPECT_EQ((*rit).second, 42);
+  EXPECT_EQ(rit->second, 42);
+  rit->second = 57;
+  EXPECT_EQ((*rit).second, 57);
+  EXPECT_EQ(rit->second, 57);
+  ++rit;
+  EXPECT_EQ((*rit).second, 6);
+  EXPECT_EQ(rit->second, 6);
+  rit++;
+  EXPECT_EQ((*rit).second, 5);
+  EXPECT_EQ(rit->second, 5);
+  --rit;
+  EXPECT_EQ((*rit).second, 6);
+  EXPECT_EQ(rit->second, 6);
+  rit--;
+  for (int i = 7; rit != m.rend(); rit++) {
+    EXPECT_EQ(rit->first, i);
+    i--;
+  }
+}
+
+TEST(MapIteratorTest, ConstReverseIterator) {
+  LIB::map<int, int> m;
+
+  m.insert(LIB::make_pair(7, 7));
+  m.insert(LIB::make_pair(1, 1));
+  m.insert(LIB::make_pair(3, 3));
+  m.insert(LIB::make_pair(2, 2));
+  m.insert(LIB::make_pair(4, 4));
+  m.insert(LIB::make_pair(6, 6));
+  m.insert(LIB::make_pair(5, 5));
+
+  LIB::map<int, int>::const_reverse_iterator rit(m.rbegin());
+
+  EXPECT_EQ((*rit).second, 7);
+  EXPECT_EQ(rit->second, 7);
+  ++rit;
+  EXPECT_EQ((*rit).second, 6);
+  EXPECT_EQ(rit->second, 6);
+  rit++;
+  EXPECT_EQ((*rit).second, 5);
+  EXPECT_EQ(rit->second, 5);
+  --rit;
+  EXPECT_EQ((*rit).second, 6);
+  EXPECT_EQ(rit->second, 6);
+  rit--;
+  for (int i = 7; rit != m.rend(); rit++) {
+    EXPECT_EQ(rit->first, i);
+    i--;
+  }
 }
