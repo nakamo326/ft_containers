@@ -205,7 +205,7 @@ TEST(VectorTest, AssignFuncInputIteratorCheck) {
 
   v.assign(tmp.begin(), tmp.end());
   int i = 0;
-  for (ft::vector<int>::iterator it = v.begin(); it != v.end(); it++) {
+  for (LIB::vector<int>::iterator it = v.begin(); it != v.end(); it++) {
     EXPECT_EQ(*it, i);
     i++;
   }

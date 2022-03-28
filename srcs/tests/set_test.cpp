@@ -1,6 +1,7 @@
 
 #include "set.hpp"
 
+#include "pair.hpp"
 #include "switch.hpp"
 
 #if __cplusplus >= 201103L
@@ -11,9 +12,8 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <set>
 #include <vector>
-
-#include "pair.hpp"
 
 TEST(SetTest, constructor) {
   LIB::set<int> m;

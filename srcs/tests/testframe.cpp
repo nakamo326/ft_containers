@@ -9,11 +9,11 @@ test_func_vec_type test_functions;
 
 /***** Include all the files that use GoogleTest to test *****/
 
-// #include "map_test.cpp"
+#include "map_test.cpp"
+#include "pair_test.cpp"
 #include "set_test.cpp"
-// #include "pair_test.cpp"
-// #include "stack_test.cpp"
-// #include "vector_test.cpp"
+#include "stack_test.cpp"
+#include "vector_test.cpp"
 
 namespace ft {
 namespace test {

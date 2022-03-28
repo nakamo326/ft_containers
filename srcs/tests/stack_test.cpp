@@ -9,6 +9,7 @@
 #endif
 
 #include <deque>
+#include <stack>
 #include <vector>
 
 TEST(StackTest, Constructor) {

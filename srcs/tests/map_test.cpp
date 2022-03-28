@@ -1,6 +1,7 @@
 
 #include "map.hpp"
 
+#include "pair.hpp"
 #include "switch.hpp"
 
 #if __cplusplus >= 201103L
@@ -11,9 +12,8 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <map>
 #include <vector>
-
-#include "pair.hpp"
 
 TEST(MapTest, constructor) {
   LIB::map<int, int> m;

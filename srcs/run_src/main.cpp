@@ -3,6 +3,7 @@
 #include <iterator>
 #include <list>
 #include <map>
+#include <set>
 #include <sstream>
 #include <vector>
 
@@ -44,16 +45,12 @@ int main() {
   //   print_map(v);
   // }
 
-  {
-    std::map<int, int> m;
-    for (size_t i = 0; i < 100000; i++) {
-      m.insert(std::make_pair(i, i));
-    }
+  std::set<int> s;
 
-    for (size_t i = 0; i < 20000; i++) {
-      m.erase(m.find(i * 5), m.find((i + 1) * 5));
-    }
-  }
+  s.insert(1);
+  s.insert(2);
+
+  std::set<int>::iterator it = s.begin();
 
   // {
   //   ft::map<int, int> m;

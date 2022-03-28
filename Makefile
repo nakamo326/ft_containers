@@ -48,19 +48,16 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 run: all
 	./$(NAME)
 
-# stdライブラリとftライブラリで比較できるように二つのバイナリを用意する。
-test:
-	clang++ --std=c++98 srcs/tests/testframe.cpp $(INCLUDES) -o test
-	./test && :
-	$(RM) test
+test: $(STDBIN) $(FTBIN)
+	./$(STDBIN)
+	./$(FTBIN)
+	$(RM) $(STDBIN) $(FTBIN)
 
-$(STDBIN): $(T_OBJS)
-	@$(CXX) $(CXXFLAGS) -DSTD $^ $(INCLUDES) -o $(STDBIN)
-	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)$(STDBIN)$(NC)" 
+$(STDBIN):
+	clang++ --std=c++98 -DSTD srcs/tests/testframe.cpp $(INCLUDES) -o $(STDBIN)
 
-$(FTBIN): $(T_OBJS)
-	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o $(FTBIN)
-	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)$(FTBIN)$(NC)" 
+$(FTBIN):
+	clang++ --std=c++98 srcs/tests/testframe.cpp $(INCLUDES) -o $(FTBIN)
 
 # google test run
 gtest:
