@@ -192,7 +192,7 @@ TEST(VectorTest, AssignFuncInputIteratorCheck) {
   std::istream_iterator<int> beg(ss);
   std::istream_iterator<int> last;
 
-  ft::vector<int> v;
+  LIB::vector<int> v;
   v.assign(beg, last);
   EXPECT_EQ(v[0], 1);
   EXPECT_EQ(v[1], 2);
@@ -211,9 +211,8 @@ TEST(VectorTest, AssignFuncInputIteratorCheck) {
   }
 }
 
-/*
 TEST(VectorTest, Destructor) {
-  ft::vector<int>* f = new ft::vector<int>(1000);
+  LIB::vector<int>* f = new LIB::vector<int>(1000);
   for (size_t i = 0; i < 1000; i++) {
     (*f)[i] = i;
   }
@@ -221,93 +220,66 @@ TEST(VectorTest, Destructor) {
 }
 
 TEST(VectorTest, At) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> v(1000);
   for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
+    v[i] = i;
   }
-  s[5] = 10;
-  f[5] = 10;
-  EXPECT_EQ(s.at(0), f.at(0));
-  EXPECT_EQ(s.at(5), f.at(5));
-  s.at(5) = 42;
-  f.at(5) = 42;
-  EXPECT_EQ(s.at(0), f.at(0));
-  EXPECT_EQ(s.at(5), f.at(5));
-  EXPECT_EQ(s.at(5), 42);
-  EXPECT_EQ(f.at(5), 42);
-  EXPECT_THROW(s.at(s.size()), std::out_of_range);
-  EXPECT_THROW(f.at(f.size()), std::out_of_range);
+
+  for (size_t i = 0; i < 1000; i++) {
+    EXPECT_EQ(v.at(i), i);
+  }
+  v.at(5) = 42;
+  EXPECT_EQ(v.at(5), 42);
+  EXPECT_THROW(v.at(v.size()), std::out_of_range);
 }
 
 TEST(VectorTest, Front) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> v;
   for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
+    v.push_back(i);
   }
-  EXPECT_EQ(s.front(), f.front());
-  s.front() = 42;
-  f.front() = 42;
-  EXPECT_EQ(s.front(), f.front());
-  EXPECT_EQ(s.front(), 42);
-  EXPECT_EQ(f.front(), 42);
+  EXPECT_EQ(v.front(), 0);
+  v.front() = 42;
+  EXPECT_EQ(v.front(), 42);
 }
 
 TEST(VectorTest, Back) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> v;
   for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
+    v.push_back(i);
   }
-  EXPECT_EQ(s.back(), f.back());
-  s.back() = 42;
-  f.back() = 42;
-  EXPECT_EQ(s.back(), f.back());
-  EXPECT_EQ(s.back(), 42);
-  EXPECT_EQ(f.back(), 42);
+  EXPECT_EQ(v.back(), 999);
+  v.back() = 42;
+  EXPECT_EQ(v.back(), 42);
 }
 
 TEST(VectorTest, Reserve) {
-  std::vector<int> s;
-  ft::vector<int>  f;
-  for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
-  }
-  s.reserve(1000);
-  f.reserve(1000);
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  EXPECT_THROW(s.reserve(s.max_size() + 1), std::length_error);
-  EXPECT_THROW(f.reserve(f.max_size() + 1), std::length_error);
+  LIB::vector<int> v;
+  v.reserve(1000);
+  EXPECT_EQ(v.capacity(), 1000);
+  v.reserve(10000);
+  EXPECT_EQ(v.capacity(), 10000);
+  v.reserve(10);
+  EXPECT_EQ(v.capacity(), 10000);
+  EXPECT_THROW(v.reserve(v.max_size() + 1), std::length_error);
 }
 
 TEST(VectorTest, BeginAndEnd) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> v;
   for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
+    v.push_back(i);
   }
-  std::vector<int>::iterator sit = s.begin();
-  ft::vector<int>::iterator  fit = f.begin();
+  LIB::vector<int>::iterator it = v.begin();
 
-  EXPECT_EQ(*sit, *fit);
-
-  for (size_t i = 0; i < s.size(); i++) {
-    sit++;
-    fit++;
+  for (size_t i = 0; i < v.size(); i++) {
+    EXPECT_EQ(*it, i);
+    it++;
   }
-  std::vector<int>::iterator send = s.end();
-  ft::vector<int>::iterator  fend = f.end();
-  EXPECT_EQ(sit, send);
-  EXPECT_EQ(fit, fend);
+  LIB::vector<int>::iterator end = v.end();
+  EXPECT_EQ(it, end);
 }
 
+/*
 TEST(VectorTest, Pushback) {
   std::vector<int> s;
   ft::vector<int>  f;
