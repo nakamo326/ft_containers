@@ -279,114 +279,96 @@ TEST(VectorTest, BeginAndEnd) {
   EXPECT_EQ(it, end);
 }
 
-/*
 TEST(VectorTest, Pushback) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> v;
   for (size_t i = 0; i < 100000; i++) {
-    s.push_back(i);
-    f.push_back(i);
-    EXPECT_EQ(s[i], f[i]);
-    EXPECT_EQ(s.size(), f.size());
-    EXPECT_EQ(s.capacity(), f.capacity());
+    v.push_back(i);
+    EXPECT_EQ(v[i], i);
+    EXPECT_EQ(v.size(), i + 1);
   }
 }
 
 TEST(VectorTest, Clear) {
-  std::vector<TestClass> s(10);
-  ft::vector<TestClass>  f(10);
-  s.clear();
-  f.clear();
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
+  LIB::vector<TestClass> v(10);
+  v.clear();
+  EXPECT_EQ(v.size(), 0);
+  EXPECT_EQ(v.capacity(), 10);
 }
 
 TEST(VectorTest, InsertWithValue) {
-  std::vector<int> s;
-  ft::vector<int>  f;
-  for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
-  }
-  std::vector<int> ts;
-  ft::vector<int>  tf;
+  LIB::vector<int> v;
   for (int i = 0; i < 1000; i++) {
-    ts.insert(ts.begin(), i);
-    tf.insert(tf.begin(), i);
-    EXPECT_EQ(ts[0], i);
-    EXPECT_EQ(tf[0], i);
-    EXPECT_EQ(ts.size(), tf.size());
-    EXPECT_EQ(ts.capacity(), tf.capacity());
+    v.insert(v.begin(), i);
+    EXPECT_EQ(v[0], i);
+    EXPECT_EQ(v.size(), i + 1);
   }
 }
 
 TEST(VectorTest, InsertWithCount) {
-  std::vector<int> s;
-  ft::vector<int>  f;
-  for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
+  LIB::vector<int> v;
+
+  v.insert(v.begin(), 1000, 42);
+  v.insert(v.begin() + 500, 1000, 57);
+  for (size_t i = 0; i < 500; i++) {
+    EXPECT_EQ(v[i], 42);
   }
-  s.insert(s.begin(), 1000, 42);
-  f.insert(f.begin(), 1000, 42);
-  s.insert(s.begin() + 5, 4000, 57);
-  f.insert(f.begin() + 5, 4000, 57);
-  for (size_t i = 0; i < s.size(); i++) {
-    EXPECT_EQ(s[i], f[i]);
+  for (size_t i = 500; i < 1500; i++) {
+    EXPECT_EQ(v[i], 57);
+  }
+  for (size_t i = 1500; i < 2000; i++) {
+    EXPECT_EQ(v[i], 42);
   }
 }
 
 TEST(VectorTest, InsertWithIter) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> v;
   for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
+    v.push_back(i);
   }
-  std::vector<int> input(10000);
+  LIB::vector<int> input(10000);
   for (size_t i = 0; i < 10000; i++) {
     input[i] = i;
   }
-  s.insert(s.begin() + 500, input.begin(), input.end());
-  f.insert(f.begin() + 500, input.begin(), input.end());
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  for (size_t i = 0; i < s.size(); i++) {
-    EXPECT_EQ(s[i], f[i]);
+  v.insert(v.begin() + 500, input.begin(), input.end());
+  EXPECT_EQ(v.size(), 11000);
+  for (size_t i = 0; i < 500; i++) {
+    EXPECT_EQ(v[i], i);
+  }
+  for (size_t i = 0; i < 10000; i++) {
+    EXPECT_EQ(v[i + 500], i);
+  }
+  for (size_t i = 0; i < 500; i++) {
+    EXPECT_EQ(v[i + 10500], i + 500);
   }
 }
 
 TEST(VectorTest, EraseOne) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> v;
   for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
+    v.push_back(i);
   }
-  std::vector<int>::iterator sret = s.erase(s.begin() + 50);
-  ft::vector<int>::iterator  fret = f.erase(f.begin() + 50);
-  EXPECT_EQ(*sret, *fret);
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  for (size_t i = 0; i < s.size(); i++) {
-    EXPECT_EQ(s[i], f[i]);
+  LIB::vector<int>::iterator ret = v.erase(v.begin() + 50);
+  EXPECT_EQ(*ret, 51);
+  EXPECT_EQ(v.size(), 999);
+  for (size_t i = 0; i < 999; i++) {
+    if (i < 50) {
+      EXPECT_EQ(v[i], i);
+    } else if (i >= 50) {
+      EXPECT_EQ(v[i], i + 1);
+    }
   }
-  sret = s.erase(s.end() - 1);
-  fret = f.erase(f.end() - 1);
-  EXPECT_EQ(sret, s.end());
-  EXPECT_EQ(fret, f.end());
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  for (size_t i = 0; i < s.size(); i++) {
-    EXPECT_EQ(s[i], f[i]);
-  }
+  ret = v.erase(v.end() - 1);
+  EXPECT_EQ(ret, v.end());
+  EXPECT_EQ(v.size(), 998);
+
   // leak check
-  ft::vector<TestClass> v(10);
+  LIB::vector<TestClass> tv(10);
   for (size_t i = 0; i < 10; i++) {
-    v.erase(v.begin());
+    tv.erase(v.begin());
   }
 }
 
+/*
 TEST(VectorTest, EraseIter) {
   std::vector<int> s;
   ft::vector<int>  f;
