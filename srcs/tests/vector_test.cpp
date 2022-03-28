@@ -364,176 +364,140 @@ TEST(VectorTest, EraseOne) {
   // leak check
   LIB::vector<TestClass> tv(10);
   for (size_t i = 0; i < 10; i++) {
-    tv.erase(v.begin());
+    tv.erase(tv.begin());
   }
 }
 
-/*
 TEST(VectorTest, EraseIter) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> v;
   for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
+    v.push_back(i);
   }
-  std::vector<int>::iterator sret = s.erase(s.begin() + 50, s.begin() + 60);
-  ft::vector<int>::iterator  fret = f.erase(f.begin() + 50, f.begin() + 60);
-  EXPECT_EQ(*sret, *fret);
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  for (size_t i = 0; i < s.size(); i++) {
-    EXPECT_EQ(s[i], f[i]);
+  LIB::vector<int>::iterator ret = v.erase(v.begin() + 50, v.begin() + 60);
+  EXPECT_EQ(*ret, 60);
+  EXPECT_EQ(v.size(), 990);
+
+  for (size_t i = 0; i < v.size(); i++) {
+    if (i < 50) {
+      EXPECT_EQ(v[i], i);
+    } else if (i >= 60) {
+      EXPECT_EQ(v[i], i + 10);
+    }
   }
-  sret = s.erase(s.begin() + 80, s.end());
-  fret = f.erase(f.begin() + 80, f.end());
-  EXPECT_EQ(sret, s.end());
-  EXPECT_EQ(fret, f.end());
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  for (size_t i = 0; i < s.size(); i++) {
-    EXPECT_EQ(s[i], f[i]);
+
+  ret = v.erase(v.begin() + 80, v.end());
+  EXPECT_EQ(ret, v.end());
+  EXPECT_EQ(v.size(), 80);
+  for (size_t i = 0; i < v.size(); i++) {
+    if (i < 50) {
+      EXPECT_EQ(v[i], i);
+    } else if (i >= 60) {
+      EXPECT_EQ(v[i], i + 10);
+    }
   }
+
   // leak check
-  ft::vector<TestClass> v(10);
-  v.erase(v.begin(), v.begin() + 5);
-  v.erase(v.begin(), v.begin() + 5);
+  LIB::vector<TestClass> t(10);
+  t.erase(t.begin(), t.begin() + 5);
+  t.erase(t.begin(), t.begin() + 5);
 }
 
 TEST(VectorTest, PopBack) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> s;
   for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
     s.push_back(i);
   }
   for (size_t i = 0; i < 100; i++) {
     s.pop_back();
-    f.pop_back();
-    EXPECT_EQ(s.size(), f.size());
-    EXPECT_EQ(s.capacity(), f.capacity());
+    EXPECT_EQ(s.size(), 1000 - (i + 1));
     for (size_t j = 0; j < s.size(); j++) {
-      EXPECT_EQ(s[i], f[i]);
+      EXPECT_EQ(s[j], j);
     }
   }
-  ft::vector<TestClass> v(10);
+  LIB::vector<TestClass> v(10);
   for (size_t i = 0; i < 10; i++) {
     v.pop_back();
   }
 }
 
 TEST(VectorTest, Resize) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> v;
   for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
+    v.push_back(i);
   }
-  s.resize(100, 42);
-  f.resize(100, 42);
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  for (size_t i = 0; i < s.size(); i++) {
-    EXPECT_EQ(s[i], f[i]);
+  v.resize(100, 42);
+  EXPECT_EQ(v.size(), 100);
+  for (size_t i = 0; i < v.size(); i++) {
+    EXPECT_EQ(v[i], i);
   }
-  s.resize(0, 3);
-  f.resize(0, 3);
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  for (size_t i = 0; i < s.size(); i++) {
-    EXPECT_EQ(s[i], f[i]);
-  }
-  s.resize(200, 3);
-  f.resize(200, 3);
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  for (size_t i = 0; i < s.size(); i++) {
-    EXPECT_EQ(s[i], f[i]);
+  v.resize(0, 3);
+  EXPECT_EQ(v.size(), 0);
+  v.resize(200, 3);
+  EXPECT_EQ(v.size(), 200);
+  for (size_t i = 0; i < v.size(); i++) {
+    EXPECT_EQ(v[i], 3);
   }
 }
 
 TEST(VectorTest, Swap) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> v;
   for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
-    s.push_back(i);
+    v.push_back(i);
   }
-  std::vector<int> ts(50);
-  ft::vector<int>  tf(50);
+  LIB::vector<int> ts;
   for (size_t i = 0; i < 50; i++) {
-    s[i] = 50 - i;
-    f[i] = 50 - i;
+    ts.push_back(50 - i);
   }
-  s.swap(ts);
-  f.swap(tf);
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  for (size_t i = 0; i < s.size(); i++) {
-    EXPECT_EQ(s[i], f[i]);
+  v.swap(ts);
+  EXPECT_EQ(v.size(), 50);
+  for (size_t i = 0; i < v.size(); i++) {
+    EXPECT_EQ(v[i], 50 - i);
   }
-  std::swap(s, ts);
-  ft::swap(f, tf);
-  EXPECT_EQ(s.size(), f.size());
-  EXPECT_EQ(s.capacity(), f.capacity());
-  for (size_t i = 0; i < s.size(); i++) {
-    EXPECT_EQ(s[i], f[i]);
+  LIB::swap(v, ts);
+  EXPECT_EQ(v.size(), 1000);
+  for (size_t i = 0; i < v.size(); i++) {
+    EXPECT_EQ(v[i], i);
   }
-  // FIXME: check with iterator
-  ft::vector<int>::iterator f_it  = f.begin();
-  ft::vector<int>::iterator tf_it = tf.begin();
-  ft::swap(f, tf);
-  std::swap(s, ts);
-  std::vector<int>::iterator s_it  = s.begin();
-  std::vector<int>::iterator ts_it = ts.begin();
 
-  for (; f_it != tf.end(); f_it++) {
-    EXPECT_EQ(*ts_it, *f_it);
-    ts_it++;
+  LIB::vector<int>::iterator it = v.begin();
+  LIB::swap(v, ts);
+  for (int i = 0; it != ts.end(); it++) {
+    EXPECT_EQ(*it, i);
+    i++;
   }
-  EXPECT_EQ(ts_it, ts.end());
-  for (; tf_it != f.end(); tf_it++) {
-    EXPECT_EQ(*s_it, *tf_it);
-    s_it++;
-  }
-  EXPECT_EQ(s_it, s.end());
+
+  EXPECT_EQ(it, ts.end());
 }
 
 TEST(VectorTest, Comparison) {
-  std::vector<int> s;
-  ft::vector<int>  f;
+  LIB::vector<int> s;
   for (size_t i = 0; i < 1000; i++) {
-    f.push_back(i);
     s.push_back(i);
   }
-  ft::vector<int>  cf = f;
-  std::vector<int> cs = s;
-  EXPECT_EQ(cf, f);
-  EXPECT_EQ(f, cf);
-  EXPECT_EQ(cs == s, cf == f);
-  EXPECT_EQ(s == cs, f == cf);
-  EXPECT_EQ(cs != s, cf != f);
-  EXPECT_EQ(s != cs, f != cf);
-  EXPECT_EQ(cs <= s, cf <= f);
-  EXPECT_EQ(s <= cs, f <= cf);
-  EXPECT_EQ(cs >= s, cf >= f);
-  EXPECT_EQ(s >= cs, f >= cf);
-  EXPECT_EQ(cs > s, cf > f);
-  EXPECT_EQ(s > cs, f > cf);
-  EXPECT_EQ(cs < s, cf < f);
-  EXPECT_EQ(s < cs, f < cf);
-  cf.push_back(42);
+  LIB::vector<int> cs = s;
+  EXPECT_EQ(cs == s, true);
+  EXPECT_EQ(s == cs, true);
+  EXPECT_EQ(cs != s, false);
+  EXPECT_EQ(s != cs, false);
+  EXPECT_EQ(cs <= s, true);
+  EXPECT_EQ(s <= cs, true);
+  EXPECT_EQ(cs >= s, true);
+  EXPECT_EQ(s >= cs, true);
+  EXPECT_EQ(cs > s, false);
+  EXPECT_EQ(s > cs, false);
+  EXPECT_EQ(cs < s, false);
+  EXPECT_EQ(s < cs, false);
   cs.push_back(42);
-  EXPECT_EQ(cs == s, cf == f);
-  EXPECT_EQ(s == cs, f == cf);
-  EXPECT_EQ(cs != s, cf != f);
-  EXPECT_EQ(s != cs, f != cf);
-  EXPECT_EQ(cs <= s, cf <= f);
-  EXPECT_EQ(s <= cs, f <= cf);
-  EXPECT_EQ(cs >= s, cf >= f);
-  EXPECT_EQ(s >= cs, f >= cf);
-  EXPECT_EQ(cs > s, cf > f);
-  EXPECT_EQ(s > cs, f > cf);
-  EXPECT_EQ(cs < s, cf < f);
-  EXPECT_EQ(s < cs, f < cf);
+  EXPECT_EQ(cs == s, false);
+  EXPECT_EQ(s == cs, false);
+  EXPECT_EQ(cs != s, true);
+  EXPECT_EQ(s != cs, true);
+  EXPECT_EQ(cs <= s, false);
+  EXPECT_EQ(s <= cs, true);
+  EXPECT_EQ(cs >= s, true);
+  EXPECT_EQ(s >= cs, false);
+  EXPECT_EQ(cs > s, true);
+  EXPECT_EQ(s > cs, false);
+  EXPECT_EQ(cs < s, false);
+  EXPECT_EQ(s < cs, true);
 }
-*/
