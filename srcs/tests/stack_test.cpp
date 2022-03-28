@@ -1,5 +1,7 @@
 #include "stack.hpp"
 
+#include "switch.hpp"
+
 #if __cplusplus >= 201103L
 #include <gtest/gtest.h>
 #else
@@ -10,14 +12,14 @@
 #include <vector>
 
 TEST(StackTest, Constructor) {
-  ft::stack<int> s;
+  LIB::stack<int> s;
   EXPECT_EQ(s.size(), 0);
   EXPECT_EQ(s.empty(), true);
 }
 
 TEST(StackTest, ConstructorWithVector) {
-  ft::vector<int> v(5, 42);
-  ft::stack<int>  s(v);
+  LIB::vector<int> v(5, 42);
+  LIB::stack<int>  s(v);
   EXPECT_EQ(s.size(), 5);
   EXPECT_EQ(s.empty(), false);
   EXPECT_EQ(s.top(), 42);
@@ -29,15 +31,20 @@ TEST(StackTest, ConstructorWithVector) {
 }
 
 TEST(StackTest, Push) {
-  ft::stack<int> s;
+  LIB::stack<int> s;
   s.push(42);
   EXPECT_EQ(s.size(), 1);
+  EXPECT_EQ(s.empty(), false);
   EXPECT_EQ(s.top(), 42);
+  s.push(43);
+  EXPECT_EQ(s.size(), 2);
+  EXPECT_EQ(s.empty(), false);
+  EXPECT_EQ(s.top(), 43);
 }
 
 TEST(StackTest, Assignation) {
-  ft::stack<int> s1;
-  ft::stack<int> s2;
+  LIB::stack<int> s1;
+  LIB::stack<int> s2;
   s1.push(1);
   s1.push(2);
   s1.push(3);
@@ -49,7 +56,7 @@ TEST(StackTest, Assignation) {
 }
 
 TEST(StackTest, ElementAccess) {
-  ft::stack<int> s;
+  LIB::stack<int> s;
   s.push(1);
   s.push(2);
   s.push(3);
@@ -57,7 +64,7 @@ TEST(StackTest, ElementAccess) {
 }
 
 TEST(StackTest, Capacity) {
-  ft::stack<int> s;
+  LIB::stack<int> s;
   EXPECT_EQ(s.empty(), true);
   EXPECT_EQ(s.size(), 0);
   s.push(1);
@@ -69,7 +76,7 @@ TEST(StackTest, Capacity) {
 }
 
 TEST(StackTest, Modifires) {
-  ft::stack<int> s;
+  LIB::stack<int> s;
   s.push(1);
   s.push(2);
   s.push(3);
@@ -83,8 +90,8 @@ TEST(StackTest, Modifires) {
 }
 
 TEST(StackTest, NonMemberFunction) {
-  ft::stack<int> s1;
-  ft::stack<int> s2;
+  LIB::stack<int> s1;
+  LIB::stack<int> s2;
   s1.push(1);
   s1.push(2);
   s1.push(3);
@@ -101,16 +108,16 @@ TEST(StackTest, NonMemberFunction) {
 
 // same test with std::vector
 TEST(StackTest, ConstructorWithStdVector) {
-  std::vector<int>                  v;
-  ft::stack<int, std::vector<int> > s(v);
+  std::vector<int>                   v;
+  LIB::stack<int, std::vector<int> > s(v);
   EXPECT_EQ(s.size(), 0);
   EXPECT_EQ(s.empty(), true);
 }
 
 TEST(StackTest, AssignationWithStdVector) {
-  std::vector<int>                  v;
-  ft::stack<int, std::vector<int> > s1(v);
-  ft::stack<int, std::vector<int> > s2;
+  std::vector<int>                   v;
+  LIB::stack<int, std::vector<int> > s1(v);
+  LIB::stack<int, std::vector<int> > s2;
   s1.push(1);
   s1.push(2);
   s1.push(3);
@@ -122,8 +129,8 @@ TEST(StackTest, AssignationWithStdVector) {
 }
 
 TEST(StackTest, ElementAccessWithStdVector) {
-  std::vector<int>                  v;
-  ft::stack<int, std::vector<int> > s(v);
+  std::vector<int>                   v;
+  LIB::stack<int, std::vector<int> > s(v);
   s.push(1);
   s.push(2);
   s.push(3);
@@ -131,8 +138,8 @@ TEST(StackTest, ElementAccessWithStdVector) {
 }
 
 TEST(StackTest, CapacityWithStdVector) {
-  std::vector<int>                  v;
-  ft::stack<int, std::vector<int> > s(v);
+  std::vector<int>                   v;
+  LIB::stack<int, std::vector<int> > s(v);
   EXPECT_EQ(s.empty(), true);
   EXPECT_EQ(s.size(), 0);
   s.push(1);
@@ -144,8 +151,8 @@ TEST(StackTest, CapacityWithStdVector) {
 }
 
 TEST(StackTest, ModifiresWithStdVector) {
-  std::vector<int>                  v;
-  ft::stack<int, std::vector<int> > s(v);
+  std::vector<int>                   v;
+  LIB::stack<int, std::vector<int> > s(v);
   s.push(1);
   s.push(2);
   s.push(3);
@@ -159,9 +166,9 @@ TEST(StackTest, ModifiresWithStdVector) {
 }
 
 TEST(StackTest, NonMemberFunctionWithStdVector) {
-  std::vector<int>                  v;
-  ft::stack<int, std::vector<int> > s1(v);
-  ft::stack<int, std::vector<int> > s2;
+  std::vector<int>                   v;
+  LIB::stack<int, std::vector<int> > s1(v);
+  LIB::stack<int, std::vector<int> > s2;
   s1.push(1);
   s1.push(2);
   s1.push(3);
