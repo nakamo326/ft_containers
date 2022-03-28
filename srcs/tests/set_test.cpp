@@ -1,21 +1,22 @@
 
 #include "set.hpp"
 
+#include "switch.hpp"
+
 #if __cplusplus >= 201103L
 #include <gtest/gtest.h>
 #else
 #include "testframe/testframe.hpp"
 #endif
 
-#include <limits>
-#include <random>
-#include <typeinfo>
+#include <cstdlib>
+#include <ctime>
 #include <vector>
 
 #include "pair.hpp"
 
 TEST(SetTest, constructor) {
-  ft::set<int> m;
+  LIB::set<int> m;
 
   EXPECT_EQ(m.size(), 0);
 }
@@ -26,9 +27,9 @@ TEST(SetTest, rangeConstructor) {
     from.push_back(i);
     from.push_back(i);
   }
-  ft::set<int> m(from.begin(), from.end());
+  LIB::set<int> m(from.begin(), from.end());
 
-  ft::set<int>::iterator it = m.begin();
+  LIB::set<int>::iterator it = m.begin();
   EXPECT_EQ(m.size(), 10);
   for (int i = 0; i < 10; i++) {
     EXPECT_EQ(*it, from.at(i * 2));
@@ -37,14 +38,14 @@ TEST(SetTest, rangeConstructor) {
 }
 
 TEST(SetTest, copyConstructor) {
-  ft::set<int> from;
+  LIB::set<int> from;
   for (int i = 0; i < 10; i++) {
     from.insert(i);
   }
-  ft::set<int> m(from);
+  LIB::set<int> m(from);
 
-  ft::set<int>::iterator it   = m.begin();
-  ft::set<int>::iterator f_it = from.begin();
+  LIB::set<int>::iterator it   = m.begin();
+  LIB::set<int>::iterator f_it = from.begin();
   EXPECT_EQ(m.size(), 10);
   for (int i = 0; i < 10; i++) {
     EXPECT_EQ(*it, *f_it);
@@ -54,11 +55,11 @@ TEST(SetTest, copyConstructor) {
 }
 
 TEST(SetTest, assignation) {
-  ft::set<int> from;
+  LIB::set<int> from;
   for (int i = 0; i < 10; i++) {
     from.insert(i);
   }
-  ft::set<int> m;
+  LIB::set<int> m;
   for (int i = 0; i < 5; i++) {
     from.insert(4);
   }
@@ -69,24 +70,24 @@ TEST(SetTest, assignation) {
 }
 
 TEST(SetTest, GetAllocator) {
-  ft::set<int> f;
+  LIB::set<int> f;
 
-  ft::set<int>::allocator_type a   = f.get_allocator();
-  ft::set<int>::value_type*    val = a.allocate(1);
-  *val                             = 42;
+  LIB::set<int>::allocator_type a   = f.get_allocator();
+  LIB::set<int>::value_type*    val = a.allocate(1);
+  *val                              = 42;
   EXPECT_EQ(*val, 42);
   a.deallocate(val, 1);
 }
 
 TEST(SetTest, empty) {
-  ft::set<int> m;
+  LIB::set<int> m;
   EXPECT_EQ(m.empty(), true);
   m.insert(0);
   EXPECT_EQ(m.empty(), false);
 }
 
 TEST(SetTest, size) {
-  ft::set<int> m;
+  LIB::set<int> m;
   EXPECT_EQ(m.size(), 0);
   for (size_t i = 1; i <= 1000; i++) {
     m.insert(i);
@@ -98,17 +99,11 @@ TEST(SetTest, size) {
   }
 }
 
-TEST(SetTest, MaxSize) {
-  std::set<int> s;
-  ft::set<int>  f;
-  EXPECT_EQ(s.max_size(), f.max_size());
-}
-
 TEST(SetTest, simpleInsert) {
-  std::random_device rand;
+  std::srand(time(NULL));
   {
-    ft::set<int> m;
-    int          times = 10000;
+    LIB::set<int> m;
+    int           times = 10000;
     for (size_t i = 0; i < times; i++) {
       m.insert(i);
       EXPECT_EQ(m.size(), i + 1);
@@ -125,12 +120,12 @@ TEST(SetTest, simpleInsert) {
       size_t b = rand() % i;
       std::swap(v[a], v[b]);
     }
-    ft::set<int> m;
+    LIB::set<int> m;
     for (size_t i = 0; i < 10000; i++) {
       m.insert(v[i]);
       EXPECT_EQ(m.size(), i + 1);
     }
-    ft::set<int>::iterator it = m.begin();
+    LIB::set<int>::iterator it = m.begin();
     for (size_t i = 0; i < 10000; i++) {
       EXPECT_EQ(*it, i);
       it++;
@@ -139,10 +134,10 @@ TEST(SetTest, simpleInsert) {
 }
 
 TEST(SetTest, positionInsert) {
-  std::random_device rand;
-  ft::set<int>       m;
-  int                times = 10000;
-  std::vector<int>   v(times);
+  std::srand(time(NULL));
+  LIB::set<int>    m;
+  int              times = 10000;
+  std::vector<int> v(times);
   for (size_t i = 0; i < times; i++) {
     v[i] = i;
   }
@@ -165,8 +160,8 @@ TEST(SetTest, positionInsert) {
     }
   }
 
-  ft::set<int>::iterator it  = m.begin();
-  int                    num = *it;
+  LIB::set<int>::iterator it  = m.begin();
+  int                     num = *it;
   it++;
   for (; it != m.end(); it++) {
     EXPECT_EQ(num < *it, true);
@@ -174,13 +169,13 @@ TEST(SetTest, positionInsert) {
 }
 
 TEST(SetTest, rangeInsert) {
-  ft::set<int>     m;
+  LIB::set<int>    m;
   std::vector<int> v(1000);
   for (size_t i = 0; i < 1000; i++) {
     v[i] = i;
   }
   m.insert(v.begin(), v.end());
-  ft::set<int>::iterator it(m.begin());
+  LIB::set<int>::iterator it(m.begin());
   for (size_t i = 0; it != m.end(); it++) {
     EXPECT_EQ(*it, i);
     i++;
@@ -188,8 +183,8 @@ TEST(SetTest, rangeInsert) {
 }
 
 TEST(SetTest, Erase) {
-  ft::set<int> m;
-  int          times = 10000;
+  LIB::set<int> m;
+  int           times = 10000;
   for (size_t i = 1; i <= times; i++) {
     m.insert(i);
   }
@@ -201,8 +196,8 @@ TEST(SetTest, Erase) {
 }
 
 TEST(SetTest, positionErase) {
-  ft::set<int> m;
-  int          times = 10000;
+  LIB::set<int> m;
+  int           times = 10000;
   for (size_t i = 1; i <= times; i++) {
     m.insert(i);
   }
@@ -214,8 +209,8 @@ TEST(SetTest, positionErase) {
 }
 
 TEST(SetTest, rangeErase) {
-  ft::set<int> m;
-  int          times = 10000;
+  LIB::set<int> m;
+  int           times = 10000;
   for (size_t i = 1; i <= times; i++) {
     m.insert(i);
   }
@@ -225,17 +220,17 @@ TEST(SetTest, rangeErase) {
 }
 
 TEST(SetTest, Swap) {
-  ft::set<int> m;
-  int          times = 10000;
+  LIB::set<int> m;
+  int           times = 10000;
   for (size_t i = 1; i <= times; i++) {
     m.insert(i);
   }
-  ft::set<int> n;
+  LIB::set<int> n;
   for (size_t i = 1; i <= 1000; i++) {
     m.insert(4);
   }
-  ft::set<int>::iterator m_it = m.begin();
-  ft::set<int>::iterator n_it = n.begin();
+  LIB::set<int>::iterator m_it = m.begin();
+  LIB::set<int>::iterator n_it = n.begin();
   n.swap(m);
   EXPECT_EQ(n.size(), times);
   for (int i = 1; m_it != n.end(); m_it++) {
@@ -251,8 +246,8 @@ TEST(SetTest, Swap) {
 }
 
 TEST(SetTest, Clear) {
-  ft::set<int> m;
-  int          times = 10000;
+  LIB::set<int> m;
+  int           times = 10000;
   for (size_t i = 1; i <= times; i++) {
     m.insert(i);
   }
@@ -262,7 +257,7 @@ TEST(SetTest, Clear) {
 }
 
 TEST(SetTest, count) {
-  ft::set<int> m;
+  LIB::set<int> m;
   EXPECT_TRUE(m.count(0) == 0);
   m.insert(0);
   EXPECT_TRUE(m.count(0) == 1);
@@ -272,11 +267,11 @@ TEST(SetTest, count) {
 }
 
 TEST(SetTest, find) {
-  ft::set<int> m;
+  LIB::set<int> m;
   m.insert(1);
   m.insert(3);
   m.insert(2);
-  ft::set<int>::iterator it = m.begin();
+  LIB::set<int>::iterator it = m.begin();
 
   EXPECT_EQ(m.find(0), m.end());
   EXPECT_NE(m.find(1), m.end());
@@ -287,13 +282,13 @@ TEST(SetTest, find) {
   EXPECT_EQ(m.find(3), it);
   EXPECT_EQ(m.find(4), m.end());
 
-  ft::set<int>::const_iterator cit = m.find(1);
+  LIB::set<int>::const_iterator cit = m.find(1);
   // cannot assign
   // cit->second = 57;
 }
 
 TEST(SetTest, equalRange) {
-  ft::set<int> m;
+  LIB::set<int> m;
   m.insert(1);
   m.insert(3);
   m.insert(2);
@@ -313,7 +308,7 @@ TEST(SetTest, equalRange) {
 }
 
 TEST(SetTest, lowerBound) {
-  ft::set<int> m;
+  LIB::set<int> m;
   m.insert(1);
   m.insert(3);
   m.insert(2);
@@ -326,7 +321,7 @@ TEST(SetTest, lowerBound) {
 }
 
 TEST(SetTest, upperBound) {
-  ft::set<int> m;
+  LIB::set<int> m;
   m.insert(1);
   m.insert(3);
   m.insert(2);
@@ -339,31 +334,31 @@ TEST(SetTest, upperBound) {
 }
 
 TEST(SetTest, KeyCompare) {
-  ft::set<int> m;
+  LIB::set<int> m;
 
-  ft::set<int>::key_compare kc = m.key_comp();
+  LIB::set<int>::key_compare kc = m.key_comp();
 
   EXPECT_EQ(kc(0, 1), true);
   EXPECT_EQ(kc(42, 0), false);
 }
 
 TEST(SetTest, ValueCompare) {
-  ft::set<int> m;
+  LIB::set<int> m;
 
-  ft::set<int>::value_compare vc = m.value_comp();
+  LIB::set<int>::value_compare vc = m.value_comp();
 
   EXPECT_EQ(vc(0, 1), true);
   EXPECT_EQ(vc(42, 1), false);
 }
 
 TEST(SetTest, ComparisonOperators) {
-  ft::set<int> m;
+  LIB::set<int> m;
   m.insert(0);
   m.insert(1);
   m.insert(2);
   m.insert(3);
 
-  ft::set<int> c(m);
+  LIB::set<int> c(m);
 
   EXPECT_EQ(m == c, true);
   EXPECT_EQ(m != c, false);
@@ -387,4 +382,118 @@ TEST(SetTest, ComparisonOperators) {
   EXPECT_EQ(m > c, false);
   EXPECT_EQ(m <= c, true);
   EXPECT_EQ(m >= c, true);
+}
+
+TEST(SetIteratorTest, Iterator) {
+  LIB::set<int> m;
+
+  m.insert(7);
+  m.insert(1);
+  m.insert(3);
+  m.insert(2);
+  m.insert(4);
+  m.insert(6);
+  m.insert(5);
+
+  LIB::set<int>::iterator it = m.begin();
+  EXPECT_EQ((*it), 1);
+  *it = 42;
+  EXPECT_EQ((*it), 42);
+  *it = 57;
+  EXPECT_EQ((*it), 57);
+  *it = 1;
+  ++it;
+  EXPECT_EQ((*it), 2);
+  it++;
+  EXPECT_EQ((*it), 3);
+  --it;
+  EXPECT_EQ((*it), 2);
+  it--;
+  for (int i = 1; it != m.end(); it++) {
+    EXPECT_EQ(*it, i);
+    i++;
+  }
+}
+
+TEST(SetIteratorTest, ConstIterator) {
+  LIB::set<int> m;
+
+  m.insert(7);
+  m.insert(1);
+  m.insert(3);
+  m.insert(2);
+  m.insert(4);
+  m.insert(6);
+  m.insert(5);
+
+  LIB::set<int>::const_iterator it = m.begin();
+  EXPECT_EQ(*it, 1);
+  ++it;
+  EXPECT_EQ(*it, 2);
+  it++;
+  EXPECT_EQ(*it, 3);
+  --it;
+  EXPECT_EQ(*it, 2);
+  it--;
+  for (int i = 1; it != m.end(); it++) {
+    EXPECT_EQ(*it, i);
+    i++;
+  }
+}
+
+TEST(SetIteratorTest, ReverseIterator) {
+  LIB::set<int> m;
+
+  m.insert(7);
+  m.insert(1);
+  m.insert(3);
+  m.insert(2);
+  m.insert(4);
+  m.insert(6);
+  m.insert(5);
+
+  LIB::set<int>::reverse_iterator rit(m.rbegin());
+
+  EXPECT_EQ(*rit, 7);
+  *rit = 42;
+  EXPECT_EQ(*rit, 42);
+  *rit = 7;
+  ++rit;
+  EXPECT_EQ(*rit, 6);
+  rit++;
+  EXPECT_EQ(*rit, 5);
+  --rit;
+  EXPECT_EQ(*rit, 6);
+  rit--;
+  for (int i = 7; rit != m.rend(); rit++) {
+    EXPECT_EQ(*rit, i);
+    i--;
+  }
+}
+
+TEST(SetIteratorTest, ConstReverseIterator) {
+  LIB::set<int> m;
+
+  m.insert(7);
+  m.insert(1);
+  m.insert(3);
+  m.insert(2);
+  m.insert(4);
+  m.insert(6);
+  m.insert(5);
+
+  LIB::set<int>::const_reverse_iterator rit(m.rbegin());
+
+  EXPECT_EQ(*rit, 7);
+  ++rit;
+  EXPECT_EQ(*rit, 6);
+  rit++;
+  EXPECT_EQ(*rit, 5);
+  --rit;
+  EXPECT_EQ(*rit, 6);
+  rit--;
+  for (int i = 7; rit != m.rend(); rit++) {
+    EXPECT_EQ(*rit, i);
+    i--;
+  }
 }
