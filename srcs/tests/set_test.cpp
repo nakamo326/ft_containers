@@ -227,20 +227,20 @@ TEST(SetTest, Swap) {
   }
   LIB::set<int> n;
   for (size_t i = 1; i <= 1000; i++) {
-    m.insert(4);
+    n.insert(1);
   }
   LIB::set<int>::iterator m_it = m.begin();
   LIB::set<int>::iterator n_it = n.begin();
   n.swap(m);
+  // n ... 1 ~ 10000
+  // m ... 1 ~ 1000
   EXPECT_EQ(n.size(), times);
   for (int i = 1; m_it != n.end(); m_it++) {
-    EXPECT_EQ(*m_it, i);
     EXPECT_EQ(*m_it, i);
     i++;
   }
   for (int i = 1; n_it != m.end(); n_it++) {
     EXPECT_EQ(*n_it, i);
-    EXPECT_EQ(*n_it, 42);
     i++;
   }
 }
@@ -397,11 +397,6 @@ TEST(SetIteratorTest, Iterator) {
 
   LIB::set<int>::iterator it = m.begin();
   EXPECT_EQ((*it), 1);
-  *it = 42;
-  EXPECT_EQ((*it), 42);
-  *it = 57;
-  EXPECT_EQ((*it), 57);
-  *it = 1;
   ++it;
   EXPECT_EQ((*it), 2);
   it++;
@@ -455,9 +450,6 @@ TEST(SetIteratorTest, ReverseIterator) {
   LIB::set<int>::reverse_iterator rit(m.rbegin());
 
   EXPECT_EQ(*rit, 7);
-  *rit = 42;
-  EXPECT_EQ(*rit, 42);
-  *rit = 7;
   ++rit;
   EXPECT_EQ(*rit, 6);
   rit++;

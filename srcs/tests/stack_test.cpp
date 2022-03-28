@@ -20,7 +20,8 @@ TEST(StackTest, Constructor) {
 
 TEST(StackTest, ConstructorWithVector) {
   LIB::vector<int> v(5, 42);
-  LIB::stack<int>  s(v);
+  // clang-format off
+  LIB::stack<int, LIB::vector<int> > s(v);
   EXPECT_EQ(s.size(), 5);
   EXPECT_EQ(s.empty(), false);
   EXPECT_EQ(s.top(), 42);
@@ -109,15 +110,18 @@ TEST(StackTest, NonMemberFunction) {
 
 // same test with std::vector
 TEST(StackTest, ConstructorWithStdVector) {
-  std::vector<int>                   v;
+  std::vector<int>                  v;
+  // clang-format off
   LIB::stack<int, std::vector<int> > s(v);
   EXPECT_EQ(s.size(), 0);
   EXPECT_EQ(s.empty(), true);
 }
 
 TEST(StackTest, AssignationWithStdVector) {
-  std::vector<int>                   v;
+  std::vector<int>                  v;
+  // clang-format off
   LIB::stack<int, std::vector<int> > s1(v);
+  // clang-format off
   LIB::stack<int, std::vector<int> > s2;
   s1.push(1);
   s1.push(2);
@@ -130,7 +134,8 @@ TEST(StackTest, AssignationWithStdVector) {
 }
 
 TEST(StackTest, ElementAccessWithStdVector) {
-  std::vector<int>                   v;
+  std::vector<int>                  v;
+  // clang-format off
   LIB::stack<int, std::vector<int> > s(v);
   s.push(1);
   s.push(2);
@@ -139,7 +144,8 @@ TEST(StackTest, ElementAccessWithStdVector) {
 }
 
 TEST(StackTest, CapacityWithStdVector) {
-  std::vector<int>                   v;
+  std::vector<int>                  v;
+  // clang-format off
   LIB::stack<int, std::vector<int> > s(v);
   EXPECT_EQ(s.empty(), true);
   EXPECT_EQ(s.size(), 0);
@@ -152,7 +158,8 @@ TEST(StackTest, CapacityWithStdVector) {
 }
 
 TEST(StackTest, ModifiresWithStdVector) {
-  std::vector<int>                   v;
+  std::vector<int>                  v;
+  // clang-format off
   LIB::stack<int, std::vector<int> > s(v);
   s.push(1);
   s.push(2);
@@ -167,8 +174,10 @@ TEST(StackTest, ModifiresWithStdVector) {
 }
 
 TEST(StackTest, NonMemberFunctionWithStdVector) {
-  std::vector<int>                   v;
+  std::vector<int>                  v;
+  // clang-format off
   LIB::stack<int, std::vector<int> > s1(v);
+  // clang-format off
   LIB::stack<int, std::vector<int> > s2;
   s1.push(1);
   s1.push(2);

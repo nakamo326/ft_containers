@@ -241,7 +241,7 @@ TEST(MapTest, Swap) {
   }
   LIB::map<int, int> n;
   for (size_t i = 1; i <= 1000; i++) {
-    m.insert(LIB::make_pair(i, 42));
+    n.insert(LIB::make_pair(i, 42));
   }
   LIB::map<int, int>::iterator m_it = m.begin();
   LIB::map<int, int>::iterator n_it = n.begin();

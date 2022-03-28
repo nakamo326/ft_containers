@@ -51,6 +51,7 @@ int main() {
   s.insert(2);
 
   std::set<int>::iterator it = s.begin();
+  *it                        = 3;
 
   // {
   //   ft::map<int, int> m;

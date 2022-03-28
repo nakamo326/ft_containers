@@ -49,8 +49,8 @@ run: all
 	./$(NAME)
 
 test: $(STDBIN) $(FTBIN)
-	./$(STDBIN)
-	./$(FTBIN)
+	./$(STDBIN) || :
+	./$(FTBIN) || :
 	$(RM) $(STDBIN) $(FTBIN)
 
 $(STDBIN):
