@@ -501,3 +501,115 @@ TEST(VectorTest, Comparison) {
   EXPECT_EQ(cs < s, false);
   EXPECT_EQ(s < cs, true);
 }
+
+TEST(VectorTest, Iterator) {
+  LIB::vector<int> v(10);
+  for (size_t i = 0; i < 10; i++) {
+    v[i] = i;
+  }
+  LIB::vector<int>::iterator       it = v.begin();
+  LIB::vector<int>::iterator       it2(it);
+  LIB::vector<int>::const_iterator cit = v.begin();
+  EXPECT_EQ((it == it2), true);
+  EXPECT_EQ((it == cit), true);
+  EXPECT_EQ((cit == it), true);
+  EXPECT_EQ((it != it2), false);
+  EXPECT_EQ((it != cit), false);
+  EXPECT_EQ((it <= it2), true);
+  EXPECT_EQ((it <= cit), true);
+  EXPECT_EQ((it >= it2), true);
+  EXPECT_EQ((it >= cit), true);
+  EXPECT_EQ((it < it2), false);
+  EXPECT_EQ((it < cit), false);
+  EXPECT_EQ((it > it2), false);
+  EXPECT_EQ((it > cit), false);
+  cit++;
+  it2++;
+  EXPECT_EQ((it == it2), false);
+  EXPECT_EQ((it == cit), false);
+  EXPECT_EQ((it != it2), true);
+  EXPECT_EQ((it != cit), true);
+  EXPECT_EQ((it <= it2), true);
+  EXPECT_EQ((it <= cit), true);
+  EXPECT_EQ((it >= it2), false);
+  EXPECT_EQ((it >= cit), false);
+  EXPECT_EQ((it < it2), true);
+  EXPECT_EQ((it < cit), true);
+  EXPECT_EQ((it > it2), false);
+  EXPECT_EQ((it > cit), false);
+  cit += 9;
+  it2 += 9;
+  EXPECT_EQ(true, (it2 == v.end()));
+  EXPECT_EQ(true, (cit == v.end()));
+  EXPECT_EQ((v.end() - v.begin()), 10);
+}
+
+TEST(VectorTest, ReverseIterator) {
+  LIB::vector<int> v(10);
+  for (size_t i = 0; i < 10; i++) {
+    v[i] = i;
+  }
+  LIB::vector<int>::reverse_iterator       it = v.rbegin();
+  LIB::vector<int>::reverse_iterator       it2(it);
+  LIB::vector<int>::const_reverse_iterator cit = v.rbegin();
+  EXPECT_EQ((it == it2), true);
+  EXPECT_EQ((it == cit), true);
+  EXPECT_EQ((cit == it), true);
+  EXPECT_EQ((it != it2), false);
+  EXPECT_EQ((it != cit), false);
+  EXPECT_EQ((it <= it2), true);
+  EXPECT_EQ((it <= cit), true);
+  EXPECT_EQ((it >= it2), true);
+  EXPECT_EQ((it >= cit), true);
+  EXPECT_EQ((it < it2), false);
+  EXPECT_EQ((it < cit), false);
+  EXPECT_EQ((it > it2), false);
+  EXPECT_EQ((it > cit), false);
+  cit++;
+  it2++;
+  EXPECT_EQ((it == it2), false);
+  EXPECT_EQ((it == cit), false);
+  EXPECT_EQ((it != it2), true);
+  EXPECT_EQ((it != cit), true);
+  EXPECT_EQ((it <= it2), true);
+  EXPECT_EQ((it <= cit), true);
+  EXPECT_EQ((it >= it2), false);
+  EXPECT_EQ((it >= cit), false);
+  EXPECT_EQ((it < it2), true);
+  EXPECT_EQ((it < cit), true);
+  EXPECT_EQ((it > it2), false);
+  EXPECT_EQ((it > cit), false);
+  cit += 9;
+  it2 += 9;
+  EXPECT_EQ(true, (it2 == v.rend()));
+  EXPECT_EQ(true, (cit == v.rend()));
+  EXPECT_EQ((v.rend() - v.rbegin()), 10);
+
+  LIB::vector<int> tmp(100);
+  for (size_t i = 0; i < 100; i++) {
+    tmp.push_back(i);
+  }
+  LIB::vector<int>::reverse_iterator rit = tmp.rbegin();
+  for (size_t i = 0; i < 100; i++) {
+    EXPECT_EQ(*rit, 99 - i);
+    rit++;
+  }
+}
+
+TEST(VectorTest, const_iterator) {
+  LIB::vector<int> s(10);
+  for (size_t i = 0; i < 10; i++) {
+    s[i] = i;
+  }
+  LIB::vector<int>::iterator       it       = s.begin();
+  LIB::vector<int>::const_iterator const_it = it;
+
+  // cannot assign to const_it;
+  // *const_it = 42;
+
+  for (size_t i = 0; i < 10; i++) {
+    EXPECT_EQ(*it, *const_it);
+    it++;
+    const_it++;
+  }
+}
