@@ -16,53 +16,30 @@ typedef ft::RBtree<int, ft::pair<int, int>, ft::_Select1st<ft::pair<int, int>>,
                    std::less<int>>
     tree_type;
 
-// TEST(RBtreeTest, add) {
-//   std::random_device rand;
-//   {
-//     tree_type tree;
-//     int       times = 10000;
-//     for (size_t i = 0; i < times; i++) {
-//       tree.insert(ft::make_pair(i, 0));
-//       EXPECT_EQ(tree.isValidTree(), true);
-//       EXPECT_EQ(tree.size(), i + 1);
-//     }
-//   }
-//   {
-//     tree_type tree;
-//     int       times = 10000;
-//     for (size_t i = 0; i < times; i++) {
-//       int tmp = rand() % times;
-//       tree.insert(ft::make_pair(tmp, 0));
-//       EXPECT_EQ(tree.isValidTree(), true);
-//       EXPECT_EQ(tree.size(), i + 1);
-//     }
-//   }
-// }
+TEST(RBtreeTest, Random) {
+  int                test_times = 100000;
+  std::random_device rand;
+  ft::RBtree<int,
+             ft::pair<int, int>,
+             ft::_Select1st<ft::pair<int, int>>,
+             std::less<int>>
+                   tree;
+  std::vector<int> keyList;
 
-// TEST(RBtreeTest, Random) {
-//   int                test_times = 40000;
-//   std::random_device rand;
-//   ft::RBtree<int,
-//              ft::pair<int, int>,
-//              ft::_Select1st<ft::pair<int, int>>,
-//              std::less<int>>
-//                    tree;
-//   std::vector<int> keyList;
-
-//   int add_times = 0;
-//   for (size_t i = 0; i < test_times; i++) {
-//     if (rand() % 2 || add_times == 0) {
-//       int tmp = rand() % test_times;
-//       tree.insert(ft::make_pair(tmp, 0));
-//       keyList.push_back(tmp);
-//       add_times++;
-//     } else {
-//       tree.erase(keyList[rand() % add_times]);
-//       ASSERT_EQ(tree.isValidTree(), true);
-//       add_times--;
-//     }
-//   }
-// }
+  int add_times = 0;
+  for (size_t i = 0; i < test_times; i++) {
+    if (rand() % 2 || add_times == 0) {
+      int tmp = rand() % test_times;
+      tree.insert(ft::make_pair(tmp, 0));
+      keyList.push_back(tmp);
+      add_times++;
+    } else {
+      tree.erase(keyList[rand() % add_times]);
+      ASSERT_EQ(tree.is_valid_tree(), true);
+      add_times--;
+    }
+  }
+}
 
 TEST(RBtreeTest, BeginNodeTest) {
   tree_type tree;

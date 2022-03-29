@@ -548,17 +548,13 @@ private:
         set_black(node);
       return;
     }
-    if (is_red(node) && is_red(node->parent_))
-      correct_tree(node);
+    if (is_red(node) && is_red(node->parent_)) {
+      if (is_uncle_node_black(node))
+        return rotate(node);
+      flip_color(node);
+    }
     if (node != root_)
       fix_insertion(node->parent_);
-  }
-
-  // black uncle rotate, red uncle color flip
-  void correct_tree(node_pointer node) {
-    if (is_uncle_node_black(node))
-      return rotate(node);
-    flip_color(node);
   }
 
   // == rotate ==
