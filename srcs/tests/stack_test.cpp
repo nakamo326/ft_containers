@@ -55,6 +55,13 @@ TEST(StackTest, Assignation) {
   EXPECT_EQ(s2.size(), 3);
   EXPECT_EQ(s1.top(), 3);
   EXPECT_EQ(s2.top(), 3);
+  s1.pop();
+  EXPECT_EQ(s1.top(), 2);
+  EXPECT_EQ(s2.top(), 3);
+  EXPECT_EQ(s1.size(), 2);
+  EXPECT_EQ(s2.size(), 3);
+  s2.pop();
+  EXPECT_EQ(s2.top(), 2);
 }
 
 TEST(StackTest, ElementAccess) {
