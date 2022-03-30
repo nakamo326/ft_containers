@@ -18,26 +18,28 @@ void stk_constructor(void) {
 void stk_copy_constructor_std(void) {
   for (size_t i = 0; i < 10000; i++) {
     std::stack<int> s(pre_sstack);
+    std::cerr << s.top() << std::endl;
   }
 }
 
 void stk_copy_constructor_ft(void) {
   for (size_t i = 0; i < 10000; i++) {
     ft::stack<int> s(pre_fstack);
+    std::cerr << s.top() << std::endl;
   }
 }
 
 void stk_assignation_std(void) {
+  std::stack<int> s;
   for (size_t i = 0; i < 100000; i++) {
-    std::stack<int> s;
     s = pre_sstack;
     std::cerr << s.top() << std::endl;
   }
 }
 
 void stk_assignation_ft(void) {
+  ft::stack<int> s;
   for (size_t i = 0; i < 100000; i++) {
-    ft::stack<int> s;
     s = pre_fstack;
     std::cerr << s.top() << std::endl;
   }
@@ -46,18 +48,20 @@ void stk_assignation_ft(void) {
 void stk_top_std(void) {
   size_t n = 0;
 
-  for (size_t i = 0; i < 10000000; i++) {
-    n += pre_sstack.top();
+  for (size_t i = 0; i < 1000000000; i++) {
+    if (pre_sstack.top())
+      n++;
   }
-  std::cerr << n << std::endl;
+  std::cout << n << std::endl;
 }
 void stk_top_ft(void) {
   size_t n = 0;
 
-  for (size_t i = 0; i < 10000000; i++) {
-    n += pre_fstack.top();
+  for (size_t i = 0; i < 1000000000; i++) {
+    if (pre_fstack.top())
+      n++;
   }
-  std::cerr << n << std::endl;
+  std::cout << n << std::endl;
 }
 
 void stk_empty_std(void) {
@@ -134,9 +138,9 @@ void stack_bench_entry(void) {
   Benchmark(
       "copyConstructor", stk_copy_constructor_std, stk_copy_constructor_ft);
   Benchmark("assignation", stk_assignation_std, stk_assignation_ft);
-  Benchmark("top", stk_top_std, stk_top_ft);
-  Benchmark("empty", stk_empty_std, stk_empty_ft);
-  Benchmark("size", stk_size_std, stk_size_ft);
+  // Benchmark("top", stk_top_std, stk_top_ft);
+  // Benchmark("empty", stk_empty_std, stk_empty_ft);
+  // Benchmark("size", stk_size_std, stk_size_ft);
   Benchmark("push", stk_push<std::stack<int> >, stk_push<ft::stack<int> >);
   Benchmark("pop", stk_pop_std, stk_pop_ft);
   std::cout << std::endl;

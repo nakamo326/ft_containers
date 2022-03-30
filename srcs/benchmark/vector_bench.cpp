@@ -44,7 +44,7 @@ void vec_get_allocator(void) {
   T                          v;
   typename T::allocator_type a;
 
-  for (size_t i = 0; i < 10000000; i++) {
+  for (size_t i = 0; i < 1000000000; i++) {
     a = v.get_allocator();
   }
 }
@@ -53,7 +53,7 @@ void vec_array_op_std(void) {
   int n;
 
   for (size_t j = 0; j < 10; j++) {
-    for (size_t i = 0; i < 1000000; i++) {
+    for (size_t i = 0; i < 100000000; i++) {
       n = pre_sv[i];
     }
   }
@@ -62,7 +62,7 @@ void vec_array_op_ft(void) {
   int n;
 
   for (size_t j = 0; j < 10; j++) {
-    for (size_t i = 0; i < 1000000; i++) {
+    for (size_t i = 0; i < 100000000; i++) {
       n = pre_fv[i];
     }
   }
@@ -71,7 +71,7 @@ void vec_array_op_ft(void) {
 void vec_at_std(void) {
   int n;
 
-  for (size_t j = 0; j < 10; j++) {
+  for (size_t j = 0; j < 100; j++) {
     for (size_t i = 0; i < 100000; i++) {
       n = pre_sv.at(i);
     }
@@ -80,7 +80,7 @@ void vec_at_std(void) {
 void vec_at_ft(void) {
   int n;
 
-  for (size_t j = 0; j < 10; j++) {
+  for (size_t j = 0; j < 100; j++) {
     for (size_t i = 0; i < 100000; i++) {
       n = pre_fv.at(i);
     }
