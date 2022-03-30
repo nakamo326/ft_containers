@@ -36,12 +36,12 @@ public:
   const_reference top() const { return c_.back(); }
 
   // == capacity ==
-  bool            empty() const { return c_.empty(); }
-  size_type       size() const { return c_.size(); }
+  bool      empty() const { return c_.empty(); }
+  size_type size() const { return c_.size(); }
 
   // == modifires ==
-  void            push(const value_type& value) { return c_.push_back(value); }
-  void            pop() { return c_.pop_back(); }
+  void push(const value_type& value) { return c_.push_back(value); }
+  void pop() { return c_.pop_back(); }
 
   // == comparison ==
   template <typename Tp, typename Cont>

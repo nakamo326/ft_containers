@@ -9,50 +9,55 @@ ft::stack<int>  pre_fstack;
 
 template <typename T>
 void stk_constructor(void) {
-  for (size_t i = 0; i < 100000; i++) {
+  for (size_t i = 0; i < 10000000; i++) {
     T s;
+    s.push(0);
   }
 }
 
 void stk_copy_constructor_std(void) {
-  for (size_t i = 0; i < 1000; i++) {
+  for (size_t i = 0; i < 10000; i++) {
     std::stack<int> s(pre_sstack);
   }
 }
 
 void stk_copy_constructor_ft(void) {
-  for (size_t i = 0; i < 1000; i++) {
+  for (size_t i = 0; i < 10000; i++) {
     ft::stack<int> s(pre_fstack);
   }
 }
 
 void stk_assignation_std(void) {
-  for (size_t i = 0; i < 1000; i++) {
+  for (size_t i = 0; i < 100000; i++) {
     std::stack<int> s;
     s = pre_sstack;
+    std::cerr << s.top() << std::endl;
   }
 }
 
 void stk_assignation_ft(void) {
-  for (size_t i = 0; i < 1000; i++) {
+  for (size_t i = 0; i < 100000; i++) {
     ft::stack<int> s;
     s = pre_fstack;
+    std::cerr << s.top() << std::endl;
   }
 }
 
 void stk_top_std(void) {
-  int n;
+  size_t n = 0;
 
   for (size_t i = 0; i < 10000000; i++) {
-    n = pre_sstack.top();
+    n += pre_sstack.top();
   }
+  std::cerr << n << std::endl;
 }
 void stk_top_ft(void) {
-  int n;
+  size_t n = 0;
 
   for (size_t i = 0; i < 10000000; i++) {
-    n = pre_fstack.top();
+    n += pre_fstack.top();
   }
+  std::cerr << n << std::endl;
 }
 
 void stk_empty_std(void) {
@@ -62,7 +67,9 @@ void stk_empty_std(void) {
       num++;
     };
   }
+  std::cerr << num << std::endl;
 }
+
 void stk_empty_ft(void) {
   int num = 0;
   for (size_t i = 0; i < 10000000; i++) {
@@ -70,6 +77,7 @@ void stk_empty_ft(void) {
       num++;
     };
   }
+  std::cerr << num << std::endl;
 }
 
 void stk_size_std(void) {
@@ -79,6 +87,7 @@ void stk_size_std(void) {
       num++;
     };
   }
+  std::cerr << num << std::endl;
 }
 void stk_size_ft(void) {
   int num = 0;
@@ -87,6 +96,7 @@ void stk_size_ft(void) {
       num++;
     };
   }
+  std::cerr << num << std::endl;
 }
 
 template <typename T>

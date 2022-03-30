@@ -66,7 +66,7 @@ gtest:
 bench: $(B_OBJS)
 	@$(CXX) $(CXXFLAGS) $^ $(INCLUDES) -o bench
 	@echo -e "flags  : $(YLW)$(CXXFLAGS)$(NC)\nbuild  : $(GRN)$^$(NC)\n=> $(BLU)bench$(NC)" 
-	./bench
+	./bench 2> /dev/null
 	$(RM) bench
 
 

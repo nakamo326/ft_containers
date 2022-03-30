@@ -336,7 +336,7 @@ void map_count_std(void) {
   for (size_t i = 0; i < 100000; i++) {
     res += pre_sm.count(i);
   }
-  std::cout << res << std::endl;
+  std::cerr << res << std::endl;
 }
 
 void map_count_ft(void) {
@@ -344,7 +344,7 @@ void map_count_ft(void) {
   for (size_t i = 0; i < 100000; i++) {
     res += pre_fm.count(i);
   }
-  std::cout << res << std::endl;
+  std::cerr << res << std::endl;
 }
 
 void map_find_std(void) {
@@ -355,7 +355,7 @@ void map_find_std(void) {
     if (it != pre_sm.end())
       count++;
   }
-  std::cout << count << std::endl;
+  std::cerr << count << std::endl;
 }
 
 void map_find_ft(void) {
@@ -366,7 +366,7 @@ void map_find_ft(void) {
     if (it != pre_fm.end())
       count++;
   }
-  std::cout << count << std::endl;
+  std::cerr << count << std::endl;
 }
 
 void map_equal_range_std(void) {
@@ -381,7 +381,7 @@ void map_equal_range_std(void) {
         count++;
     }
   }
-  std::cout << count << std::endl;
+  std::cerr << count << std::endl;
 }
 
 void map_equal_range_ft(void) {
@@ -395,7 +395,7 @@ void map_equal_range_ft(void) {
         count++;
     }
   }
-  std::cout << count << std::endl;
+  std::cerr << count << std::endl;
 }
 
 void map_lower_bound_std(void) {
@@ -406,7 +406,7 @@ void map_lower_bound_std(void) {
     if (it != pre_sm.end())
       count++;
   }
-  std::cout << count << std::endl;
+  std::cerr << count << std::endl;
 }
 
 void map_lower_bound_ft(void) {
@@ -417,7 +417,7 @@ void map_lower_bound_ft(void) {
     if (it != pre_fm.end())
       count++;
   }
-  std::cout << count << std::endl;
+  std::cerr << count << std::endl;
 }
 
 void map_upper_bound_std(void) {
@@ -428,7 +428,7 @@ void map_upper_bound_std(void) {
     if (it != pre_sm.end())
       count++;
   }
-  std::cout << count << std::endl;
+  std::cerr << count << std::endl;
 }
 
 void map_upper_bound_ft(void) {
@@ -439,7 +439,7 @@ void map_upper_bound_ft(void) {
     if (it != pre_fm.end())
       count++;
   }
-  std::cout << count << std::endl;
+  std::cerr << count << std::endl;
 }
 
 // ======================================================
