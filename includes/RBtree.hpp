@@ -650,6 +650,8 @@ private:
     node_pointer  x, y;
     _RBtree_color y_color;
     node_pointer  x_parent;
+    // xは削除された位置に来る新しいノード
+    // x_parentは削除された位置に来るノードの新しい親
 
     y        = z;
     y_color  = y->color_;
@@ -662,6 +664,7 @@ private:
       x = z->left_;
       transplant_nodes(z, z->left_);
     } else {
+      // 削除するノードの子が二つあるとき。
       y        = search_minimum(z->right_);
       y_color  = y->color_;
       x        = y->right_;
@@ -670,6 +673,7 @@ private:
       if (y->parent_ == z) {
         x_parent = y;
       } else {
+        // yの右の子をもともとyがあった位置へ
         transplant_nodes(y, y->right_);
         y->right_          = z->right_;
         y->right_->parent_ = y;

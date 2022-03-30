@@ -13,8 +13,9 @@ std::vector<int> random_v_s(50000);
 
 template <typename T>
 void set_construct_value(void) {
-  for (size_t i = 0; i < 100000; i++) {
+  for (size_t i = 0; i < 1000000; i++) {
     T m;
+    m.insert(0);
   }
 }
 

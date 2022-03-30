@@ -13,8 +13,9 @@ std::vector<int>   random_v(50000);
 
 template <typename T>
 void map_construct_value(void) {
-  for (size_t i = 0; i < 100000; i++) {
+  for (size_t i = 0; i < 1000000; i++) {
     T m;
+    m[0] = 0;
   }
 }
 
