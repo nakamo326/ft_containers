@@ -1,4 +1,7 @@
+#include <algorithm>
 #include <cstddef>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <iterator>
 #include <list>
@@ -30,19 +33,26 @@ void print_map(Map& m) {
 }
 
 int main() {
-  // {
-  //   std::map<int, int> v;
-  //   for (size_t i = 0; i < 50; i++) {
-  //     v.insert(v.begin(), std::make_pair(i, i));
-  //   }
-  //   print_map(v);
-  // }
-  // {
-  //   ft::map<int, int> v;
-  //   for (size_t i = 0; i < 50; i++) {
-  //     v.insert(v.begin(), ft::make_pair(i, i));
-  //   }
-  //   print_map(v);
-  // }
+  std::srand(std::time(NULL));
+  ft::map<int, int, std::greater<int> > m;
+  std::vector<int>                      v;
+  for (size_t i = 0; i < 1000; i++) {
+    int                                                            r = rand();
+    ft::pair<ft::RBtree_iterator<ft::pair<const int, int>*>, bool> ret =
+        m.insert(ft::make_pair(r, r));
+    if (ret.second)
+      v.push_back(r);
+  }
+  std::sort(v.begin(), v.end(), std::greater<int>());
+  std::vector<int>::iterator  vit = v.begin();
+  ft::map<int, int>::iterator mit = m.begin();
+  for (; vit != v.end(); vit++) {
+    std::cout << *vit << std::endl;
+    std::cout << mit->first << std::endl;
+    if (*vit != mit->first)
+      std::cout << "not equal" << std::endl;
+    mit++;
+  }
+
   return 0;
 }

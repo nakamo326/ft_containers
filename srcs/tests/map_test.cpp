@@ -436,15 +436,18 @@ TEST(MapIteratorTest, Iterator) {
   EXPECT_EQ((*it).second, 57);
   EXPECT_EQ(it->second, 57);
   ++it;
+  m.insert(LIB::make_pair(8, 8));
   EXPECT_EQ((*it).second, 2);
   EXPECT_EQ(it->second, 2);
   it++;
+  m.erase(7);
   EXPECT_EQ((*it).second, 3);
   EXPECT_EQ(it->second, 3);
   --it;
   EXPECT_EQ((*it).second, 2);
   EXPECT_EQ(it->second, 2);
   it--;
+  m.insert(LIB::make_pair(7, 7));
   for (int i = 1; it != m.end(); it++) {
     EXPECT_EQ(it->first, i);
     i++;

@@ -702,13 +702,15 @@ private:
           set_red(parent);
           left_rotate(parent);
           s = parent->right_;
+          // P -> red, S -> black
         }
         if (is_black(s->left_) && is_black(s->right_)) {
           set_red(s);
           node   = parent;
+          // if parent is red, parent will be black after break while.
           parent = parent->parent_;
         } else {
-          if (is_black(s->right_)) {
+          if (is_black(s->right_)) { // s->left is red
             set_black(s->left_);
             set_red(s);
             right_rotate(s);
